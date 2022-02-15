@@ -16,12 +16,13 @@ import debounce from 'debounce';
 import EmailsInput, { createEmailOption } from './EmailsInput';
 
 function Form(props) {
+  const [messageID, setMessageID] = useState('');
   const [emails, setEmails, emailsValidation, emailsChanged] = useField(() => JSON.parse(sessionStorageGetItem('emails')) || [], emailsValidator);
   const [emailInput, setEmailInput] = useField(() => JSON.parse(sessionStorageGetItem('emailInput')) || '');
   const [message, setMessage, messageValidation, messageChanged] = useField(() => JSON.parse(sessionStorageGetItem('message')) || '', messageValidator);
   const [silentPeriod, setSilentPeriod] = useField(() => parseInt(sessionStorageGetItem('silentPeriod') || 180, 10));
   const [reminderInterval, setReminderInterval] = useField(() => parseInt(sessionStorageGetItem('reminderInterval') || 30, 10));
-  const [isActive, setIsActive] = useState(() => false);
+  const [isActive, setIsActive] = useState(() => true);
   const [dialog, setDialog] = useState({ open: false, title: '', text: '', });
   const [isLoading, setIsLoading] = useState(() => false);
   useSessionStorage('emails', emails);
@@ -37,14 +38,20 @@ function Form(props) {
       try {
         const headers = await generateHeaders(props.netlifyIdentity);
         const res = await axios.get(
-          'https://x46g8u90qd.execute-api.ap-southeast-1.amazonaws.com/default/retrieve',
+          'https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api?action=select-messages',
           { headers },
         );
-        setEmails(res.data.emails.split(', ').map(createEmailOption));
-        setMessage(res.data.message);
-        setSilentPeriod(res.data.silentPeriod);
-        setReminderInterval(res.data.reminderInterval);
-        setIsActive(res.data.isActive);
+        const dataList = res.data.data;
+        if (!Array.isArray(dataList) || dataList.length === 0) {
+          throw new Error('dataList is invalid', dataList);
+        }
+        const data = dataList[0];
+        setMessageID(data.id);
+        setEmails(data.emailReceivers.map(createEmailOption));
+        setMessage(data.messageContent);
+        setSilentPeriod(data.inactivePeriodDays);
+        setReminderInterval(data.reminderIntervalDays);
+        setIsActive(data.isActive);
       } catch (err) {}
     }
     fetchData();
@@ -69,17 +76,21 @@ function Form(props) {
     const trimmedMessage = message.trim().replace(/\n\s*\n\s*\n/g, '\n\n');
     try {
       const headers = await generateHeaders(props.netlifyIdentity);
-      await axios.post(
-        'https://x46g8u90qd.execute-api.ap-southeast-1.amazonaws.com/default/initiate',
+      const action = messageID === '' ? 'insert-message' : 'update-message'
+      const res = await axios.post(
+        `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api?action=${action}`,
         {
-          emails: emails.map(email => email.value).join(', '),
-          message: trimmedMessage,
-          silentPeriod,
-          reminderInterval,
+          id: messageID,
+          emailReceivers: emails.map(email => email.value),
+          messageContent: trimmedMessage,
+          inactivePeriodDays: silentPeriod,
+          reminderIntervalDays: reminderInterval,
           isActive,
         },
         { headers },
       );
+      const newMessageID = res.data.data.id;
+      setMessageID(newMessageID);
       const message = isActive ?
         ' and ACTIVATED' :
         ' but NOT YET ACTIVE. Check the activation toggle and click submit to activate';
@@ -154,6 +165,7 @@ function Form(props) {
         control={
           <Switch
             checked={isActive}
+            disabled={messageID === ''}
             onChange={(e) => {
               if (email) {
                 return setIsActive(e.target.checked);

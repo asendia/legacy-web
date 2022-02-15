@@ -5,7 +5,10 @@ import LoginButton from './components/LoginButton';
 import './App.css';
 import Form from './components/Form';
 import { getParameterByName } from './QueryString';
-import { protractTestament, unsubscribeTestament } from './ApiCalls';
+import { 
+  protractTestamentOld, unsubscribeTestamentOld,
+  extendMessage, unsubscribeMessage,
+} from './ApiCalls';
 import UserContext from './UserContext';
 
 function App() {
@@ -34,19 +37,38 @@ function App() {
 function useEmailActionsQueryParser() {
   useEffect(() => {
     async function callApi() {
+      const action = getParameterByName('action');
+      const secret = getParameterByName('secret');
+      const id = getParameterByName('id');
+      if (action !== null) {
+        switch (action) {
+          case 'extend-message':
+            await extendMessage(id, secret);
+            typeof window !== 'undefined' && window.alert('Message has been extended!');
+            break;
+          case 'unsubscribe-message':
+            await unsubscribeMessage(id, secret);
+            typeof window !== 'undefined' && window.alert('Message has been unsubscribed!');
+            break;
+          default:
+            window.alert('Invalid action!');
+            break;
+        }
+        typeof window !== 'undefined' && window.location.replace('/');
+        return;
+      }
       const mode = getParameterByName('mode');
       const token = getParameterByName('token');
-      const id = getParameterByName('id');
       if (token && mode && id && token.length >= 64) {
         try {
           switch (mode) {
             case 'protract':
-              await protractTestament(id, token);
+              await protractTestamentOld(id, token);
               typeof window !== 'undefined' && window.alert('Protraction success!');
               break;
             case 'unsubscribe': {
               const email = getParameterByName('email');
-              await unsubscribeTestament(id, token, email);
+              await unsubscribeTestamentOld(id, token, email);
               typeof window !== 'undefined' && window.alert('Unsubscribe success!');
               break;
             }
