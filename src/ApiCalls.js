@@ -39,7 +39,7 @@ export const extendMessage = async function extendMessage(id, secret) {
 export const unsubscribeMessage = async function unsubscribeMessage(id, secret) {
   const res = await axios.post(
     `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api-secret` +
-    `?action=unsubscribe-message&id=${id}&secre=${secret}`,
+    `?action=unsubscribe-message&id=${id}&secret=${secret}`,
     { 'Content-Type': 'application/json' }
   );
   return res;
