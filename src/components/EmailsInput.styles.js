@@ -8,7 +8,7 @@ export const styles = theme => ({
 export const reactSelectStyle = {
   container: () => ({
     padding: '0',
-    fontSize: '16px',
+    fontSize: '14px',
   }),
   valueContainer: (obj) => ({
     ...obj,

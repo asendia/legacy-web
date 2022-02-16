@@ -4,6 +4,7 @@ const styles = theme => ({
     margin: '10px auto',
     display: 'flex',
     flexDirection: 'column',
+    padding: '0 14px',
   },
   textField: {
     marginBottom: 10,
@@ -19,6 +20,7 @@ const styles = theme => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
+    fontSize: '14px',
   },
   button: {
     margin: theme.spacing(1),

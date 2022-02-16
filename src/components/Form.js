@@ -60,7 +60,7 @@ function Form(props) {
     return setDialog({
       open: true,
       title: 'Please login',
-      description: 'You need to login first in order to try Warisin',
+      description: 'You need to login first in order to try warisin.com',
     });
   }
   async function handleSubmit(e) {
@@ -105,7 +105,7 @@ function Form(props) {
     setIsLoading(false);
   }
   return (
-    <form className={props.classes.container} onSubmit={handleSubmit}>
+    <form className={props.classes.container} onSubmit={handleSubmit} autoComplete={'off'}>
       <EmailsInput
         id='emails'
         emails={emails || []}
@@ -127,8 +127,15 @@ function Form(props) {
         helperText={messageValidation.helperText}
         onChange={(e) => setMessage(e.target.value)}
         multiline
-        rowsMax='20'
+        rowsMax='50'
         margin='normal'
+        hiddenLabel={true}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        InputProps={{
+          style: { fontSize: '14px' },
+        }}
       />
       <FormControl className={props.classes.formControl}>
         <InputLabel shrink htmlFor='input-silent-period'>
@@ -174,6 +181,7 @@ function Form(props) {
             }}
             value=''
             color='primary'
+            size={'small'}
           />
         }
         className={props.classes.switch}
@@ -181,10 +189,11 @@ function Form(props) {
       />
       <Button
         onClick={handleSubmit}
-        variant='contained'
+        variant={email ? 'contained' : 'outlined'}
         color='primary'
         className={props.classes.button}
         disabled={isLoading}
+        size={'small'}
       >
         submit
       </Button>

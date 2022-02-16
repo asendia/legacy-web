@@ -22,7 +22,6 @@ function App() {
           {({ user, netlifyIdentity }) => (
             <React.Fragment>
               <LoginButton user={user} netlifyIdentity={netlifyIdentity} />
-              <div style={{ borderTop: '1px grey solid', margin: '0 8px' }} />
               <Form key={user && user.email} netlifyIdentity={netlifyIdentity} />
             </React.Fragment>
           )}

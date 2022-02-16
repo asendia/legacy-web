@@ -8,10 +8,10 @@ const styles = (theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '10px 0',
   },
   greetings: {
     marginRight: '10px',
+    fontSize: '14px',
   },
 });
 
@@ -23,31 +23,37 @@ function LoginButton(props) {
     props.netlifyIdentity.logout();
   }
   const { classes, isLoading, user } = props;
-  const text = oc(user, 'user_metadata.full_name') || oc(user, 'email') || 'User';
+  const text =
+    oc(user, 'user_metadata.full_name') || oc(user, 'email') || 'User';
   return (
     <div className={classes.wrapper}>
-    {
-    user ?
-      <React.Fragment>
-        <div className={classes.greetings}>Hello, {text}</div>
-        <Button 
-          onClick={handleLogout}
-          variant='contained'
-          color='secondary'
-          disabled={isLoading}
-        >
-          logout
-        </Button>
-      </React.Fragment> :
-      <Button 
-        onClick={handleLogin}
-        variant='contained'
-        color='primary'
-        disabled={isLoading}
-      >
-        login
-      </Button>
-    }
+      {user ? (
+        <React.Fragment>
+          <div className={classes.greetings}>Hello, {text}</div>
+          <Button
+            onClick={handleLogout}
+            variant='outlined'
+            color='none'
+            disabled={isLoading}
+            size={'small'}
+          >
+            logout
+          </Button>
+        </React.Fragment>
+      ) : (
+        <>
+          <div className={classes.greetings}>Testament in the cloud</div>
+          <Button
+            onClick={handleLogin}
+            variant='outlined'
+            color='primary'
+            disabled={isLoading}
+            size={'small'}
+          >
+            login
+          </Button>
+        </>
+      )}
     </div>
   );
 }

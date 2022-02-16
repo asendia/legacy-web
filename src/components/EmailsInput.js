@@ -17,7 +17,6 @@ function EmailsInput(props) {
   function handleKeyDown(event) {
     switch (event.key) {
       case 'Enter':
-      case 'Tab':
       case ' ':
       case ',':
         event.preventDefault();
@@ -50,6 +49,12 @@ function EmailsInput(props) {
     } : reactSelectStyle;
   return (
     <FormControl className={props.classes.formControl}>
+      <label style={{
+        textAlign: 'left',
+        fontSize: '12px',
+        color: 'rgba(0, 0, 0, 0.54)',
+        letterSpacing: '0.00938em',
+      }}>To:</label>
       <CreatableSelect
         id={props.id}
         onChange={handleEmailsChange}
@@ -60,7 +65,7 @@ function EmailsInput(props) {
         menuIsOpen={false}
         noOptionsMessage={() => 'Please enter valid email'}
         formatCreateLabel={(input) => `Press enter to add ${input}`}
-        placeholder={'Testament receivers\' emails'}
+        placeholder={'Email list'}
         components={components}
         styles={newStyles}
         value={props.emails}
