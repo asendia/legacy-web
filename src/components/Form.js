@@ -8,12 +8,11 @@ import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
-import { generateHeaders } from '../ApiCalls';
 import DialogBox from './DialogBox';
 import styles from './Form.styles';
 import debounce from 'debounce';
 import EmailsInput, { createEmailOption } from './EmailsInput';
+import { selectMessages, upsertMessage } from '../ApiCallsMessages';
 
 function Form(props) {
   const [messageID, setMessageID] = useState('');
@@ -36,15 +35,7 @@ function Form(props) {
     if (!email) { return; }
     async function fetchData() {
       try {
-        const headers = await generateHeaders(props.netlifyIdentity);
-        const res = await axios.get(
-          'https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api?action=select-messages',
-          { headers },
-        );
-        const dataList = res.data.data;
-        if (!Array.isArray(dataList) || dataList.length === 0) {
-          throw new Error('dataList is invalid', dataList);
-        }
+        const dataList = await selectMessages(props.netlifyIdentity);
         const data = dataList[0];
         setMessageID(data.id);
         setEmails(data.emailReceivers.map(createEmailOption));
@@ -52,8 +43,12 @@ function Form(props) {
         setSilentPeriod(data.inactivePeriodDays);
         setReminderInterval(data.reminderIntervalDays);
         setIsActive(data.isActive);
-      } catch (err) {}
+      } catch (err) {
+        console.log(err)
+      }
+      setIsLoading(false);
     }
+    setIsLoading(true);
     fetchData();
   }, []);
   function openDialogInviteRegister() {
@@ -75,22 +70,9 @@ function Form(props) {
     setIsLoading(true);
     const trimmedMessage = message.trim().replace(/\n\s*\n\s*\n/g, '\n\n');
     try {
-      const headers = await generateHeaders(props.netlifyIdentity);
-      const action = messageID === '' ? 'insert-message' : 'update-message'
-      const res = await axios.post(
-        `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api?action=${action}`,
-        {
-          id: messageID,
-          emailReceivers: emails.map(email => email.value),
-          messageContent: trimmedMessage,
-          inactivePeriodDays: silentPeriod,
-          reminderIntervalDays: reminderInterval,
-          isActive,
-        },
-        { headers },
-      );
-      const newMessageID = res.data.data.id;
-      setMessageID(newMessageID);
+      const newMessage = await upsertMessage(props.netlifyIdentity, messageID, emails.map(email => email.value), 
+        trimmedMessage, silentPeriod, reminderInterval, isActive);
+      setMessageID(newMessage.id);
       const message = isActive ?
         ' and ACTIVATED' :
         ' but NOT YET ACTIVE. Check the activation toggle and click submit to activate';
