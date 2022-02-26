@@ -21,7 +21,7 @@ function Header() {
       }}
     >
       <div style={{ position: 'relative' }}>
-        <img src={Logo} width='30px' alt={'warisin logo'} />
+        <img src={Logo} width={'30px'} height={'30px'} alt={'warisin logo'} />
         <div style={{ ...styleLogoLine, left: '-45px' }}></div>
         <div style={{ ...styleLogoLine, right: '-45px' }}></div>
       </div>
