@@ -43,7 +43,7 @@ function UserContextProvider(props) {
     });
     // netlifyIdentity.on('open', () => console.log('Widget opened'));
     // netlifyIdentity.on('close', () => console.log('Widget closed'));
-  });
+  }, []);
   return (
     <UserContext.Provider value={{
       netlifyIdentity,

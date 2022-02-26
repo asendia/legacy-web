@@ -102,33 +102,9 @@ function useEmailActionsQueryParser() {
         typeof window !== 'undefined' && window.location.replace('/');
         return;
       }
-      const mode = getParameterByName('mode');
-      const token = getParameterByName('token');
-      if (token && mode && id && token.length >= 64) {
-        try {
-          switch (mode) {
-            case 'protract':
-              await protractTestamentOld(id, token);
-              typeof window !== 'undefined' &&
-                window.alert('Protraction success!');
-              break;
-            case 'unsubscribe': {
-              const email = getParameterByName('email');
-              await unsubscribeTestamentOld(id, token, email);
-              typeof window !== 'undefined' &&
-                window.alert('Unsubscribe success!');
-              break;
-            }
-            default:
-              window.alert('Invalid mode.');
-              break;
-          }
-        } catch (err) {}
-        typeof window !== 'undefined' && window.location.replace('/');
-      }
     }
     callApi();
-  });
+  }, []);
 }
 
 export default App;
