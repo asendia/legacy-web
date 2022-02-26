@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
+import Button from '@mui/material/Button';
+import withStyles from '@mui/styles/withStyles';
 import oc from '../OptionalChaining';
 
 const styles = (theme) => ({
@@ -32,8 +32,8 @@ function LoginButton(props) {
           <div className={classes.greetings}>Hello, {text}</div>
           <Button
             onClick={handleLogout}
-            variant='outlined'
-            color='none'
+            variant={'outlined'}
+            color={'inherit'}
             disabled={isLoading}
             size={'small'}
           >
@@ -45,8 +45,8 @@ function LoginButton(props) {
           <div className={classes.greetings}>Testament in the cloud</div>
           <Button
             onClick={handleLogin}
-            variant='outlined'
-            color='primary'
+            variant={'outlined'}
+            color={'primary'}
             disabled={isLoading}
             size={'small'}
           >

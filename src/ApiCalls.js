@@ -1,46 +1,55 @@
-import axios from 'axios';
-
-export const generateHeaders = async function generateHeaders(netlifyIdentity) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (netlifyIdentity && netlifyIdentity.currentUser()) {
-    const token = await netlifyIdentity.currentUser().jwt();
-    return { ...headers, Authorization: `Bearer ${token}` };
-  }
-  return headers;
-}
-
-export const protractTestamentOld = async function protractTestamentOld(id, token) {
-  const res = await axios.post(
+export const protractTestamentOld = async function protractTestamentOld(
+  id,
+  token
+) {
+  const res = await fetch(
     `https://x46g8u90qd.execute-api.ap-southeast-1.amazonaws.com/default/protract`,
-    { id, token },
-    { 'Content-Type': 'application/json' }
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, token }),
+    }
   );
-  return res;
-}
+  return res.json();
+};
 
-export const unsubscribeTestamentOld = async function unsubscribeTestament(id, token, email) {
-  const res = await axios.post(
+export const unsubscribeTestamentOld = async function unsubscribeTestament(
+  id,
+  token,
+  email
+) {
+  const res = await fetch(
     `https://x46g8u90qd.execute-api.ap-southeast-1.amazonaws.com/default/unsubscribe`,
-    { id, token, email },
-    { 'Content-Type': 'application/json' }
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, token, email }),
+    }
   );
-  return res;
-}
+  return res.json();
+};
 
 export const extendMessage = async function extendMessage(id, secret) {
-  const res = await axios.get(
+  const res = await fetch(
     `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api-secret` +
-    `?action=extend-message&id=${id}&secret=${secret}`,
-    { 'Content-Type': 'application/json' }
+      `?action=extend-message&id=${id}&secret=${secret}`,
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
   );
-  return res;
-}
+  return res.json();
+};
 
-export const unsubscribeMessage = async function unsubscribeMessage(id, secret) {
-  const res = await axios.post(
+export const unsubscribeMessage = async function unsubscribeMessage(
+  id,
+  secret
+) {
+  const res = await fetch(
     `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api-secret` +
-    `?action=unsubscribe-message&id=${id}&secret=${secret}`,
-    { 'Content-Type': 'application/json' }
+      `?action=unsubscribe-message&id=${id}&secret=${secret}`,
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
   );
-  return res;
-}
+  return res.json();
+};
