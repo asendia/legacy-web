@@ -9,7 +9,7 @@ export async function upsertMessage(netlifyIdentity, messageID, emails, message,
     `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api?action=${action}`,
     {
       id: messageID,
-      emailReceivers: emails.map((email) => email.value),
+      emailReceivers: emails,
       messageContent: message,
       inactivePeriodDays: inactivePeriod,
       reminderIntervalDays: reminderInterval,
