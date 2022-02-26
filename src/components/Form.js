@@ -149,7 +149,7 @@ function Form(props) {
           style: { fontSize: '14px' },
         }}
         size={'small'}
-        variant={'standard'}
+        variant={'outlined'}
       />
       <FormControl size={'small'} variant={'standard'}>
         <NativeSelect
