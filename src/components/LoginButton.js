@@ -2,15 +2,7 @@ import React from 'react';
 import Button from '@mui/material/Button';
 
 function LoginButton(props) {
-  function handleLogin() {
-    props.netlifyIdentity.open('login');
-  }
-  function handleLogout() {
-    props.netlifyIdentity.logout();
-  }
-  const { isLoading, user } = props;
-  const text =
-    user?.user_metadata?.full_name || user?.email || 'User';
+  const { isLoading, username } = props;
   const greetingsStyle = { marginRight: '10px', fontSize: '14px' };
   return (
     <div
@@ -20,11 +12,11 @@ function LoginButton(props) {
         alignItems: 'center',
       }}
     >
-      {user ? (
+      {username ? (
         <>
-          <div style={greetingsStyle}>Hello, {text}</div>
+          <div style={greetingsStyle}>Hello, {username}</div>
           <Button
-            onClick={handleLogout}
+            onClick={() => props.onLogout && props.onLogout()}
             variant={'outlined'}
             color={'inherit'}
             disabled={isLoading}
@@ -37,7 +29,7 @@ function LoginButton(props) {
         <>
           <div style={greetingsStyle}>Testament in the cloud</div>
           <Button
-            onClick={handleLogin}
+            onClick={() => props.onLogin && props.onLogin()}
             variant={'outlined'}
             color={'primary'}
             disabled={isLoading}

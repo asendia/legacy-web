@@ -6,10 +6,7 @@ import LoginButton from './components/LoginButton';
 import './App.css';
 import Form from './components/Form';
 import { getParameterByName } from './QueryString';
-import {
-  extendMessage,
-  unsubscribeMessage,
-} from './ApiCalls';
+import { extendMessage, unsubscribeMessage } from './ApiCalls';
 import UserContext from './UserContext';
 
 const theme = createTheme();
@@ -25,9 +22,13 @@ function App() {
             <UserContext.Consumer>
               {({ user, netlifyIdentity }) => (
                 <React.Fragment>
-                  <LoginButton user={user} netlifyIdentity={netlifyIdentity} />
+                  <LoginButton
+                    username={user?.user_metadata?.full_name || user?.email}
+                    onLogin={() => netlifyIdentity.open('login')}
+                    onLogout={() => netlifyIdentity.logout()}
+                  />
                   <Form
-                    key={user && user.email}
+                    key={user?.email}
                     netlifyIdentity={netlifyIdentity}
                   />
                 </React.Fragment>
