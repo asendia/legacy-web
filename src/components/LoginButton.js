@@ -1,6 +1,5 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import oc from '../OptionalChaining';
 
 function LoginButton(props) {
   function handleLogin() {
@@ -11,7 +10,7 @@ function LoginButton(props) {
   }
   const { isLoading, user } = props;
   const text =
-    oc(user, 'user_metadata.full_name') || oc(user, 'email') || 'User';
+    user?.user_metadata?.full_name || user?.email || 'User';
   const greetingsStyle = { marginRight: '10px', fontSize: '14px' };
   return (
     <div
