@@ -33,7 +33,7 @@ function UserContextProvider(props) {
         setNetlifyIdentity({ ...netlifyIdentity });
       });
       setNetlifyIdentity(netlifyIdentity);
-      !hasGotrue && netlifyIdentity?.open('login');
+      !hasGotrue && !hasBearerHash && netlifyIdentity?.open('login');
       // netlifyIdentity.on('open', () => console.log('Widget opened'));
       // netlifyIdentity.on('close', () => console.log('Widget closed'));
     }
