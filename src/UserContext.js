@@ -1,14 +1,15 @@
-import { netlifyIdentity } from 'netlify-identity-widget';
 import React, { useState, useEffect } from 'react';
 
 const UserContext = React.createContext();
 
 function UserContextProvider(props) {
   const [identity, setNetlifyIdentity] = useState(null);
+  const hasGotrue = localStorage?.getItem('gotrue.user') !== null;
+  const [loadNetlify, setLoadNetlify] = useState(hasGotrue);
 
   useEffect(() => {
     async function initNetlify() {
-      netlifyIdentity = await import('netlify-identity-widget');
+      const netlifyIdentity = await import('netlify-identity-widget');
       netlifyIdentity.init({
         container: '#netlify-modal', // defaults to document.body,
       });
@@ -28,15 +29,17 @@ function UserContextProvider(props) {
         setNetlifyIdentity({ ...netlifyIdentity });
       });
       setNetlifyIdentity(netlifyIdentity);
+      !hasGotrue && netlifyIdentity?.open('login');
       // netlifyIdentity.on('open', () => console.log('Widget opened'));
       // netlifyIdentity.on('close', () => console.log('Widget closed'));
     }
-    initNetlify();
-  }, []);
+    loadNetlify && initNetlify();
+  }, [loadNetlify]);
   return (
     <UserContext.Provider
       value={{
         netlifyIdentity: identity,
+        setLoadNetlify,
       }}
     >
       {props.children}

@@ -20,12 +20,15 @@ function App() {
           <Header />
           <div className='App-intro'>
             <UserContext.Consumer>
-              {({ netlifyIdentity }) => (
+              {({ netlifyIdentity, setLoadNetlify }) => (
                 <React.Fragment>
                   <LoginButton
                     username={netlifyIdentity?.currentUser()?.email}
-                    onLogin={() => netlifyIdentity.open('login')}
-                    onLogout={() => netlifyIdentity.logout()}
+                    onLogin={() => {
+                      setLoadNetlify(true);
+                      netlifyIdentity?.open('login');
+                    }}
+                    onLogout={() => netlifyIdentity?.logout()}
                   />
                   <Form
                     key={netlifyIdentity?.currentUser()?.email}
