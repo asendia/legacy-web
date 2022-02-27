@@ -1,19 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import withStyles from '@mui/styles/withStyles';
 import oc from '../OptionalChaining';
-
-const styles = (theme) => ({
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  greetings: {
-    marginRight: '10px',
-    fontSize: '14px',
-  },
-});
 
 function LoginButton(props) {
   function handleLogin() {
@@ -22,14 +9,21 @@ function LoginButton(props) {
   function handleLogout() {
     props.netlifyIdentity.logout();
   }
-  const { classes, isLoading, user } = props;
+  const { isLoading, user } = props;
   const text =
     oc(user, 'user_metadata.full_name') || oc(user, 'email') || 'User';
+  const greetingsStyle = { marginRight: '10px', fontSize: '14px' };
   return (
-    <div className={classes.wrapper}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       {user ? (
-        <React.Fragment>
-          <div className={classes.greetings}>Hello, {text}</div>
+        <>
+          <div style={greetingsStyle}>Hello, {text}</div>
           <Button
             onClick={handleLogout}
             variant={'outlined'}
@@ -39,10 +33,10 @@ function LoginButton(props) {
           >
             logout
           </Button>
-        </React.Fragment>
+        </>
       ) : (
         <>
-          <div className={classes.greetings}>Testament in the cloud</div>
+          <div style={greetingsStyle}>Testament in the cloud</div>
           <Button
             onClick={handleLogin}
             variant={'outlined'}
@@ -58,4 +52,4 @@ function LoginButton(props) {
   );
 }
 
-export default withStyles(styles)(LoginButton);
+export default LoginButton;

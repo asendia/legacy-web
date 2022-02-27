@@ -1,10 +1,3 @@
-export const styles = theme => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
-});
-
 export const reactSelectStyle = {
   container: () => ({
     padding: '0',

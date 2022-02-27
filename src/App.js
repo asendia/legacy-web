@@ -7,48 +7,12 @@ import './App.css';
 import Form from './components/Form';
 import { getParameterByName } from './QueryString';
 import {
-  protractTestamentOld,
-  unsubscribeTestamentOld,
   extendMessage,
   unsubscribeMessage,
 } from './ApiCalls';
 import UserContext from './UserContext';
 
-// This is ugly, probably I use it wrong, will figure it out later
-const theme = createTheme({
-  components: {
-    MuiFormControl: {
-      styleOverrides: {
-        root: {
-          margin: '8px 0',
-        },
-      },
-    },
-    MuiFormHelperText: {
-      styleOverrides: {
-        root: {
-          lineHeight: '1.4',
-          fontWeight: '300',
-        },
-      },
-    },
-    MuiInput: {
-      styleOverrides: {
-        input: {
-          fontSize: '0.9rem',
-        },
-      },
-    },
-    // Toggle label
-    MuiTypography: {
-      styleOverrides: {
-        root: {
-          fontSize: '0.9rem',
-        },
-      },
-    },
-  },
-});
+const theme = createTheme();
 
 function App() {
   useEmailActionsQueryParser();

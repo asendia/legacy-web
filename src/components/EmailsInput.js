@@ -3,9 +3,8 @@ import CreatableSelect from 'react-select/creatable';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
-import withStyles from '@mui/styles/withStyles';
 import { validateEmail } from '../Validate';
-import { styles, reactSelectStyle } from './EmailsInput.styles';
+import { reactSelectStyle } from './EmailsInput.styles';
 
 function EmailsInput(props) {
   const [emailInputError, setEmailInputError] = useState(() => false);
@@ -51,13 +50,12 @@ function EmailsInput(props) {
           }),
         }
       : reactSelectStyle;
-  newStyles.valueContainer = (obj) => ({ ...obj, paddingLeft: showToLabel ? '20px' : '0' });
-  return (
-    <FormControl
-      className={props.classes.formControl}
-      size={'small'}
-      variant={'standard'}
-    >
+  newStyles.valueContainer = (obj) => ({
+    ...obj,
+    paddingLeft: showToLabel ? '20px' : '0',
+  });
+  const emailsInputComponent = (
+    <FormControl size={'small'} variant={'standard'} style={{ width: '100%' }}>
       {showToLabel && <InputLabel style={{ top: '1px' }}>To</InputLabel>}
       <CreatableSelect
         id={props.id}
@@ -83,9 +81,10 @@ function EmailsInput(props) {
       </FormHelperText>
     </FormControl>
   );
+  return emailsInputComponent;
 }
 
-export default withStyles(styles)(EmailsInput);
+export default EmailsInput;
 
 const components = {
   DropdownIndicator: null,

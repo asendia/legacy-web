@@ -6,12 +6,11 @@ import NativeSelect from '@mui/material/NativeSelect';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import withStyles from '@mui/styles/withStyles';
 import DialogBox from './DialogBox';
-import styles from './Form.styles';
 import debounce from 'debounce';
 import EmailsInput, { createEmailOption } from './EmailsInput';
 import { selectMessages, upsertMessage } from '../ApiCallsMessages';
+import { styles } from './Form.styles';
 
 function Form(props) {
   const [messageID, setMessageID] = useState('');
@@ -106,9 +105,9 @@ function Form(props) {
     }
     setIsLoading(false);
   }
-  return (
+  const formComponent = (
     <form
-      className={props.classes.container}
+      style={styles.form}
       onSubmit={handleSubmit}
       autoComplete={'off'}
     >
@@ -132,10 +131,10 @@ function Form(props) {
         id={'message'}
         label={''}
         autoComplete={'off'}
-        className={props.classes.textField}
         value={message}
         error={messageChanged && messageValidation.error}
         helperText={messageChanged && messageValidation.helperText}
+        FormHelperTextProps={{ style: { marginLeft: 0 } }}
         onChange={(e) => setMessage(e.target.value)}
         multiline
         minRows={5}
@@ -151,7 +150,7 @@ function Form(props) {
         size={'small'}
         variant={'outlined'}
       />
-      <FormControl size={'small'} variant={'standard'}>
+      <FormControl size={'small'} variant={'standard'} style={styles.formControl}>
         <NativeSelect
           value={silentPeriod}
           name='input-silent-period'
@@ -161,11 +160,11 @@ function Form(props) {
           <option value={180}>After 6 months</option>
           <option value={360}>After 12 months</option>
         </NativeSelect>
-        <FormHelperText>
+        <FormHelperText style={styles.formHelperText}>
           of inactivity, this message will be sent to recipients
         </FormHelperText>
       </FormControl>
-      <FormControl size={'small'} variant={'standard'}>
+      <FormControl size={'small'} variant={'standard'} style={styles.formControl}>
         <NativeSelect
           value={reminderInterval}
           name='input-reminder-interval'
@@ -174,8 +173,8 @@ function Form(props) {
           <option value={15}>Every 15 days</option>
           <option value={30}>Every 30 days</option>
         </NativeSelect>
-        <FormHelperText>
-          <b>{email ?? 'you'}</b> will receive link to postpone this message
+        <FormHelperText style={styles.formHelperText}>
+          <b>{email ?? 'you'}</b> will receive a link to postpone this message
         </FormHelperText>
       </FormControl>
       <FormControlLabel
@@ -212,9 +211,10 @@ function Form(props) {
       />
     </form>
   );
+  return formComponent;
 }
 
-export default withStyles(styles)(Form);
+export default Form;
 
 function sessionStorageGetItem(key) {
   return typeof window !== 'undefined' && window.sessionStorage.getItem(key);
