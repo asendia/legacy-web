@@ -5,7 +5,11 @@ const UserContext = React.createContext();
 function UserContextProvider(props) {
   const [identity, setNetlifyIdentity] = useState(null);
   const hasGotrue = localStorage?.getItem('gotrue.user') !== null;
-  const [loadNetlify, setLoadNetlify] = useState(hasGotrue);
+  // Redirect from netlify login form
+  const hasBearerHash =
+    location?.hash?.includes('access_token') &&
+    location?.hash?.includes('token_type=bearer');
+  const [loadNetlify, setLoadNetlify] = useState(hasGotrue || hasBearerHash);
 
   useEffect(() => {
     async function initNetlify() {
