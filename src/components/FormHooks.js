@@ -30,8 +30,8 @@ export function useForm(props) {
   useSessionStorage('message', message);
   useSessionStorage('silentPeriod', silentPeriod);
   useSessionStorage('reminderInterval', reminderInterval);
-  const currentUser = props.netlifyIdentity.currentUser();
-  const email = currentUser && currentUser.email;
+  const currentUser = props.netlifyIdentity?.currentUser();
+  const email = currentUser?.email;
   useEffect(() => {
     if (!email) {
       return;

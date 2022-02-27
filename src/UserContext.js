@@ -1,55 +1,44 @@
+import { netlifyIdentity } from 'netlify-identity-widget';
 import React, { useState, useEffect } from 'react';
-import netlifyIdentity from 'netlify-identity-widget';
-
-netlifyIdentity.init({
-  container: '#netlify-modal' // defaults to document.body,
-});
 
 const UserContext = React.createContext();
 
 function UserContextProvider(props) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState(netlifyIdentity.currentUser());
-  const netlifyLogin = netlifyIdentity.login;
-  netlifyIdentity.login = (...args) => {
-    setIsLoading(true);
-    netlifyLogin(...args);
-  }
-  const netlifyLogout = netlifyIdentity.logout;
-  netlifyIdentity.logout = (...args) => {
-    setIsLoading(true);
-    netlifyLogout(...args);
-  }
+  const [identity, setNetlifyIdentity] = useState(null);
+
   useEffect(() => {
-    netlifyIdentity.on('init', user => {
-      setIsLoading(false);
-      setUser(typeof user === 'object' ? { ...user } : user);
-    });
-    netlifyIdentity.on('login', user => {
-      setIsLoading(false);
-      setUser(typeof user === 'object' ? { ...user } : user);
-      netlifyIdentity.close();
-    });
-    netlifyIdentity.on('logout', () => {
-      if (typeof window !== 'undefined' && window.sessionStorage) {
-        window.sessionStorage.clear();
-      }
-      setIsLoading(false);
-      setUser(undefined);
-    });
-    netlifyIdentity.on('error', err => {
-      setIsLoading(false);
-      setUser(undefined);
-    });
-    // netlifyIdentity.on('open', () => console.log('Widget opened'));
-    // netlifyIdentity.on('close', () => console.log('Widget closed'));
+    async function initNetlify() {
+      netlifyIdentity = await import('netlify-identity-widget');
+      netlifyIdentity.init({
+        container: '#netlify-modal', // defaults to document.body,
+      });
+      netlifyIdentity.on('init', () => {
+        setNetlifyIdentity({ ...netlifyIdentity });
+      });
+      netlifyIdentity.on('login', () => {
+        setNetlifyIdentity({ ...netlifyIdentity });
+        netlifyIdentity.close();
+      });
+      netlifyIdentity.on('logout', () => {
+        window.sessionStorage?.clear();
+        setNetlifyIdentity({ ...netlifyIdentity });
+      });
+      netlifyIdentity.on('error', (err) => {
+        console.error('Netlify error:', err);
+        setNetlifyIdentity({ ...netlifyIdentity });
+      });
+      setNetlifyIdentity(netlifyIdentity);
+      // netlifyIdentity.on('open', () => console.log('Widget opened'));
+      // netlifyIdentity.on('close', () => console.log('Widget closed'));
+    }
+    initNetlify();
   }, []);
   return (
-    <UserContext.Provider value={{
-      netlifyIdentity,
-      user,
-      isLoading,
-    }}>
+    <UserContext.Provider
+      value={{
+        netlifyIdentity: identity,
+      }}
+    >
       {props.children}
     </UserContext.Provider>
   );
