@@ -8,21 +8,34 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DialogBox from './DialogBox';
 import EmailsInput from './EmailsInput';
-import { upsertMessage } from '../ApiCallsMessages';
+import { upsertMessage } from '../APIMessages';
 import { styles } from './Form.styles';
 import { useForm } from './FormHooks';
 
 function Form(props) {
   const {
-    messageID, setMessageID,
-    emails, setEmails, emailsValidation, emailsChanged,
-    emailInput, setEmailInput,
-    message, setMessage, messageValidation, messageChanged,
-    silentPeriod, setSilentPeriod,
-    reminderInterval, setReminderInterval,
-    isActive, setIsActive,
-    dialog, setDialog,
-    isLoading, setIsLoading,
+    messageID,
+    setMessageID,
+    emails,
+    setEmails,
+    emailsValidation,
+    emailsChanged,
+    emailInput,
+    setEmailInput,
+    message,
+    setMessage,
+    messageValidation,
+    messageChanged,
+    silentPeriod,
+    setSilentPeriod,
+    reminderInterval,
+    setReminderInterval,
+    isActive,
+    setIsActive,
+    dialog,
+    setDialog,
+    isLoading,
+    setIsLoading,
     email,
   } = useForm(props);
   function openDialogInviteRegister() {
@@ -68,11 +81,7 @@ function Form(props) {
     setIsLoading(false);
   }
   const formComponent = (
-    <form
-      style={styles.form}
-      onSubmit={handleSubmit}
-      autoComplete={'off'}
-    >
+    <form style={styles.form} onSubmit={handleSubmit} autoComplete={'off'}>
       <EmailsInput
         id='emails'
         emails={emails || []}
@@ -112,7 +121,11 @@ function Form(props) {
         size={'small'}
         variant={'outlined'}
       />
-      <FormControl size={'small'} variant={'standard'} style={styles.formControl}>
+      <FormControl
+        size={'small'}
+        variant={'standard'}
+        style={styles.formControl}
+      >
         <NativeSelect
           value={silentPeriod}
           name='input-silent-period'
@@ -126,7 +139,11 @@ function Form(props) {
           of inactivity, this message will be sent to recipients
         </FormHelperText>
       </FormControl>
-      <FormControl size={'small'} variant={'standard'} style={styles.formControl}>
+      <FormControl
+        size={'small'}
+        variant={'standard'}
+        style={styles.formControl}
+      >
         <NativeSelect
           value={reminderInterval}
           name='input-reminder-interval'

@@ -20,22 +20,22 @@ function DialogBox(props) {
           {props.dialog.description}
         </DialogContentText>
       </DialogContent>
-    {
-      props.onOk ?
-      <DialogActions>
-        <Button onClick={props.onClose} color='secondary' autoFocus>
-          Cancel
-        </Button>
-        <Button onClick={props.onOk} color='primary' autoFocus>
-          Ok
-        </Button>
-      </DialogActions> :
-      <DialogActions>
-        <Button onClick={props.onClose} color='primary' autoFocus>
-          Ok
-        </Button>
-      </DialogActions>
-    }
+      {props.onOk ? (
+        <DialogActions>
+          <Button onClick={props.onClose} color='secondary' autoFocus>
+            Cancel
+          </Button>
+          <Button onClick={props.onOk} color='primary' autoFocus>
+            Ok
+          </Button>
+        </DialogActions>
+      ) : (
+        <DialogActions>
+          <Button onClick={props.onClose} color='primary' autoFocus>
+            Ok
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

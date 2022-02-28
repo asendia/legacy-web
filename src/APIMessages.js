@@ -49,4 +49,4 @@ async function generateHeaders(netlifyIdentity) {
     return { ...headers, Authorization: `Bearer ${token}` };
   }
   return headers;
-};
+}
