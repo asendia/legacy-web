@@ -1,14 +1,14 @@
 // action = 'insert-message' | 'update-message'
 export async function upsertMessage(
-  netlifyIdentity,
-  messageID,
-  emails,
-  message,
-  inactivePeriod,
-  reminderInterval,
-  isActive
+  jwt: string,
+  messageID: string,
+  emails: Array<string>,
+  message: string,
+  inactivePeriod: number,
+  reminderInterval: number,
+  isActive: boolean,
 ) {
-  const headers = await generateHeaders(netlifyIdentity);
+  const headers = generateHeaders(jwt);
   const action = messageID === '' ? 'insert-message' : 'update-message';
   const res = await fetch(
     `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api?action=${action}`,
@@ -23,30 +23,26 @@ export async function upsertMessage(
         isActive,
       }),
       headers,
-    }
+    },
   );
   const newMessage = (await res.json()).data;
   return newMessage;
 }
 
-export async function selectMessages(netlifyIdentity) {
-  const headers = await generateHeaders(netlifyIdentity);
+export async function selectMessages(jwt: string) {
+  const headers = generateHeaders(jwt);
   const res = await fetch(
     'https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api?action=select-messages',
-    { headers }
+    { headers },
   );
   const dataList = (await res.json()).data;
   if (!Array.isArray(dataList) || dataList.length === 0) {
-    throw new Error('dataList is invalid', dataList);
+    throw new Error('dataList is invalid: ' + JSON.stringify(dataList));
   }
   return dataList;
 }
 
-async function generateHeaders(netlifyIdentity) {
+function generateHeaders(jwt: string) {
   const headers = { 'Content-Type': 'application/json' };
-  if (netlifyIdentity && netlifyIdentity.currentUser()) {
-    const token = await netlifyIdentity.currentUser().jwt();
-    return { ...headers, Authorization: `Bearer ${token}` };
-  }
-  return headers;
+  return { ...headers, Authorization: `Bearer ${jwt}` };
 }

@@ -1,36 +1,20 @@
 [build]
+  command = "npm run build"
   publish = "build/"
-  command = "yarn build"
-  environment = { INLINE_RUNTIME_CHUNK = "false", REACT_APP_DEPLOY_ENV = "production", NODE_VERSION = "14" }
+  functions = "functions/"
+  environment = { NODE_VERSION = "16.14" }
 
 [[headers]]
   for = "/service-worker.js"
   [headers.values]
-    Cache-Control = "no-cache, max-age=0"
+    cache-control = "no-cache, max-age=0"
 
 [[headers]]
   for = "/"
   [headers.values]
-    Content-Security-Policy = "default-src 'none'; script-src 'self'; manifest-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://asia-southeast1-monarch-public.cloudfunctions.net https://x46g8u90qd.execute-api.ap-southeast-1.amazonaws.com"
+    Content-Security-Policy = "default-src 'none'; script-src 'self'; manifest-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://asia-southeast1-monarch-public.cloudfunctions.net"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Feature-Policy = "geolocation 'none'; microphone 'none'; camera 'none'; fullscreen 'none'; payment 'none'; sync-xhr 'none'"
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
-
-[[redirects]]
-  from = "https://cloudtestament.com"
-  to = "https://warisin.com"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "https://www.cloudtestament.com"
-  to = "https://warisin.com"
-  status = 301
-
-[[redirects]]
-  from = "/pesangon/*"
-  to = "https://pesangon.netlify.app/pesangon/:splat"
-  status = 200
-  force = true
