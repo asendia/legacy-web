@@ -1,4 +1,8 @@
-<footer>
+<script>
+  import { blue } from './colors';
+</script>
+
+<footer style="--color-blue: {blue}">
   2018 - 2022
   <br />
   warisin - source code:
@@ -17,5 +21,8 @@
     font-size: 0.9rem;
     font-weight: 300;
     text-align: center;
+  }
+  a {
+    color: var(--color-blue);
   }
 </style>

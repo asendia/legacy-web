@@ -49,5 +49,6 @@
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
     letter-spacing: 0.03rem;
+    background: none;
   }
 </style>

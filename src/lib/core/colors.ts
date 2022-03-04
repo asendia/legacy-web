@@ -1,7 +1,8 @@
 export const blue = 'rgb(25, 118, 210)';
 export const black = 'rgb(0, 0, 0)';
 export const white = 'rgb(255, 255, 255)';
-export const grey = 'rgb(222, 222, 222)';
+export const themeGrey = 'rgb(226 226 226)';
+export const grey = 'rgb(166, 166, 166)';
 
 export const colors = {
   filledprimary: {

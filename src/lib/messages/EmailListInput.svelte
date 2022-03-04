@@ -130,6 +130,7 @@
     border: none;
     margin: 0 0 4px 0;
     flex-grow: 1;
+    background: none;
   }
   input.text:focus {
     outline-width: 0;
