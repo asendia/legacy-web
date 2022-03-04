@@ -17,7 +17,7 @@
 <div class="wrapper">
   Send this message to recipients after
   <select on:change={handleInactivePeriodChange}>
-    {#each [90, 180, 360] as i}
+    {#each [30, 60, 90] as i}
       {#if i === inactivePeriodDays}
         <option value={i} selected>{i / 30} months</option>
       {:else}
