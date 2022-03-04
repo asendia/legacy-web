@@ -1,3 +1,5 @@
+import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
+
 // action = 'insert-message' | 'update-message'
 export async function upsertMessage(
   jwt: string,
@@ -25,6 +27,7 @@ export async function upsertMessage(
       headers,
     },
   );
+  throwIfNonSuccessResponse(res);
   const newMessage = (await res.json()).data;
   return newMessage;
 }
@@ -35,6 +38,7 @@ export async function selectMessages(jwt: string) {
     'https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api?action=select-messages',
     { headers },
   );
+  throwIfNonSuccessResponse(res);
   const dataList = (await res.json()).data;
   if (!Array.isArray(dataList) || dataList.length === 0) {
     throw new Error('dataList is invalid: ' + JSON.stringify(dataList));

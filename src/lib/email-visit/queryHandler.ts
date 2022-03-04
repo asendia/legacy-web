@@ -11,18 +11,18 @@ export async function handleQueryVisit() {
       switch (action) {
         case 'extend-message':
           await extendMessage(id, secret);
-          typeof alert('Message has been extended!');
+          alert('Message has been extended!');
           break;
         case 'unsubscribe-message':
           await unsubscribeMessage(id, secret);
-          typeof alert('Message has been unsubscribed!');
+          alert('Message has been unsubscribed!');
           break;
         default:
           throw new Error('Invalid action: ' + action);
       }
     } catch (err) {
       console.error(err);
-      redirectToHome = confirm('Error found. Redirect to home? (dev: see console)');
+      redirectToHome = confirm('Probably you have already used this extension url. Redirect to home?');
     }
     redirectToHome && location.replace('/');
   }

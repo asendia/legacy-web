@@ -1,3 +1,5 @@
+import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
+
 const authDomain = 'warisin.com';
 
 export function authorizeUser(provider: 'google' | 'github') {
@@ -40,6 +42,7 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
           }`,
         },
       });
+      throwIfNonSuccessResponse(res);
       const authObject = await res.json();
       authObject.token = token;
       localStorage.setItem('gotrue.user', JSON.stringify(authObject));
