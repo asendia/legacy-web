@@ -67,7 +67,11 @@
       email,
     );
   }
-  $: toText = emailList.length > 0 ? 'To' : 'Recipients';
+  $: toText =
+    emailList.length > 0 ||
+    (typeof document !== 'undefined' && document?.activeElement) === inputText
+      ? 'To'
+      : 'Recipients';
 </script>
 
 <div class="wrapper" on:click={handleWrapperClick}>
@@ -105,17 +109,17 @@
     font-size: 1rem;
     color: rgb(50, 50, 50);
     line-height: 16px;
-    margin: 0 5px 4px 0;
+    margin: 1px 5px 4px 0;
   }
   .email {
     position: relative;
     border-radius: 2px;
-    background-color: var(--color-grey);
-    padding: 0 15px 0 5px;
+    background-color: rgb(194, 194, 194);
+    padding: 0 18px 0 5px;
     margin: 0 4px 4px 0;
     font-size: 0.9rem;
     color: rgb(50, 50, 50);
-    line-height: 16px;
+    line-height: 1.2rem;
   }
   .deleteEmail {
     position: absolute;
@@ -124,13 +128,15 @@
     padding: 0 2px 4px 4px;
     cursor: pointer;
     font-size: 1.1rem;
-    line-height: 14px;
+    line-height: 1rem;
   }
   .text {
     border: none;
     margin: 0 0 4px 0;
     flex-grow: 1;
     background: none;
+    line-height: 1.1rem;
+    /* font-family: 'Roboto', sans-serif; */
   }
   input.text:focus {
     outline-width: 0;
