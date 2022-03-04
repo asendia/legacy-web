@@ -136,7 +136,7 @@
     flex-grow: 1;
     background: none;
     line-height: 1.1rem;
-    /* font-family: 'Roboto', sans-serif; */
+    font-family: 'Roboto', sans-serif;
   }
   input.text:focus {
     outline-width: 0;
