@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { getEncryptionConfig, isProbablyEncrypted } from './encryption';
   export let messageContent = '';
-  export let onChange: (content: string) => void;
+  export let onChange: (content: string, enableClientAES: boolean) => void;
   export let enableClientAES = false;
+  let autoToggleClientAES = true;
   const maxRows = 20;
   const minRows = 12;
   let toggleShow = true;
@@ -9,7 +11,7 @@
   let rows = 1;
   function handleChange(e: HTMLElementEvent<HTMLTextAreaElement>) {
     messageContent = e.target.value.trim();
-    onChange(messageContent);
+    onChange(messageContent, enableClientAES);
   }
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
@@ -17,10 +19,11 @@
     }
   }
   function handleAESToggle() {
-    alert('Feature is still under development');
-    // enableClientAES = !enableClientAES;
+    autoToggleClientAES = false;
+    enableClientAES = !enableClientAES;
+    onChange(messageContent, enableClientAES);
   }
-  function handleRevealToggle() {
+  function handleShowToggle() {
     autoToggleShow = false;
     toggleShow = !toggleShow;
   }
@@ -36,6 +39,11 @@
       toggleShow = messageContent.length === 0;
     }
   }
+  $: {
+    if (autoToggleClientAES) {
+      enableClientAES = isProbablyEncrypted(messageContent) || !!getEncryptionConfig();
+    }
+  }
 </script>
 
 <div class="textWrapper">
@@ -44,6 +52,7 @@
     on:change={handleChange}
     on:keydown={handleKeydown}
     on:focus={handleFocus}
+    readonly={enableClientAES && isProbablyEncrypted(messageContent)}
     rows={Math.max(minRows, Math.min(rows, maxRows))}
     maxlength="800"
     {placeholder}
@@ -51,9 +60,11 @@
   >
   <div class="toggle aes" on:click={handleAESToggle}>
     <div>client-aes:</div>
-    <div class="aesStatus">{enableClientAES ? 'on' : 'off'}</div>
+    <div>{enableClientAES ? 'on' : 'off'}</div>
   </div>
-  <div class="toggle reveal" on:click={handleRevealToggle}>{toggleShow ? 'hide' : 'show'}</div>
+  <div class="toggle show" on:click={handleShowToggle}>
+    {toggleShow ? 'hide' : 'show'}
+  </div>
 </div>
 
 <style>
@@ -77,20 +88,21 @@
     font-weight: 300;
     border-radius: 2px;
     box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
   }
   .toggle.aes {
     width: 107px;
     bottom: 2px;
-    right: 54px;
-    display: flex;
-    justify-content: space-between;
+    right: 52px;
   }
-  .toggle.reveal {
-    width: 50px;
+  .toggle.show {
+    width: 48px;
     bottom: 2px;
     right: 2px;
+    justify-content: center;
   }
-  .aesStatus {
+  .toggle div:nth-child(2) {
     flex-grow: 1;
     text-align: right;
   }

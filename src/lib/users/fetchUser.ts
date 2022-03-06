@@ -1,6 +1,8 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
+import { localStorageNameEncryption } from '$lib/messages/encryption';
 
 const authDomain = 'warisin.com';
+const localStorageNameGotrue = 'gotrue.user';
 
 export function authorizeUser(provider: 'google' | 'github') {
   window.location.href = `https://${authDomain}/.netlify/identity/authorize?provider=${provider}`;
@@ -45,18 +47,19 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
       throwIfNonSuccessResponse(res);
       const authObject = await res.json();
       authObject.token = token;
-      localStorage.setItem('gotrue.user', JSON.stringify(authObject));
+      localStorage.setItem(localStorageNameGotrue, JSON.stringify(authObject));
       location.hash = '';
       return authObject;
     } catch (err) {
-      localStorage.removeItem('gotrue.user');
+      localStorage.removeItem(localStorageNameGotrue);
+      localStorage.removeItem(localStorageNameEncryption)
       return;
     }
   }
 
   // From localStorage
   try {
-    const authObject = JSON.parse(localStorage.getItem('gotrue.user'));
+    const authObject = JSON.parse(localStorage.getItem(localStorageNameGotrue));
     if (
       authObject?.token.access_token.length > 0 &&
       authObject?.email.includes('@') &&
@@ -67,11 +70,13 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
   } catch (err) {
     console.error(err);
   }
-  localStorage.removeItem('gotrue.user');
+  localStorage.removeItem(localStorageNameGotrue);
+  localStorage.removeItem(localStorageNameEncryption);
 }
 
 export function logout() {
-  localStorage.removeItem('gotrue.user');
+  localStorage.removeItem(localStorageNameGotrue);
+  localStorage.removeItem(localStorageNameEncryption);
   location.reload();
 }
 

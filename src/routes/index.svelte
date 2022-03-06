@@ -11,6 +11,11 @@
   import { getAuthObject, type AuthObject } from '$lib/users/fetchUser';
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import { handleQueryVisit } from '$lib/email-visit/queryHandler';
+  import {
+    decryptMessage,
+    encryptMessage,
+    isProbablyEncrypted,
+  } from '$lib/messages/encryption';
 
   let emailReceivers: Array<string> = [],
     messageID = '',
@@ -19,6 +24,7 @@
     messageContent = '',
     reminderIntervalDays = 15,
     authObject: AuthObject | undefined,
+    enableClientAES = false,
     disableSubmit = false;
   onMount(async () => {
     try {
@@ -32,11 +38,16 @@
         return;
       }
       const d = dataList[0];
+      let msg = d.messageContent;
+      if (isProbablyEncrypted(msg)) {
+        msg = decryptMessage(msg) || msg;
+        enableClientAES = true;
+      }
       emailReceivers = d.emailReceivers;
       messageID = d.id;
       inactivePeriodDays = d.inactivePeriodDays;
       isActive = d.isActive;
-      messageContent = d.messageContent;
+      messageContent = msg;
       reminderIntervalDays = d.reminderIntervalDays;
     } catch (err) {
       console.error(err);
@@ -45,8 +56,13 @@
   function handleEmailReceiversChange(list: Array<string>) {
     emailReceivers = list;
   }
-  function handleMessageChange(content: string) {
-    messageContent = content;
+  function handleMessageChange(content: string, aes: boolean) {
+    let msg = content;
+    if (aes) {
+      msg = decryptMessage(msg) || msg;
+    }
+    messageContent = msg;
+    enableClientAES = aes;
   }
   function handleSchedulerChange(value: number, type: 'reminder' | 'inactive') {
     if (type === 'reminder') {
@@ -58,30 +74,39 @@
   async function handleClickSubmit(e: MouseEvent) {
     e.preventDefault();
     disableSubmit = true;
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    try {
-      if (!authObject) {
-        window.alert('Please login first');
-        throw new Error('User needs to login');
-      }
-      await upsertMessage(
-        authObject.token.access_token,
-        messageID,
-        emailReceivers,
-        messageContent,
-        inactivePeriodDays,
-        reminderIntervalDays,
-        isActive,
-      );
-    } catch (err) {
-      if (err.message !== 'User needs to login') {
-        console.error(err);
-      }
-    }
-    disableSubmit = false;
   }
-  const colorPalette = `--color-grey:${grey};--color-blue:${blue};` +
-   `--color-darkgrey:${darkGrey};--color-lightgrey:${lightGrey}`
+  $: {
+    disableSubmit &&
+      (async () => {
+        try {
+          if (!authObject) {
+            window.alert('Please login first');
+            throw new Error('User needs to login');
+          }
+          let msg = messageContent;
+          if (enableClientAES) {
+            msg = encryptMessage(msg) || msg;
+          }
+          await upsertMessage(
+            authObject.token.access_token,
+            messageID,
+            emailReceivers,
+            msg,
+            inactivePeriodDays,
+            reminderIntervalDays,
+            isActive,
+          );
+        } catch (err) {
+          if (err.message !== 'User needs to login') {
+            console.error(err);
+          }
+        }
+        disableSubmit = false;
+      })();
+  }
+  const colorPalette =
+    `--color-grey:${grey};--color-blue:${blue};` +
+    `--color-darkgrey:${darkGrey};--color-lightgrey:${lightGrey}`;
 </script>
 
 <svelte:head>
@@ -93,7 +118,7 @@
   <Login />
   <div class="separator" />
   <EmailListInput emailList={emailReceivers} onChange={handleEmailReceiversChange} />
-  <EmailContent onChange={handleMessageChange} {messageContent} />
+  <EmailContent onChange={handleMessageChange} {messageContent} {enableClientAES} />
   <Scheduler
     onChange={handleSchedulerChange}
     {inactivePeriodDays}

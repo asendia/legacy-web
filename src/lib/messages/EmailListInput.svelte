@@ -68,11 +68,13 @@
       email,
     );
   }
-  $: toText =
-    emailList.length > 0 ||
-    (typeof document !== 'undefined' && document?.activeElement) === inputText
-      ? 'To'
-      : 'Recipients';
+  $: {
+    toText =
+      emailList.length > 0 ||
+      (typeof document !== 'undefined' && document?.activeElement) === inputText
+        ? 'To'
+        : 'Recipients';
+  }
 </script>
 
 <div class="wrapper" on:click={handleWrapperClick}>
