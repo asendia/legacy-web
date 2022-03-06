@@ -40,7 +40,7 @@ export async function selectMessages(jwt: string) {
   );
   throwIfNonSuccessResponse(res);
   const dataList = (await res.json()).data;
-  if (!Array.isArray(dataList) || dataList.length === 0) {
+  if (!Array.isArray(dataList)) {
     throw new Error('dataList is invalid: ' + JSON.stringify(dataList));
   }
   return dataList;

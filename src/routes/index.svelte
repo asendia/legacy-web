@@ -28,6 +28,9 @@
         return;
       }
       const dataList = await selectMessages(authObject.token.access_token);
+      if (dataList.length === 0) {
+        return;
+      }
       const d = dataList[0];
       emailReceivers = d.emailReceivers;
       messageID = d.id;
