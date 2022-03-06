@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { getEncryptionConfig, isProbablyEncrypted } from './encryption';
   export let messageContent = '';
   export let onChange: (content: string, enableClientAES: boolean) => void;
@@ -9,6 +10,7 @@
   let toggleShow = true;
   let autoToggleShow = true;
   let rows = 1;
+  let isMounted = false;
   function handleChange(e: HTMLElementEvent<HTMLTextAreaElement>) {
     messageContent = e.target.value.trim();
     onChange(messageContent, enableClientAES);
@@ -34,13 +36,17 @@
   // '\n\nYou can also encrypt the message yourself before storing it in warisin.com' +
   // '\n\nIf you encrypt it by yourself, ' +
   // 'be sure to give the decryption key to the recipients using other methods.';
+  onMount(() => {
+    isMounted = true;
+  });
   $: {
     if (autoToggleShow) {
       toggleShow = messageContent.length === 0;
     }
   }
   $: {
-    if (autoToggleClientAES) {
+    // isMounted is needed since getEncryptionConfig can only run in browser env
+    if (autoToggleClientAES && isMounted) {
       enableClientAES = isProbablyEncrypted(messageContent) || !!getEncryptionConfig();
     }
   }

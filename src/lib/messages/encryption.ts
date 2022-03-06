@@ -1,5 +1,5 @@
-import AES from 'crypto-js/aes';
-import cryptoJS_UTF8 from 'crypto-js/enc-utf8';
+import AES from 'crypto-js/aes.js';
+import cryptoJS_UTF8 from 'crypto-js/enc-utf8.js';
 
 export const localStorageNameEncryption = 'encryption.config';
 
