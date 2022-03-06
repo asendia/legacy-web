@@ -1,40 +1,40 @@
 <script lang="ts">
   export let messageContent = '';
   export let onChange: (content: string) => void;
-  const maxHeight = 400;
+  export let enableClientAES = false;
+  const maxRows = 20;
+  const minRows = 12;
   let toggleShow = true;
-  let autoToggle = true;
-  let height = 200;
+  let autoToggleShow = true;
+  let rows = 1;
   function handleChange(e: HTMLElementEvent<HTMLTextAreaElement>) {
     messageContent = e.target.value.trim();
     onChange(messageContent);
   }
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
-      height += 14;
+      rows++;
     }
   }
+  function handleAESToggle() {
+    alert('Feature is still under development');
+    // enableClientAES = !enableClientAES;
+  }
   function handleRevealToggle() {
-    autoToggle = false;
+    autoToggleShow = false;
     toggleShow = !toggleShow;
   }
-  function calculateHeight(content: string) {
-    const newLines = content.split('\n').length;
-    const lineHeight = 14;
-    const padding = 10;
-    const newHeight = newLines * lineHeight + 2 * padding;
-    height = Math.max(newHeight, height);
-    return height;
+  function handleFocus() {
+    autoToggleShow = false;
   }
   const placeholder = 'Message is encrypted by default';
   // '\n\nYou can also encrypt the message yourself before storing it in warisin.com' +
   // '\n\nIf you encrypt it by yourself, ' +
   // 'be sure to give the decryption key to the recipients using other methods.';
   $: {
-    if (autoToggle) {
+    if (autoToggleShow) {
       toggleShow = messageContent.length === 0;
     }
-    calculateHeight(messageContent);
   }
 </script>
 
@@ -43,15 +43,17 @@
     class="text"
     on:change={handleChange}
     on:keydown={handleKeydown}
+    on:focus={handleFocus}
+    rows={Math.max(minRows, Math.min(rows, maxRows))}
     maxlength="800"
     {placeholder}
-    style="height: {Math.min(height, maxHeight)}px; filter: {toggleShow ? 'none' : 'blur(5px)'}"
-    >{messageContent}</textarea
+    style="filter: {toggleShow ? 'none' : 'blur(5px)'}">{messageContent}</textarea
   >
-  <div
-    class="revealToggle"
-    on:click={handleRevealToggle}
-  >{toggleShow ? 'hide' : 'show'}</div>
+  <div class="toggle aes" on:click={handleAESToggle}>
+    <div>client-aes:</div>
+    <div class="aesStatus">{enableClientAES ? 'on' : 'off'}</div>
+  </div>
+  <div class="toggle reveal" on:click={handleRevealToggle}>{toggleShow ? 'hide' : 'show'}</div>
 </div>
 
 <style>
@@ -59,11 +61,11 @@
     position: relative;
     border: 1px solid var(--color-grey);
     border-radius: 4px;
+    padding-bottom: 30px;
   }
-  .revealToggle {
+  .toggle {
     position: absolute;
-    padding: 4px 5px;
-    min-width: 40px;
+    padding: 4px 6px;
     text-align: center;
     bottom: 2px;
     right: 2px;
@@ -74,6 +76,23 @@
     color: white;
     font-weight: 300;
     border-radius: 2px;
+    box-sizing: border-box;
+  }
+  .toggle.aes {
+    width: 107px;
+    bottom: 2px;
+    right: 54px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .toggle.reveal {
+    width: 50px;
+    bottom: 2px;
+    right: 2px;
+  }
+  .aesStatus {
+    flex-grow: 1;
+    text-align: right;
   }
   .text {
     display: block;
