@@ -14,6 +14,7 @@ const defaultConfig: EncryptionConfig = {
   secret: '',
   encoding: 'utf8',
 };
+const secretLength = 32;
 const encryptPrefixText = `${defaultConfig.cipher}.${defaultConfig.encoding}:`;
 
 export function encryptMessage(text: string) {
@@ -27,7 +28,7 @@ export function encryptMessage(text: string) {
       console.log('Generating encryption config');
       config = {
         cipher: defaultConfig.cipher,
-        secret: randomString(20),
+        secret: randomString(secretLength),
         encoding: defaultConfig.encoding,
       };
       localStorage.setItem(localStorageNameEncryption, JSON.stringify(config));
@@ -94,7 +95,7 @@ export function getEncryptionConfig() {
 function isValidConfig(config: EncryptionConfig) {
   const isValid = !(
     config?.cipher !== defaultConfig.cipher ||
-    config?.secret?.length !== 20 ||
+    config?.secret?.length !== secretLength ||
     config?.encoding !== defaultConfig.encoding
   );
   return isValid;

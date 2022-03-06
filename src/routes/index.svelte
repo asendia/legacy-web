@@ -11,7 +11,12 @@
   import { getAuthObject, type AuthObject } from '$lib/users/fetchUser';
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import { handleQueryVisit } from '$lib/email-visit/queryHandler';
-  import { decryptMessage, encryptMessage, isProbablyEncrypted } from '$lib/messages/encryption';
+  import {
+    decryptMessage,
+    encryptMessage,
+    isProbablyEncrypted,
+    localStorageNameEncryption,
+  } from '$lib/messages/encryption';
 
   let emailReceivers: Array<string> = [],
     messageID = '',
@@ -72,33 +77,35 @@
     disableSubmit = true;
   }
   $: {
-    disableSubmit &&
-      (async () => {
-        try {
-          if (!authObject) {
-            window.alert('Please login first');
-            throw new Error('User needs to login');
-          }
-          let msg = messageContent;
-          if (enableClientAES) {
-            msg = encryptMessage(msg) || msg;
-          }
-          await upsertMessage(
-            authObject.token.access_token,
-            messageID,
-            emailReceivers,
-            msg,
-            inactivePeriodDays,
-            reminderIntervalDays,
-            isActive,
-          );
-        } catch (err) {
-          if (err.message !== 'User needs to login') {
-            console.error(err);
-          }
-        }
-        disableSubmit = false;
-      })();
+    disableSubmit && submit();
+  }
+  async function submit() {
+    try {
+      if (!authObject) {
+        window.alert('Please login first');
+        throw new Error('User needs to login');
+      }
+      let msg = messageContent;
+      if (enableClientAES) {
+        msg = encryptMessage(msg) || msg;
+      } else {
+        localStorage.removeItem(localStorageNameEncryption);
+      }
+      await upsertMessage(
+        authObject.token.access_token,
+        messageID,
+        emailReceivers,
+        msg,
+        inactivePeriodDays,
+        reminderIntervalDays,
+        isActive,
+      );
+    } catch (err) {
+      if (err.message !== 'User needs to login') {
+        console.error(err);
+      }
+    }
+    disableSubmit = false;
   }
   const colorPalette =
     `--color-grey:${grey};--color-blue:${blue};` +
