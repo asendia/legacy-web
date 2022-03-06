@@ -52,7 +52,7 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
       return authObject;
     } catch (err) {
       localStorage.removeItem(localStorageNameGotrue);
-      localStorage.removeItem(localStorageNameEncryption)
+      localStorage.removeItem(localStorageNameEncryption);
       return;
     }
   }

@@ -22,7 +22,9 @@ export async function handleQueryVisit() {
       }
     } catch (err) {
       console.error(err);
-      redirectToHome = confirm('Probably you have already used this extension url. Redirect to home?');
+      redirectToHome = confirm(
+        'Probably you have already used this extension url. Redirect to home?',
+      );
     }
     redirectToHome && location.replace('/');
   }

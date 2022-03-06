@@ -11,11 +11,7 @@
   import { getAuthObject, type AuthObject } from '$lib/users/fetchUser';
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import { handleQueryVisit } from '$lib/email-visit/queryHandler';
-  import {
-    decryptMessage,
-    encryptMessage,
-    isProbablyEncrypted,
-  } from '$lib/messages/encryption';
+  import { decryptMessage, encryptMessage, isProbablyEncrypted } from '$lib/messages/encryption';
 
   let emailReceivers: Array<string> = [],
     messageID = '',
