@@ -1,8 +1,4 @@
-<script>
-  import { blue } from './colors';
-</script>
-
-<footer style="--color-blue: {blue}">
+<footer>
   2018 - 2022
   <br />
   warisin - source code:

@@ -31,12 +31,13 @@
     e.stopPropagation();
   }
   function handleInputFocus() {
-    showInput = true;
     toText = 'To';
+    showInput = true;
   }
   function handleInputBlur() {
     addEmail(text);
     if (emailList.length === 0 && text === '') {
+      showInput = false;
       toText = 'Recipients';
     }
   }
@@ -104,21 +105,30 @@
     border-bottom: 1px solid var(--color-grey);
     margin: 0 0 20px 0;
     cursor: text;
+    position: relative;
+    box-sizing: border-box;
+    padding-left: 20px;
+  }
+  .wrapper:focus {
+    outline-width: 1px;
   }
   .toText {
     font-size: 1rem;
-    color: rgb(50, 50, 50);
+    color: var(--color-darkgrey);
     line-height: 16px;
     margin: 1px 5px 4px 0;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
   .email {
     position: relative;
     border-radius: 2px;
-    background-color: rgb(194, 194, 194);
+    background-color: var(--color-grey);
     padding: 0 18px 0 5px;
     margin: 0 4px 4px 0;
     font-size: 0.9rem;
-    color: rgb(50, 50, 50);
+    color: var(--color-darkgrey);
     line-height: 1.2rem;
   }
   .deleteEmail {
@@ -138,7 +148,8 @@
     line-height: 1.1rem;
     font-family: 'Roboto', sans-serif;
   }
-  input.text:focus {
+  .text:focus {
+    outline-style: solid;
     outline-width: 0;
   }
 </style>

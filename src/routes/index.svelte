@@ -9,7 +9,7 @@
   import Footer from '$lib/core/Footer.svelte';
   import { selectMessages, upsertMessage } from '$lib/messages/fetchMessages';
   import { getAuthObject, type AuthObject } from '$lib/users/fetchUser';
-  import { grey } from '$lib/core/colors';
+  import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import { handleQueryVisit } from '$lib/email-visit/queryHandler';
 
   let emailReceivers: Array<string> = [],
@@ -80,13 +80,15 @@
     }
     disableSubmit = false;
   }
+  const colorPalette = `--color-grey:${grey};--color-blue:${blue};` +
+   `--color-darkgrey:${darkGrey};--color-lightgrey:${lightGrey}`
 </script>
 
 <svelte:head>
   <title>Warisin - Your testament in the cloud</title>
   <meta name="description" content="Warisin is a secure testament storage and delivery service" />
 </svelte:head>
-<div class="wrapper" style="--color-grey: {grey}">
+<div class="wrapper" style={colorPalette}>
   <Header />
   <Login />
   <div class="separator" />

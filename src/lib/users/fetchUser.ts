@@ -66,8 +66,8 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
     }
   } catch (err) {
     console.error(err);
-    localStorage.removeItem('gotrue.user');
   }
+  localStorage.removeItem('gotrue.user');
 }
 
 export function logout() {
