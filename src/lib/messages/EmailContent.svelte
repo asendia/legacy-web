@@ -54,7 +54,7 @@
     on:focus={handleFocus}
     readonly={enableClientAES && isProbablyEncrypted(messageContent)}
     rows={Math.max(minRows, Math.min(rows, maxRows))}
-    maxlength="800"
+    maxlength="2000"
     {placeholder}
     style="filter: {toggleShow ? 'none' : 'blur(5px)'}">{messageContent}</textarea
   >
