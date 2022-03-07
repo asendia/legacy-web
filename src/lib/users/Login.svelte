@@ -5,7 +5,7 @@
 
   let message = 'Testament in the cloud';
   let auth: AuthObject;
-  let disabled = false;
+  let disabled = true;
 
   function handleLogin() {
     disabled = true;
@@ -16,7 +16,6 @@
     logout();
   }
   onMount(async () => {
-    disabled = true;
     auth = await getAuthObject();
     if (auth) {
       message = 'Welcome, ' + auth.email;

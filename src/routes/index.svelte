@@ -26,7 +26,7 @@
     reminderIntervalDays = 15,
     authObject: AuthObject | undefined,
     enableClientAES = false,
-    disableSubmit = false;
+    disableSubmit = true;
   onMount(async () => {
     try {
       await handleQueryVisit();
@@ -34,7 +34,6 @@
       if (!authObject) {
         throw new Error('User needs to login');
       }
-      disableSubmit = true;
       const dataList = await selectMessages(authObject.token.access_token);
       if (dataList.length === 0) {
         throw new Error('Message length is 0');
