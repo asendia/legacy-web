@@ -19,7 +19,7 @@ const encryptPrefixText = `${defaultConfig.cipher}.${defaultConfig.encoding}:`;
 
 export function encryptMessage(text: string) {
   // Prevent double encryption
-  if (isProbablyEncrypted(text)) {
+  if (isProbablyEncrypted(text) || text === '') {
     return text;
   }
   try {

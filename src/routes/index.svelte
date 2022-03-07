@@ -32,12 +32,12 @@
       await handleQueryVisit();
       authObject = await getAuthObject();
       if (!authObject) {
-        return;
+        throw new Error('User needs to login');
       }
       disableSubmit = true;
       const dataList = await selectMessages(authObject.token.access_token);
       if (dataList.length === 0) {
-        return;
+        throw new Error('Message length is 0');
       }
       const d = dataList[0];
       let msg = d.messageContent;
@@ -52,7 +52,9 @@
       messageContent = msg;
       reminderIntervalDays = d.reminderIntervalDays;
     } catch (err) {
-      console.error(err);
+      if (err.message !== 'User needs to login' && err.message !== 'Message length is 0') {
+        console.error(err);
+      }
     }
     disableSubmit = false;
   });
@@ -60,11 +62,7 @@
     emailReceivers = list;
   }
   function handleMessageChange(content: string, aes: boolean) {
-    let msg = content;
-    if (aes) {
-      msg = decryptMessage(msg) || msg;
-    }
-    messageContent = msg;
+    messageContent = content;
     enableClientAES = aes;
   }
   function handleSchedulerChange(value: number, type: 'reminder' | 'inactive') {

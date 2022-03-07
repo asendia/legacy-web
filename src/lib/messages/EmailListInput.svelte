@@ -5,31 +5,27 @@
   let toText = 'Recipients';
   let text = '';
   let inputText: HTMLInputElement;
+  const isValidEmail = (email: string) =>
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+      email,
+    );
   function addEmail(email: string) {
-    if (!isValidEmail(email)) {
-      return;
-    }
-    if (emailList.length >= 3) {
+    if (!isValidEmail(email) || emailList.length >= 3) {
       return;
     }
     emailList.push(email);
-    onChange(emailList);
     text = '';
+    onChange(emailList);
   }
   function deleteEmail(id: number) {
     if (id < 0 || id >= emailList.length) {
       return;
     }
     emailList.splice(id, 1);
-    emailList = emailList;
     onChange(emailList);
   }
-  function handleWrapperClick() {
-    inputText.focus();
-  }
-  function handleEmailClick(e: Event) {
-    e.stopPropagation();
-  }
+  const handleWrapperClick = () => inputText.focus();
+  const handleEmailClick = (e: Event) => e.stopPropagation();
   function handleInputFocus() {
     toText = 'To';
     showInput = true;
@@ -41,11 +37,7 @@
       toText = 'Recipients';
     }
   }
-  function createHandleDeleteEmail(id: number) {
-    return function handleDeleteEmail() {
-      deleteEmail(id);
-    };
-  }
+  const createHandleDeleteEmail = (id: number) => () => deleteEmail(id);
   function handleInputKeypup(e: KeyboardEvent & HTMLElementEvent<HTMLInputElement>) {
     switch (e.key) {
       case 'Backspace':
@@ -63,17 +55,10 @@
         break;
     }
   }
-  function isValidEmail(email: string) {
-    return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-      email,
-    );
-  }
   $: {
-    toText =
-      emailList.length > 0 ||
-      (typeof document !== 'undefined' && document?.activeElement) === inputText
-        ? 'To'
-        : 'Recipients';
+    if (typeof document !== 'undefined') {
+      toText = emailList.length > 0 || document.activeElement === inputText ? 'To' : 'Recipients';
+    }
   }
 </script>
 

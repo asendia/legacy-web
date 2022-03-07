@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { getEncryptionConfig, isProbablyEncrypted } from './encryption';
+  import { decryptMessage, getEncryptionConfig, isProbablyEncrypted } from './encryption';
   export let messageContent = '';
-  export let onChange: (content: string, enableClientAES: boolean) => void;
+  export let onChange: (messageContent: string, aes: boolean) => void;
   export let enableClientAES = false;
   let autoToggleClientAES = true;
   const maxRows = 20;
@@ -10,43 +9,35 @@
   let toggleShow = true;
   let autoToggleShow = true;
   let rows = 1;
-  let isMounted = false;
-  function handleChange(e: HTMLElementEvent<HTMLTextAreaElement>) {
-    messageContent = e.target.value.trim();
-    onChange(messageContent, enableClientAES);
-  }
-  function handleKeydown(e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      rows++;
+  function handleChange(content: string, aes: boolean) {
+    if (aes) {
+      content = decryptMessage(content) || content;
     }
+    onChange(content, aes);
   }
+  const handleTextareaChange = (e: HTMLElementEvent<HTMLTextAreaElement>) =>
+    handleChange(e.target.value.trim(), enableClientAES);
+  const handleKeydown = (e: KeyboardEvent) => e.key === 'Enter' && rows++;
   function handleAESToggle() {
     autoToggleClientAES = false;
-    enableClientAES = !enableClientAES;
-    onChange(messageContent, enableClientAES);
+    handleChange(messageContent, !enableClientAES);
   }
   function handleShowToggle() {
     autoToggleShow = false;
     toggleShow = !toggleShow;
   }
-  function handleFocus() {
-    autoToggleShow = false;
-  }
+  const handleFocus = () => (autoToggleShow = false);
   const placeholder = 'Message is encrypted by default';
-  // '\n\nYou can also encrypt the message yourself before storing it in warisin.com' +
-  // '\n\nIf you encrypt it by yourself, ' +
-  // 'be sure to give the decryption key to the recipients using other methods.';
-  onMount(() => {
-    isMounted = true;
-  });
   $: {
     if (autoToggleShow) {
       toggleShow = messageContent.length === 0;
+      rows = messageContent.split('\n').length;
+      console.log('rows calculated:', rows)
     }
   }
   $: {
-    // isMounted is needed since getEncryptionConfig can only run in browser env
-    if (autoToggleClientAES && isMounted) {
+    if (autoToggleClientAES && typeof window !== 'undefined') {
+      // Enable AES if the content is encrypted or if the user has encryption config
       enableClientAES = isProbablyEncrypted(messageContent) || !!getEncryptionConfig();
     }
   }
@@ -55,7 +46,7 @@
 <div class="textWrapper">
   <textarea
     class="text"
-    on:change={handleChange}
+    on:change={handleTextareaChange}
     on:keydown={handleKeydown}
     on:focus={handleFocus}
     readonly={enableClientAES && isProbablyEncrypted(messageContent)}

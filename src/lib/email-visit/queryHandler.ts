@@ -1,5 +1,6 @@
 import { extendMessage, unsubscribeMessage } from '$lib/email-visit/fetchEmailVisit';
 
+// Query string visit for unsubsribe & extend message
 export async function handleQueryVisit() {
   const qs = new URLSearchParams(location.search);
   const action = qs.get('action');
