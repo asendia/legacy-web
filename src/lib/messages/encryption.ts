@@ -36,7 +36,7 @@ export function encryptMessage(text: string) {
     prompt(
       'Please make a copy of this secret and send it to the recipients. ' +
         'This secret will be gone after some time and no one, including us, ' +
-        'will not be able to decrypt the message if you lost it.',
+        'will be able to decrypt the message if you lost it.',
       JSON.stringify(getEncryptionConfig()),
     );
     const encryptedText = encryptPrefixText + AES.encrypt(text, config.secret).toString();
