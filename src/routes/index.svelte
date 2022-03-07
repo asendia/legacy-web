@@ -15,7 +15,7 @@
     decryptMessage,
     encryptMessage,
     isProbablyEncrypted,
-    localStorageNameEncryption,
+    storageSecretName,
   } from '$lib/messages/encryption';
 
   let emailReceivers: Array<string> = [],
@@ -86,7 +86,7 @@
       if (enableClientAES) {
         msg = encryptMessage(msg) || msg;
       } else {
-        localStorage.removeItem(localStorageNameEncryption);
+        localStorage.removeItem(storageSecretName);
       }
       await upsertMessage(
         authObject.token.access_token,

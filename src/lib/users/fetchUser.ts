@@ -1,5 +1,5 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
-import { localStorageNameEncryption } from '$lib/messages/encryption';
+import { storageSecretName } from '$lib/messages/encryption';
 
 const authDomain = 'warisin.com';
 const localStorageNameGotrue = 'gotrue.user';
@@ -52,7 +52,7 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
       return authObject;
     } catch (err) {
       localStorage.removeItem(localStorageNameGotrue);
-      localStorage.removeItem(localStorageNameEncryption);
+      localStorage.removeItem(storageSecretName);
       return;
     }
   }
@@ -71,12 +71,12 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
     console.error(err);
   }
   localStorage.removeItem(localStorageNameGotrue);
-  localStorage.removeItem(localStorageNameEncryption);
+  localStorage.removeItem(storageSecretName);
 }
 
 export function logout() {
   localStorage.removeItem(localStorageNameGotrue);
-  localStorage.removeItem(localStorageNameEncryption);
+  localStorage.removeItem(storageSecretName);
   location.reload();
 }
 

@@ -1,27 +1,25 @@
 <script lang="ts">
-  import { decryptMessage, getEncryptionConfig, isProbablyEncrypted } from './encryption';
+  import { decryptMessage, getEncryptionSecret, isProbablyEncrypted } from './encryption';
   export let messageContent = '';
-  export let onChange: (messageContent: string, aes: boolean) => void;
+  export let onChange: (content: string, aes: boolean) => void;
   export let enableClientAES = false;
-  let autoToggleClientAES = true;
+  let autoToggleClientAES = false;
   const maxRows = 20;
   const minRows = 12;
   let toggleShow = true;
   let autoToggleShow = true;
   let rows = 1;
-  function handleChange(content: string, aes: boolean) {
+  const handleChange = (content: string, aes: boolean) => {
+    autoToggleClientAES = false;
     if (aes) {
       content = decryptMessage(content) || content;
     }
     onChange(content, aes);
-  }
+  };
   const handleTextareaChange = (e: HTMLElementEvent<HTMLTextAreaElement>) =>
     handleChange(e.target.value.trim(), enableClientAES);
   const handleKeydown = (e: KeyboardEvent) => e.key === 'Enter' && rows++;
-  function handleAESToggle() {
-    autoToggleClientAES = false;
-    handleChange(messageContent, !enableClientAES);
-  }
+  const handleAESToggle = () => handleChange(messageContent, !enableClientAES);
   function handleShowToggle() {
     autoToggleShow = false;
     toggleShow = !toggleShow;
@@ -32,13 +30,12 @@
     if (autoToggleShow) {
       toggleShow = messageContent.length === 0;
       rows = messageContent.split('\n').length;
-      console.log('rows calculated:', rows)
     }
   }
   $: {
     if (autoToggleClientAES && typeof window !== 'undefined') {
       // Enable AES if the content is encrypted or if the user has encryption config
-      enableClientAES = isProbablyEncrypted(messageContent) || !!getEncryptionConfig();
+      enableClientAES = isProbablyEncrypted(messageContent) || !!getEncryptionSecret();
     }
   }
 </script>

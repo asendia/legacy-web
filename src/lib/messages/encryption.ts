@@ -1,7 +1,7 @@
 import AES from 'crypto-js/aes.js';
 import cryptoJS_UTF8 from 'crypto-js/enc-utf8.js';
 
-export const localStorageNameEncryption = 'encryption.config';
+export const storageSecretName = 'encryption.secret';
 
 interface EncryptionConfig {
   cipher: 'aes';
@@ -23,23 +23,18 @@ export function encryptMessage(text: string) {
     return text;
   }
   try {
-    let config: EncryptionConfig = JSON.parse(localStorage.getItem(localStorageNameEncryption));
-    if (!isValidConfig(config)) {
+    let secret = localStorage.getItem(storageSecretName);
+    if (!secret) {
       console.log('Generating encryption config');
-      config = {
-        cipher: defaultConfig.cipher,
-        secret: randomString(secretLength),
-        encoding: defaultConfig.encoding,
-      };
-      localStorage.setItem(localStorageNameEncryption, JSON.stringify(config));
+      secret = randomString(secretLength);
+      localStorage.setItem(storageSecretName, secret);
     }
     prompt(
       'Please make a copy of this secret and send it to the recipients. ' +
-        'This secret will be gone after some time and no one, including us, ' +
-        'will be able to decrypt the message if you lost it.',
-      JSON.stringify(getEncryptionConfig()),
+        'No one will be able to decrypt the message if you lost it.',
+      secret,
     );
-    const encryptedText = encryptPrefixText + AES.encrypt(text, config.secret).toString();
+    const encryptedText = encryptPrefixText + AES.encrypt(text, secret).toString();
     return encryptedText;
   } catch (err) {
     console.error('Probably your browser does not support crypto:', err);
@@ -54,19 +49,21 @@ export function decryptMessage(text: string) {
   }
   try {
     text = text.replace(encryptPrefixText, '');
-    let config: EncryptionConfig = JSON.parse(localStorage.getItem(localStorageNameEncryption));
-    if (!isValidConfig(config)) {
-      const configParam = prompt(
-        'It seems like your message is encrypted and the secret is gone. ' +
+    let secret = localStorage.getItem(storageSecretName);
+    if (!secret) {
+      secret = prompt(
+        'It seems like your message is encrypted. ' +
           'Please enter your secret if you wish to decrypt it.',
       );
-      config = JSON.parse(configParam);
-      if (!isValidConfig(config)) {
+      if (!secret) {
         return null;
       }
-      localStorage.setItem(localStorageNameEncryption, configParam);
+      localStorage.setItem(storageSecretName, secret);
     }
-    const decryptedText = AES.decrypt(text, config.secret).toString(cryptoJS_UTF8);
+    const decryptedText = AES.decrypt(text, secret).toString(cryptoJS_UTF8);
+    if (decryptedText === '') {
+      localStorage.removeItem(storageSecretName);
+    }
     return decryptedText;
   } catch (err) {
     console.error('Probably your browser does not support crypto:', err);
@@ -79,26 +76,14 @@ export function isProbablyEncrypted(text: string) {
   return isEncrypted;
 }
 
-export function getEncryptionConfig() {
+export function getEncryptionSecret() {
   try {
-    const config: EncryptionConfig = JSON.parse(localStorage.getItem(localStorageNameEncryption));
-    if (!isValidConfig(config)) {
-      return null;
-    }
-    return config;
+    const secret = localStorage.getItem(storageSecretName);
+    return secret;
   } catch (err) {
-    console.error('Cannot get encryption config:', err);
+    console.error('Cannot get encryption secret:', err);
     return null;
   }
-}
-
-function isValidConfig(config: EncryptionConfig) {
-  const isValid = !(
-    config?.cipher !== defaultConfig.cipher ||
-    config?.secret?.length !== secretLength ||
-    config?.encoding !== defaultConfig.encoding
-  );
-  return isValid;
 }
 
 function randomString(length: number) {
