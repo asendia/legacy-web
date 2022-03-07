@@ -40,16 +40,16 @@
 
 <style>
   .wrapper {
-    font-size: 0.9rem;
+    font-size: 14px;
     padding: 16px 0;
-    line-height: 1.3rem;
+    line-height: 18px;
     font-weight: 300;
   }
   select {
     border: none;
     border-bottom: 1px solid var(--color-grey);
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 18px;
     background: none;
   }
   select:focus {

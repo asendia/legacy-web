@@ -115,7 +115,7 @@
     outline-width: 1px;
   }
   .toText {
-    font-size: 1rem;
+    font-size: 14px;
     color: var(--color-darkgrey);
     line-height: 16px;
     margin: 1px 5px 4px 0;
@@ -129,9 +129,9 @@
     background-color: var(--color-grey);
     padding: 0 18px 0 5px;
     margin: 0 4px 4px 0;
-    font-size: 0.9rem;
+    font-size: 14px;
+    line-height: 18px;
     color: var(--color-darkgrey);
-    line-height: 1.2rem;
   }
   .deleteEmail {
     position: absolute;
@@ -139,16 +139,18 @@
     right: 0;
     padding: 0 2px 4px 4px;
     cursor: pointer;
-    font-size: 1.1rem;
-    line-height: 1rem;
+    font-size: 16px;
+    line-height: 14px;
   }
   .text {
     border: none;
     margin: 0 0 4px 0;
     flex-grow: 1;
     background: none;
-    line-height: 1.1rem;
+    font-size: 14px;
+    line-height: 18px;
     font-family: 'Roboto', sans-serif;
+    padding: 0;
   }
   .text:focus {
     outline-style: solid;

@@ -29,7 +29,7 @@
     border: 1px solid var(--border-color);
     background-color: var(--background-color);
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: 14px;
     line-height: 28px;
     color: var(--text-color);
     cursor: pointer;

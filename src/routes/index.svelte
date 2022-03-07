@@ -150,7 +150,7 @@
   .wrapper {
     max-width: 450px;
     margin: auto;
-    letter-spacing: 0.03rem;
+    letter-spacing: 1px;
     padding: 0 24px;
   }
   .separator {

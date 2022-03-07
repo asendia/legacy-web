@@ -61,6 +61,10 @@
     readonly={enableClientAES && isProbablyEncrypted(messageContent)}
     rows={Math.max(minRows, Math.min(rows, maxRows))}
     maxlength="2000"
+    autocomplete="off"
+    autocorrect="off"
+    autocapitalize="off"
+    spellcheck="false"
     {placeholder}
     style="filter: {toggleShow ? 'none' : 'blur(5px)'}">{messageContent}</textarea
   >
@@ -89,7 +93,7 @@
     cursor: pointer;
     background-color: var(--color-darkgrey);
     text-transform: uppercase;
-    font-size: 0.7rem;
+    font-size: 10px;
     color: white;
     font-weight: 300;
     border-radius: 2px;
@@ -98,7 +102,7 @@
     justify-content: space-between;
   }
   .toggle.aes {
-    width: 107px;
+    width: 105px;
     bottom: 2px;
     right: 52px;
   }
@@ -116,13 +120,13 @@
     display: block;
     width: 100%;
     border: none;
-    line-height: 1.1rem;
+    line-height: 16px;
     padding: 10px;
     resize: none;
     box-sizing: border-box;
-    font-size: 1rem;
+    font-size: 14px;
     font-family: 'Roboto', sans-serif;
-    letter-spacing: 0.03rem;
+    letter-spacing: 1px;
     background: none;
   }
   .text:focus {

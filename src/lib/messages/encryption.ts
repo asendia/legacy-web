@@ -50,7 +50,7 @@ export function encryptMessage(text: string) {
 export function decryptMessage(text: string) {
   // Prevent decrypting non encrypted text
   if (!isProbablyEncrypted(text)) {
-    return null;
+    return text;
   }
   try {
     text = text.replace(encryptPrefixText, '');

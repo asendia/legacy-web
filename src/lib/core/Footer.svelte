@@ -14,7 +14,7 @@
   footer {
     margin-top: 20px;
     padding-bottom: 20px;
-    font-size: 0.9rem;
+    font-size: 12px;
     font-weight: 300;
     text-align: center;
   }

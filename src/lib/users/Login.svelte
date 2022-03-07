@@ -41,7 +41,7 @@
     align-items: center;
   }
   span {
-    font-size: 0.9rem;
+    font-size: 14px;
     font-weight: 300;
     margin-right: 10px;
   }

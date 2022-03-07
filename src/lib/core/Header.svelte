@@ -32,7 +32,7 @@
     background: #171717;
   }
   .heading {
-    font-size: 1.3rem;
+    font-size: 22px;
     margin: -5px 0 0;
     font-weight: lighter;
     letter-spacing: 2px;
