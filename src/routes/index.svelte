@@ -34,6 +34,7 @@
       if (!authObject) {
         return;
       }
+      disableSubmit = true;
       const dataList = await selectMessages(authObject.token.access_token);
       if (dataList.length === 0) {
         return;
@@ -53,6 +54,7 @@
     } catch (err) {
       console.error(err);
     }
+    disableSubmit = false;
   });
   function handleEmailReceiversChange(list: Array<string>) {
     emailReceivers = list;
@@ -75,9 +77,7 @@
   async function handleClickSubmit(e: MouseEvent) {
     e.preventDefault();
     disableSubmit = true;
-  }
-  $: {
-    disableSubmit && submit();
+    submit();
   }
   async function submit() {
     try {
