@@ -6,7 +6,6 @@ import {
   mockIdentityAuthorizeAPI,
   mockIdentityUserAPI,
   mockMessageAPI,
-  sleep,
 } from './mock.js';
 
 const delay = 0;
