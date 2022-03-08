@@ -18,7 +18,7 @@
   onMount(async () => {
     auth = await getAuthObject();
     if (auth) {
-      message = 'Welcome, ' + auth.email;
+      message = 'Welcome, ' + (auth.user_metadata?.full_name ?? auth.email);
     }
     disabled = false;
   });

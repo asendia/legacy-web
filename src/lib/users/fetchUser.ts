@@ -1,11 +1,11 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
-import { storageSecretName } from '$lib/messages/encryption';
+import { STORAGE_SECRET_NAME } from '$lib/messages/encryption';
 
-const authDomain = 'warisin.com';
-const localStorageNameGotrue = 'gotrue.user';
+const AUTH_URL = 'https://warisin.com/.netlify/identity';
+const STORAGE_NAME_GOTRUE = 'gotrue.user';
 
 export function authorizeUser(provider: 'google' | 'github') {
-  window.location.href = `https://${authDomain}/.netlify/identity/authorize?provider=${provider}`;
+  window.location.href = `${AUTH_URL}/authorize?provider=${provider}`;
 }
 
 export interface AuthObject {
@@ -33,11 +33,20 @@ export interface AuthObject {
   updated_at: string;
 }
 
+let promise: Promise<AuthObject | undefined>;
+
 export async function getAuthObject(): Promise<AuthObject | undefined> {
+  if (!promise) {
+    promise = _getAuthObject();
+  }
+  return promise;
+}
+
+async function _getAuthObject(): Promise<AuthObject | undefined> {
   const token = getTokenFromHash();
   if (token) {
     try {
-      const res = await fetch(`https://${authDomain}/.netlify/identity/user`, {
+      const res = await fetch(`${AUTH_URL}/user`, {
         headers: {
           authorization: `${token.token_type[0].toUpperCase() + token.token_type.substring(1)} ${
             token.access_token
@@ -47,19 +56,21 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
       throwIfNonSuccessResponse(res);
       const authObject = await res.json();
       authObject.token = token;
-      localStorage.setItem(localStorageNameGotrue, JSON.stringify(authObject));
+      localStorage.setItem(STORAGE_NAME_GOTRUE, JSON.stringify(authObject));
       location.hash = '';
       return authObject;
     } catch (err) {
-      localStorage.removeItem(localStorageNameGotrue);
-      localStorage.removeItem(storageSecretName);
+      localStorage.removeItem(STORAGE_NAME_GOTRUE);
+      localStorage.removeItem(STORAGE_SECRET_NAME);
       return;
+    } finally {
+      promise = undefined;
     }
   }
 
   // From localStorage
   try {
-    const authObject = JSON.parse(localStorage.getItem(localStorageNameGotrue));
+    const authObject = JSON.parse(localStorage.getItem(STORAGE_NAME_GOTRUE));
     if (
       authObject?.token.access_token.length > 0 &&
       authObject?.email.includes('@') &&
@@ -70,18 +81,17 @@ export async function getAuthObject(): Promise<AuthObject | undefined> {
   } catch (err) {
     console.error(err);
   }
-  localStorage.removeItem(localStorageNameGotrue);
-  localStorage.removeItem(storageSecretName);
+  localStorage.removeItem(STORAGE_NAME_GOTRUE);
+  localStorage.removeItem(STORAGE_SECRET_NAME);
 }
 
 export function logout() {
-  localStorage.removeItem(localStorageNameGotrue);
-  localStorage.removeItem(storageSecretName);
+  localStorage.removeItem(STORAGE_NAME_GOTRUE);
+  localStorage.removeItem(STORAGE_SECRET_NAME);
   location.reload();
 }
 
 function getTokenFromHash() {
-  // #access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDYzMDMxMjgsInN1YiI6ImRiZDU2NGZkLWEyZGUtNDlkYi1hOTY5LTAxYjcxNDUwOTQ5MCIsImVtYWlsIjoic3dpZnR5b3NoaW9rYUBnbWFpbC5jb20iLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCJ9LCJ1c2VyX21ldGFkYXRhIjp7ImZ1bGxfbmFtZSI6IkFzZW5kaWEgTWF5Y28ifX0.zXx4GY3kXdTV-b7n99OegGSipbad2PZnXtZeJbNY7aI&expires_in=3600&refresh_token=oh566Nb-5GvmSSl_-Hb7MA&token_type=bearer
   const h = new URLSearchParams(location.hash.substring(1));
   const access_token = h.get('access_token');
   if (!access_token) {

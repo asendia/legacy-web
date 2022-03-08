@@ -90,7 +90,7 @@
     justify-content: space-between;
   }
   .toggle.aes {
-    width: 105px;
+    width: 108px;
     bottom: 2px;
     right: 52px;
   }

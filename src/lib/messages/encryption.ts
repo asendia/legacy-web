@@ -1,7 +1,7 @@
 import AES from 'crypto-js/aes.js';
 import cryptoJS_UTF8 from 'crypto-js/enc-utf8.js';
 
-export const storageSecretName = 'encryption.secret';
+export const STORAGE_SECRET_NAME = 'encryption.secret';
 
 interface EncryptionConfig {
   cipher: 'aes';
@@ -23,11 +23,11 @@ export function encryptMessage(text: string) {
     return text;
   }
   try {
-    let secret = localStorage.getItem(storageSecretName);
+    let secret = localStorage.getItem(STORAGE_SECRET_NAME);
     if (!secret) {
       console.log('Generating encryption config');
       secret = randomString(secretLength);
-      localStorage.setItem(storageSecretName, secret);
+      localStorage.setItem(STORAGE_SECRET_NAME, secret);
     }
     prompt(
       'Please make a copy of this secret and send it to the recipients. ' +
@@ -49,7 +49,7 @@ export function decryptMessage(text: string) {
   }
   try {
     text = text.replace(encryptPrefixText, '');
-    let secret = localStorage.getItem(storageSecretName);
+    let secret = localStorage.getItem(STORAGE_SECRET_NAME);
     if (!secret) {
       secret = prompt(
         'It seems like your message is encrypted. ' +
@@ -58,11 +58,11 @@ export function decryptMessage(text: string) {
       if (!secret) {
         return null;
       }
-      localStorage.setItem(storageSecretName, secret);
+      localStorage.setItem(STORAGE_SECRET_NAME, secret);
     }
     const decryptedText = AES.decrypt(text, secret).toString(cryptoJS_UTF8);
     if (decryptedText === '') {
-      localStorage.removeItem(storageSecretName);
+      localStorage.removeItem(STORAGE_SECRET_NAME);
     }
     return decryptedText;
   } catch (err) {
@@ -78,7 +78,7 @@ export function isProbablyEncrypted(text: string) {
 
 export function getEncryptionSecret() {
   try {
-    const secret = localStorage.getItem(storageSecretName);
+    const secret = localStorage.getItem(STORAGE_SECRET_NAME);
     return secret;
   } catch (err) {
     console.error('Cannot get encryption secret:', err);

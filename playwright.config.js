@@ -4,6 +4,8 @@ const config = {
     command: 'npm run build && npm run preview',
     port: 3000,
   },
+  // playwright ignore directory included in .gitignore
+  testDir: 'tests-out',
 };
 
 export default config;

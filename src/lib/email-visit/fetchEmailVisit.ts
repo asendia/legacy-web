@@ -1,9 +1,9 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
+import { API_URL } from '$lib/core/urls';
 
 export const extendMessage = async function extendMessage(id: string, secret: string) {
   const res = await fetch(
-    `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api-secret` +
-      `?action=extend-message&id=${id}&secret=${secret}`,
+    `${API_URL}/legacy-api-secret` + `?action=extend-message&id=${id}&secret=${secret}`,
     {
       headers: { 'Content-Type': 'application/json' },
     },
@@ -14,8 +14,7 @@ export const extendMessage = async function extendMessage(id: string, secret: st
 
 export const unsubscribeMessage = async function unsubscribeMessage(id: string, secret: string) {
   const res = await fetch(
-    `https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api-secret` +
-      `?action=unsubscribe-message&id=${id}&secret=${secret}`,
+    `${API_URL}/legacy-api-secret` + `?action=unsubscribe-message&id=${id}&secret=${secret}`,
     {
       headers: { 'Content-Type': 'application/json' },
     },

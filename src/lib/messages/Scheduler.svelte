@@ -51,11 +51,14 @@
   select {
     border: none;
     border-bottom: 1px solid var(--color-grey);
+    color: var(--color-darkgrey);
     cursor: pointer;
     font-size: 18px;
     background: none;
   }
   select:focus {
     outline-width: 0;
+    color: var(--color-blue);
+    border-color: var(--color-blue);
   }
 </style>

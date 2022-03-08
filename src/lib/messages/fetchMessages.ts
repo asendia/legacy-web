@@ -1,6 +1,5 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
-
-const API_URL = 'https://asia-southeast1-monarch-public.cloudfunctions.net/legacy-api';
+import { API_URL } from '$lib/core/urls';
 
 // action = 'insert-message' | 'update-message'
 export async function upsertMessage(
@@ -14,7 +13,7 @@ export async function upsertMessage(
 ) {
   const headers = generateHeaders(jwt);
   const action = messageID === '' ? 'insert-message' : 'update-message';
-  const res = await fetch(`${API_URL}?action=${action}`, {
+  const res = await fetch(`${API_URL}/legacy-api?action=${action}`, {
     method: 'POST',
     body: JSON.stringify({
       id: messageID,
@@ -27,15 +26,17 @@ export async function upsertMessage(
     headers,
   });
   throwIfNonSuccessResponse(res);
-  const newMessage = (await res.json()).data;
+  const json = await res.json();
+  const newMessage = json.data;
   return newMessage;
 }
 
 export async function selectMessages(jwt: string) {
   const headers = generateHeaders(jwt);
-  const res = await fetch(`${API_URL}?action=select-messages`, { headers });
+  const res = await fetch(`${API_URL}/legacy-api?action=select-messages`, { headers });
   throwIfNonSuccessResponse(res);
-  const dataList = (await res.json()).data;
+  const json = await res.json();
+  const dataList = json.data;
   if (!Array.isArray(dataList)) {
     throw new Error('dataList is invalid: ' + JSON.stringify(dataList));
   }

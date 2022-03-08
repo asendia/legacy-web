@@ -15,7 +15,7 @@
     decryptMessage,
     encryptMessage,
     isProbablyEncrypted,
-    storageSecretName,
+    STORAGE_SECRET_NAME,
   } from '$lib/messages/encryption';
 
   let emailReceivers: Array<string> = [],
@@ -86,9 +86,9 @@
       if (enableClientAES) {
         msg = encryptMessage(msg) || msg;
       } else {
-        localStorage.removeItem(storageSecretName);
+        localStorage.removeItem(STORAGE_SECRET_NAME);
       }
-      await upsertMessage(
+      const message = await upsertMessage(
         authObject.token.access_token,
         messageID,
         emailReceivers,
@@ -97,6 +97,7 @@
         reminderIntervalDays,
         isActive,
       );
+      messageID = message.id;
     } catch (err) {
       if (err.message !== 'User needs to login') {
         console.error(err);

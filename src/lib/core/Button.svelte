@@ -19,7 +19,15 @@
   }
 </script>
 
-<button class="button" {disabled} style={_style} on:click={onClick}>{text}</button>
+<input
+  type="button"
+  class="button"
+  {disabled}
+  style={_style}
+  on:click={onClick}
+  tabindex="0"
+  value={text}
+/>
 
 <style>
   .button {
@@ -33,5 +41,9 @@
     line-height: 28px;
     color: var(--text-color);
     cursor: pointer;
+  }
+  .button:focus {
+    outline-color: var(--border-color);
+    outline-style: solid;
   }
 </style>
