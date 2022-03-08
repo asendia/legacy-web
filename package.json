@@ -1,6 +1,6 @@
 {
   "name": "legacy-web-svelte",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "scripts": {
     "postinstall": "npx playwright install && mkdir -p .git/hooks/ && cp pre-push .git/hooks/ && chmod +x .git/hooks/pre-push",
     "dev": "svelte-kit dev",
