@@ -23,9 +23,9 @@
   <select on:change={handleInactivePeriodChange}>
     {#each inactivePeriodDaysOptions as i}
       {#if i === inactivePeriodDays}
-        <option value={i} selected>{i / 30} months</option>
+        <option value={i} selected>{i} days</option>
       {:else}
-        <option value={i}>{i / 30} months</option>
+        <option value={i}>{i} days</option>
       {/if}
     {/each}
   </select>
@@ -46,20 +46,22 @@
   .wrapper {
     font-size: 14px;
     padding: 16px 0;
-    line-height: 18px;
+    line-height: 22px;
     font-weight: 300;
   }
   select {
     border: none;
-    border-bottom: 1px solid var(--color-grey);
-    color: var(--color-darkgrey);
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--color-blue);
+    color: var(--color-blue);
     cursor: pointer;
     font-size: 18px;
     background: none;
+    font-weight: 300;
   }
   select:focus {
     outline-width: 0;
-    color: var(--color-blue);
-    border-color: var(--color-blue);
+    border: 1px solid var(--color-blue);
+    border-radius: 3px;
   }
 </style>

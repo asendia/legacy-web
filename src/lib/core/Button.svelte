@@ -19,15 +19,14 @@
   }
 </script>
 
-<input
+<button
   type="button"
   class="button"
   {disabled}
   style={_style}
   on:click={onClick}
   tabindex="0"
-  value={text}
-/>
+>{text}</button>
 
 <style>
   .button {
