@@ -8,7 +8,9 @@ import {
   mockMessageAPI,
 } from './mock.js';
 
-const delay = 0;
+const timeout = 200;
+const delay = 100;
+const typingDelay = 1;
 const closeSymbol = '×';
 
 test('decrypting without login works', async ({ page }) => {
@@ -26,7 +28,6 @@ test('decrypting without login works', async ({ page }) => {
   expect(await page.inputValue('textarea.text')).toBe(
     'Testing from playwright\n\nBest,\nWarisin Team',
   );
-  await page.waitForLoadState('networkidle');
   expect(errorTexts[0]).toBe(undefined);
 });
 
@@ -43,8 +44,8 @@ test('non-login submit prompts user to login', async ({ page }) => {
   await page.click('text=submit');
   expect(dialogCounter).toBe(1);
   await page.click('text=submit');
+  expect(await page.locator('text=submit').isEnabled({ timeout })).toBeTruthy();
   expect(dialogCounter).toBe(2);
-  await page.waitForLoadState('networkidle');
   expect(errorTexts[0]).toBe(undefined);
 });
 
@@ -58,25 +59,24 @@ test('email input works', async ({ page }) => {
   const validEmails = ['test@warisin.com', 'admin1@warisin.com'];
   for (let i = 0; i < validEmails.length; i++) {
     const email = validEmails[i];
-    await page.keyboard.type(email, { delay });
+    await page.keyboard.type(email, { delay: typingDelay });
     await page.keyboard.press('Enter');
     expect(await page.textContent(`.wrapper > .email:nth-child(${i + 2})`)).toBe(
       email + ' ' + closeSymbol,
     );
   }
   // Enter 1 invalid email
-  await page.keyboard.type('invalidemail', { delay });
+  await page.keyboard.type('invalidemail', { delay: typingDelay });
   await page.keyboard.press('Enter');
   expect(await page.inputValue('input.text')).toBe('invalidemail');
   // Make it valid
-  await page.keyboard.type('@nowvalid.com', { delay });
+  await page.keyboard.type('@nowvalid.com', { delay: typingDelay });
   await page.keyboard.press('Enter');
   expect(await page.textContent(`.wrapper > .email:nth-child(4)`)).toBe(
     'invalidemail@nowvalid.com' + ' ' + closeSymbol,
   );
-  // Enter 1 more which shouldn't register since max emails length is 3
-  await page.keyboard.type('ignored@validemail.com', { delay });
-  await page.keyboard.press('Enter');
+  // Max email list is 3
+  expect(await page.locator('input.text').isVisible()).toBeFalsy();
   // Delete second email
   let emailElements = await page.$$('.wrapper > .email');
   expect(emailElements.length).toBe(3);
@@ -85,7 +85,6 @@ test('email input works', async ({ page }) => {
   expect(emailElements.length).toBe(2);
   expect((await emailElements[0].innerText()).startsWith(validEmails[0]));
   expect((await emailElements[1].innerText()).startsWith('invalidemail@nowvalid.com'));
-  await page.waitForLoadState('networkidle');
   expect(errorTexts[0]).toBe(undefined);
 });
 
@@ -98,7 +97,7 @@ test('login/logout', async ({ page }) => {
   await mockMessageAPI(page, token, 'select-messages', { responseBody: { data: [] } });
   await page.goto('/');
   await page.click('text=login');
-  await page.waitForNavigation();
+  await page.waitForNavigation({ timeout });
   expect(await page.innerText('div > span')).toBe('Welcome, ' + fullname);
   let gotrue = await page.evaluate(() => JSON.parse(localStorage.getItem('gotrue.user')));
   expect(gotrue.email).toBe(email);
@@ -158,9 +157,9 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(await page.locator('.toggle.show').innerText()).toBe('HIDE');
   await page.click('.toText');
   const recipient = 'recipient@warisin.com';
-  await page.keyboard.type(recipient, { delay });
+  await page.keyboard.type(recipient, { delay: typingDelay });
   await page.keyboard.press('Tab', { delay });
-  await page.keyboard.type(messageContent, { delay });
+  await page.keyboard.type(messageContent, { delay: typingDelay });
   await page.keyboard.press('Tab', { delay });
   await expect(page.locator('select:nth-child(1)')).toBeFocused();
   await page.keyboard.press('Tab', { delay });
@@ -168,7 +167,6 @@ test('insert/update message keyboard & click', async ({ page }) => {
   await page.keyboard.press('Tab', { delay });
   await expect(page.locator('text=submit')).toBeFocused();
   await page.keyboard.press('Enter', { delay });
-  await page.waitForResponse(/insert-message$/);
   expect(messages[0].messageContent).toBe(messageContent);
   expect(messages[0].inactivePeriodDays).toBe(60);
   expect(messages[0].reminderIntervalDays).toBe(15);
@@ -176,7 +174,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 0 });
 
   const additionalMessage = '\n\nnew line';
-  await page.locator('textarea.text').type(additionalMessage, { delay });
+  await page.locator('textarea.text').type(additionalMessage, { delay: typingDelay });
   await page.selectOption('select:nth-child(1)', { index: 2 });
   await page.selectOption('select:nth-child(2)', { index: 1 });
   await page.click('text=submit', { delay });
@@ -192,6 +190,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 2 });
 
   await page.reload();
+  expect(await page.locator('text=submit').isEnabled({ timeout })).toBeTruthy();
   expect(await page.inputValue('textarea.text')).toBe(messageContent + additionalMessage);
   expect(messages[0].inactivePeriodDays).toBe(90);
   expect(messages[0].reminderIntervalDays).toBe(30);
@@ -204,7 +203,6 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(await page.inputValue('select:nth-child(1)')).toBe('90');
   expect(await page.inputValue('select:nth-child(2)')).toBe('30');
   expect(accessCtr).toStrictEqual({ select: 2, insert: 1, update: 2 });
-  await page.waitForLoadState('networkidle');
   expect(errorTexts[0]).toBe(undefined);
 });
 
@@ -221,8 +219,8 @@ test('session expired', async ({ page }) => {
     callback: async () => messageAPICallCtr++,
   });
   await page.goto(generateAuthURL(token));
-  await page.waitForNavigation();
-  await page.type('textarea.text', 'this is a draft', { delay });
+  await page.waitForNavigation({ timeout });
+  await page.type('textarea.text', 'this is a draft', { delay: typingDelay });
   await page.evaluate(() => {
     const gotrue = JSON.parse(localStorage.getItem('gotrue.user'));
     gotrue.token.expires_at = Date.now() - 60000;
@@ -236,10 +234,8 @@ test('session expired', async ({ page }) => {
   expect(await page.innerText('div > span')).toBe('Welcome, ' + fullname);
   page.off('dialog', dismissDialogg).on('dialog', (dialog) => dialog.accept());
   await page.click('text=submit', { delay });
-  await page.waitForLoadState();
   expect(messageAPICallCtr).toBe(0);
   expect(await page.inputValue('textarea.text')).toBe('');
   expect(await page.innerText('div > span')).toBe('Testament in the cloud');
-  await page.waitForLoadState('networkidle');
   expect(errorTexts[0]).toBe(undefined);
 });

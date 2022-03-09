@@ -5,7 +5,7 @@ export const sleep = (milis: number) => new Promise((resolve) => setTimeout(reso
 export function generateAuthURL(token: string) {
   // Need to specify complete url since the driver derives protocol & host based on current url
   // in this case "https://" and "warisin.com"
-  return `http://localhost:3000/?test#access_token=${token}&expires_in=3600&refresh_token=refresh&token_type=bearer`;
+  return `http://localhost:3000/#access_token=${token}&expires_in=3600&refresh_token=refresh&token_type=bearer`;
 }
 
 export async function mockIdentityAuthorizeAPI(page: Page, token: string) {
