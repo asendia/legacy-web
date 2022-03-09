@@ -19,14 +19,9 @@
   }
 </script>
 
-<button
-  type="button"
-  class="button"
-  {disabled}
-  style={_style}
-  on:click={onClick}
-  tabindex="0"
->{text}</button>
+<button type="button" class="button" {disabled} style={_style} on:click={onClick} tabindex="0"
+  >{text}</button
+>
 
 <style>
   .button {

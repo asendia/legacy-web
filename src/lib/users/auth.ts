@@ -48,7 +48,7 @@ export async function getAuthObject(): Promise<AuthObject> {
     throw new Error('auth is undefined');
   }
   if (Date.now() > authObject.token.expires_at) {
-    throw new Error('auth is expired')
+    throw new Error('auth is expired');
   }
   return authObject;
 }

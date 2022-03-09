@@ -18,6 +18,7 @@
     "@playwright/test": "^1.19.1",
     "@sveltejs/adapter-netlify": "next",
     "@sveltejs/kit": "next",
+    "@types/crypto-js": "^4.1.1",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "crypto-js": "^4.1.1",
