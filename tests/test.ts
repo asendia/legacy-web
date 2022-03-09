@@ -12,6 +12,8 @@ const delay = 0;
 const closeSymbol = '×';
 
 test('decrypting without login works', async ({ page }) => {
+  const errorTexts = [];
+  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
   await page.goto('/');
   const encryptedContent =
     'aes.utf8:U2FsdGVkX1+qokMf7b9lkyHiTvCRI9jjH6BYn4eeUDhzsDa/jqXYNN9sZqUDjraB8QwfTBLjDrPhu8blOAu7Kw==';
@@ -24,9 +26,13 @@ test('decrypting without login works', async ({ page }) => {
   expect(await page.inputValue('textarea.text')).toBe(
     'Testing from playwright\n\nBest,\nWarisin Team',
   );
+  await page.waitForLoadState('networkidle');
+  expect(errorTexts[0]).toBe(undefined);
 });
 
 test('non-login submit prompts user to login', async ({ page }) => {
+  const errorTexts = [];
+  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
   await page.goto('/');
   let dialogCounter = 0;
   page.on('dialog', (dialog) => {
@@ -36,9 +42,15 @@ test('non-login submit prompts user to login', async ({ page }) => {
   });
   await page.click('text=submit');
   expect(dialogCounter).toBe(1);
+  await page.click('text=submit');
+  expect(dialogCounter).toBe(2);
+  await page.waitForLoadState('networkidle');
+  expect(errorTexts[0]).toBe(undefined);
 });
 
 test('email input works', async ({ page }) => {
+  const errorTexts = [];
+  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
   await page.goto('/');
   await page.click('.toText');
   await expect(page.locator('input.text')).toBeFocused();
@@ -73,6 +85,8 @@ test('email input works', async ({ page }) => {
   expect(emailElements.length).toBe(2);
   expect((await emailElements[0].innerText()).startsWith(validEmails[0]));
   expect((await emailElements[1].innerText()).startsWith('invalidemail@nowvalid.com'));
+  await page.waitForLoadState('networkidle');
+  expect(errorTexts[0]).toBe(undefined);
 });
 
 test('login/logout', async ({ page }) => {
@@ -95,6 +109,8 @@ test('login/logout', async ({ page }) => {
 });
 
 test('insert/update message keyboard & click', async ({ page }) => {
+  const errorTexts = [];
+  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
   const token = 'secretjwt2';
   const email = 'test@warisin.com';
   const fullname = 'Warisin Team';
@@ -102,7 +118,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
   const messageContent =
     'Hello world!\n\nThis message is written in playwright.\n\nBest,\nWarisin Team';
   const messages: Array<MessageData> = [];
-  const accessCtr = { select: 0, insert: 0, update:0 };
+  const accessCtr = { select: 0, insert: 0, update: 0 };
   await mockIdentityUserAPI(page, token, email, fullname);
   await mockMessageAPI(page, token, 'select-messages', {
     responseBody: { data: messages },
@@ -188,9 +204,13 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(await page.inputValue('select:nth-child(1)')).toBe('90');
   expect(await page.inputValue('select:nth-child(2)')).toBe('30');
   expect(accessCtr).toStrictEqual({ select: 2, insert: 1, update: 2 });
+  await page.waitForLoadState('networkidle');
+  expect(errorTexts[0]).toBe(undefined);
 });
 
 test('session expired', async ({ page }) => {
+  const errorTexts = [];
+  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
   const token = 'secretjwt2';
   const email = 'test@warisin.com';
   const fullname = 'Warisin Team';
@@ -220,4 +240,6 @@ test('session expired', async ({ page }) => {
   expect(messageAPICallCtr).toBe(0);
   expect(await page.inputValue('textarea.text')).toBe('');
   expect(await page.innerText('div > span')).toBe('Testament in the cloud');
+  await page.waitForLoadState('networkidle');
+  expect(errorTexts[0]).toBe(undefined);
 });

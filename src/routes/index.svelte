@@ -8,7 +8,7 @@
   import Button from '$lib/core/Button.svelte';
   import Footer from '$lib/core/Footer.svelte';
   import { selectMessages, upsertMessage } from '$lib/messages/fetchMessages';
-  import { getAuthObject, type AuthObject } from '$lib/users/auth';
+  import { clearStorage, getAuthObject, logout, type AuthObject } from '$lib/users/auth';
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import { handleQueryVisit } from '$lib/email-visit/queryHandler';
   import {
@@ -31,12 +31,9 @@
     try {
       await handleQueryVisit();
       authObject = await getAuthObject();
-      if (!authObject) {
-        return;
-      }
       const dataList = await selectMessages(authObject.token.access_token);
       if (dataList.length === 0) {
-        return;
+        throw new Error('message length is 0');
       }
       const d = dataList[0];
       let msg = d.messageContent;
@@ -51,7 +48,16 @@
       messageContent = msg;
       reminderIntervalDays = d.reminderIntervalDays;
     } catch (err) {
-      console.error(err);
+      switch (err.message) {
+        case 'auth is undefined':
+        case 'message length is 0':
+          break;
+        case 'auth is expired':
+          clearStorage();
+          break;
+        default:
+          console.error(err);
+      }
     } finally {
       disableSubmit = false;
     }
@@ -78,10 +84,6 @@
   async function submit() {
     try {
       authObject = await getAuthObject();
-      if (!authObject) {
-        alert('You need to login first');
-        return;
-      }
       let msg = messageContent;
       if (enableClientAES) {
         msg = encryptMessage(msg) || msg;
@@ -99,7 +101,23 @@
       );
       messageID = message.id;
     } catch (err) {
-      console.error(err);
+      switch (err.message) {
+        case 'auth is undefined':
+          alert('You need to login first');
+          break;
+        case 'auth is expired':
+          if (
+            confirm(
+              'Your session has expired, do you want to refresh the page? ' +
+                'Press cancel if you want to copy your message first',
+            )
+          ) {
+            logout();
+          }
+          break;
+        default:
+          console.error(err);
+      }
     } finally {
       disableSubmit = false;
     }

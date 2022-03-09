@@ -29,14 +29,13 @@ export async function getAuthObject(): Promise<AuthObject> {
     try {
       const res = await fetchUserToken(token);
       throwIfNonSuccessResponse(res);
-      const authObject = await res.json();
+      const authObject: AuthObject = await res.json();
       authObject.token = token;
       localStorage.setItem(STORAGE_NAME_GOTRUE, JSON.stringify(authObject));
       location.hash = '';
       return authObject;
     } catch (err) {
-      localStorage.removeItem(STORAGE_NAME_GOTRUE);
-      localStorage.removeItem(STORAGE_SECRET_NAME);
+      clearStorage();
       return;
     } finally {
       destroyFetchUserTokenPromise();
@@ -44,31 +43,22 @@ export async function getAuthObject(): Promise<AuthObject> {
   }
 
   // From localStorage
-  try {
-    const authObject = JSON.parse(localStorage.getItem(STORAGE_NAME_GOTRUE));
-    if (!authObject) {
-      return;
-    }
-    if (Date.now() > authObject.token.expires_at) {
-      throw new Error(
-        'Your session has expired and you will be redirected to the home page. ' +
-          'Please click cancel if you want to copy your message first.',
-      );
-    }
-    return authObject;
-  } catch (err) {
-    const doRedirect = confirm(err.message);
-    if (doRedirect) {
-      logout();
-    }
-    console.error(err);
-    return;
+  const authObject = JSON.parse(localStorage.getItem(STORAGE_NAME_GOTRUE));
+  if (!authObject) {
+    throw new Error('auth is undefined');
   }
+  if (Date.now() > authObject.token.expires_at) {
+    throw new Error('auth is expired')
+  }
+  return authObject;
 }
 
-export function logout() {
+export function clearStorage() {
   localStorage.removeItem(STORAGE_NAME_GOTRUE);
   localStorage.removeItem(STORAGE_SECRET_NAME);
+}
+export function logout() {
+  clearStorage();
   location.reload();
 }
 
