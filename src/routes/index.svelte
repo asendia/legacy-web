@@ -8,7 +8,7 @@
   import Button from '$lib/core/Button.svelte';
   import Footer from '$lib/core/Footer.svelte';
   import { selectMessages, upsertMessage } from '$lib/messages/fetchMessages';
-  import { getAuthObject, type AuthObject } from '$lib/users/fetchUser';
+  import { getAuthObject, type AuthObject } from '$lib/users/auth';
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import { handleQueryVisit } from '$lib/email-visit/queryHandler';
   import {
@@ -32,11 +32,11 @@
       await handleQueryVisit();
       authObject = await getAuthObject();
       if (!authObject) {
-        throw new Error('User needs to login');
+        return;
       }
       const dataList = await selectMessages(authObject.token.access_token);
       if (dataList.length === 0) {
-        throw new Error('Message length is 0');
+        return;
       }
       const d = dataList[0];
       let msg = d.messageContent;
@@ -51,11 +51,10 @@
       messageContent = msg;
       reminderIntervalDays = d.reminderIntervalDays;
     } catch (err) {
-      if (err.message !== 'User needs to login' && err.message !== 'Message length is 0') {
-        console.error(err);
-      }
+      console.error(err);
+    } finally {
+      disableSubmit = false;
     }
-    disableSubmit = false;
   });
   function handleEmailReceiversChange(list: Array<string>) {
     emailReceivers = list;
@@ -78,9 +77,9 @@
   }
   async function submit() {
     try {
+      authObject = await getAuthObject();
       if (!authObject) {
-        window.alert('Please login first');
-        throw new Error('User needs to login');
+        return;
       }
       let msg = messageContent;
       if (enableClientAES) {
@@ -99,11 +98,10 @@
       );
       messageID = message.id;
     } catch (err) {
-      if (err.message !== 'User needs to login') {
-        console.error(err);
-      }
+      console.error(err);
+    } finally {
+      disableSubmit = false;
     }
-    disableSubmit = false;
   }
   const colorPalette =
     `--color-grey:${grey};--color-blue:${blue};` +

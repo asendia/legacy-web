@@ -1,22 +1,12 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
 import { STORAGE_SECRET_NAME } from '$lib/messages/encryption';
+import { destroyFetchUserTokenPromise, fetchUserToken, type TokenObject } from './fetchUsers';
 
-const AUTH_URL = 'https://warisin.com/.netlify/identity';
 const STORAGE_NAME_GOTRUE = 'gotrue.user';
-
-export function authorizeUser(provider: 'google' | 'github') {
-  window.location.href = `${AUTH_URL}/authorize?provider=${provider}`;
-}
 
 export interface AuthObject {
   url: string;
-  token: {
-    access_token: string;
-    expires_in?: string;
-    refresh_token?: string;
-    token_type: 'bearer';
-    expires_at?: number;
-  };
+  token: TokenObject;
   id: string;
   aud: string;
   role: string;
@@ -33,26 +23,11 @@ export interface AuthObject {
   updated_at: string;
 }
 
-let promise: Promise<AuthObject | undefined>;
-
 export async function getAuthObject(): Promise<AuthObject | undefined> {
-  if (!promise) {
-    promise = _getAuthObject();
-  }
-  return promise;
-}
-
-async function _getAuthObject(): Promise<AuthObject | undefined> {
   const token = getTokenFromHash();
   if (token) {
     try {
-      const res = await fetch(`${AUTH_URL}/user`, {
-        headers: {
-          authorization: `${token.token_type[0].toUpperCase() + token.token_type.substring(1)} ${
-            token.access_token
-          }`,
-        },
-      });
+      const res = await fetchUserToken(token);
       throwIfNonSuccessResponse(res);
       const authObject = await res.json();
       authObject.token = token;
@@ -64,25 +39,31 @@ async function _getAuthObject(): Promise<AuthObject | undefined> {
       localStorage.removeItem(STORAGE_SECRET_NAME);
       return;
     } finally {
-      promise = undefined;
+      destroyFetchUserTokenPromise();
     }
   }
 
   // From localStorage
   try {
     const authObject = JSON.parse(localStorage.getItem(STORAGE_NAME_GOTRUE));
-    if (
-      authObject?.token.access_token.length > 0 &&
-      authObject?.email.includes('@') &&
-      Date.now() < authObject?.token.expires_at
-    ) {
-      return authObject;
+    if (!authObject) {
+      return;
     }
+    if (Date.now() > authObject.token.expires_at) {
+      throw new Error(
+        'Your session has expired and you will be redirected to the home page. ' +
+          'Please click cancel if you want to copy your message first.',
+      );
+    }
+    return authObject;
   } catch (err) {
+    const doRedirect = confirm(err.message);
+    if (doRedirect) {
+      logout();
+    }
     console.error(err);
+    return;
   }
-  localStorage.removeItem(STORAGE_NAME_GOTRUE);
-  localStorage.removeItem(STORAGE_SECRET_NAME);
 }
 
 export function logout() {
@@ -98,11 +79,15 @@ function getTokenFromHash() {
     return null;
   }
   const expires_in = h.get('expires_in');
-  const token = {
+  const token_type = h.get('token_type');
+  if (token_type != 'bearer') {
+    throw new Error('Invalid token type');
+  }
+  const token: TokenObject = {
     access_token,
     expires_in,
     refresh_token: h.get('refresh_token'),
-    token_type: h.get('token_type'),
+    token_type,
     expires_at: Date.now() + parseInt(expires_in, 10) * 1000,
   };
   return token;

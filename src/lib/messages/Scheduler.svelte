@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { HTMLElementEvent } from './types';
   export let emailCreator = 'me';
   export let reminderIntervalDays: number;
   export let inactivePeriodDays: number;

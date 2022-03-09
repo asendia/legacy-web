@@ -1,7 +1,8 @@
 <script lang="ts">
   import Button from '$lib/core/Button.svelte';
-  import { authorizeUser, logout, getAuthObject, type AuthObject } from '$lib/users/fetchUser';
+  import { logout, getAuthObject, type AuthObject } from '$lib/users/auth';
   import { onMount } from 'svelte';
+  import { fetchAuthorizeUser } from './fetchUsers';
 
   let message = 'Testament in the cloud';
   let auth: AuthObject;
@@ -9,7 +10,7 @@
 
   function handleLogin() {
     disabled = true;
-    authorizeUser('google');
+    fetchAuthorizeUser('google');
   }
   function handleLogout() {
     disabled = true;

@@ -90,7 +90,7 @@ function randomString(length: number) {
   const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   const values = new Uint32Array(length);
-  window.crypto.getRandomValues(values);
+  crypto.getRandomValues(values);
   for (let i = 0; i < length; i++) {
     result += charset[values[i] % charset.length];
   }

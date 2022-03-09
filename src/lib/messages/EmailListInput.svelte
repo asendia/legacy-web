@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { HTMLElementEvent } from './types';
   export let emailList: Array<string> = [];
   export let onChange: (emailList: Array<string>) => void;
   let showInput = false;

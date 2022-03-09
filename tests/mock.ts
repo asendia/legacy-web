@@ -55,14 +55,14 @@ export async function mockIdentityUserAPI(
   });
 }
 
-interface MockMessageCallback {
-  (route: Route): Promise<void>;
+interface MockMessageCallback<T> {
+  (route: Route): Promise<T>;
 }
 
-interface MockMessageOptions {
+interface MockMessageOptions<T> {
   responseBody?: object;
-  beforeFulfill?: MockMessageCallback;
-  callback?: MockMessageCallback;
+  beforeFulfill?: MockMessageCallback<T>;
+  callback?: MockMessageCallback<T>;
 }
 
 export interface MessageData {
@@ -74,11 +74,11 @@ export interface MessageData {
   reminderIntervalDays: number;
 }
 
-export async function mockMessageAPI(
+export async function mockMessageAPI<T>(
   page: Page,
   token: string,
   action: 'select-messages' | 'insert-message' | 'update-message',
-  options: MockMessageOptions = {},
+  options: MockMessageOptions<T> = {},
 ) {
   return await page.route(`**/legacy-api?action=${action}`, async (route) => {
     const request = route.request();

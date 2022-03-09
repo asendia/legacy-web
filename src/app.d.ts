@@ -8,8 +8,3 @@ declare namespace App {
   // interface Session {}
   // interface Stuff {}
 }
-
-type HTMLElementEvent<T extends HTMLElement> = Event & {
-  target: T;
-  currentTarget: T;
-};

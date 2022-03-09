@@ -6,6 +6,7 @@ const config = {
   },
   // playwright ignore directory included in .gitignore
   testDir: 'tests-out',
+  timeout: 5000,
 };
 
 export default config;
