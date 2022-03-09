@@ -23,7 +23,7 @@ export interface AuthObject {
   updated_at: string;
 }
 
-export async function getAuthObject(): Promise<AuthObject | undefined> {
+export async function getAuthObject(): Promise<AuthObject> {
   const token = getTokenFromHash();
   if (token) {
     try {

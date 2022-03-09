@@ -26,6 +26,18 @@ test('decrypting without login works', async ({ page }) => {
   );
 });
 
+test('non-login submit prompts user to login', async ({ page }) => {
+  await page.goto('/');
+  let dialogCounter = 0;
+  page.on('dialog', (dialog) => {
+    dialogCounter++;
+    expect(dialog.message()).toBe('You need to login first');
+    return dialog.accept();
+  });
+  await page.click('text=submit');
+  expect(dialogCounter).toBe(1);
+});
+
 test('email input works', async ({ page }) => {
   await page.goto('/');
   await page.click('.toText');
@@ -90,8 +102,12 @@ test('insert/update message keyboard & click', async ({ page }) => {
   const messageContent =
     'Hello world!\n\nThis message is written in playwright.\n\nBest,\nWarisin Team';
   const messages: Array<MessageData> = [];
+  const accessCtr = { select: 0, insert: 0, update:0 };
   await mockIdentityUserAPI(page, token, email, fullname);
-  await mockMessageAPI(page, token, 'select-messages', { responseBody: { data: messages } });
+  await mockMessageAPI(page, token, 'select-messages', {
+    responseBody: { data: messages },
+    beforeFulfill: async () => accessCtr.select++,
+  });
   await mockMessageAPI(page, token, 'insert-message', {
     callback: async (route) => {
       const m = route.request().postDataJSON() as MessageData;
@@ -100,6 +116,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
         id: messageID,
         isActive: true,
       });
+      accessCtr.insert++;
       route.fulfill({
         headers: corsHeadersAllow,
         body: JSON.stringify({ data: messages[0] }),
@@ -113,6 +130,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
       messages[messages.length - 1] = {
         ...m,
       };
+      accessCtr.update++;
       route.fulfill({
         headers: corsHeadersAllow,
         body: JSON.stringify({ data: messages[0] }),
@@ -139,6 +157,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(messages[0].inactivePeriodDays).toBe(60);
   expect(messages[0].reminderIntervalDays).toBe(15);
   expect(messages[0].emailReceivers[0]).toBe(recipient);
+  expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 0 });
 
   const additionalMessage = '\n\nnew line';
   await page.locator('textarea.text').type(additionalMessage, { delay });
@@ -149,10 +168,12 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(messages[0].reminderIntervalDays).toBe(30);
   expect(await page.inputValue('select:nth-child(1)')).toBe('90');
   expect(await page.inputValue('select:nth-child(2)')).toBe('30');
+  expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 1 });
 
   await page.click('.toggle.aes', { delay });
   await page.click('text=submit', { delay });
   expect(messages[0].messageContent.startsWith('aes.utf8:')).toBeTruthy();
+  expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 2 });
 
   await page.reload();
   expect(await page.inputValue('textarea.text')).toBe(messageContent + additionalMessage);
@@ -166,6 +187,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
   );
   expect(await page.inputValue('select:nth-child(1)')).toBe('90');
   expect(await page.inputValue('select:nth-child(2)')).toBe('30');
+  expect(accessCtr).toStrictEqual({ select: 2, insert: 1, update: 2 });
 });
 
 test('session expired', async ({ page }) => {

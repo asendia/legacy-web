@@ -79,6 +79,7 @@
     try {
       authObject = await getAuthObject();
       if (!authObject) {
+        alert('You need to login first');
         return;
       }
       let msg = messageContent;
@@ -114,7 +115,7 @@
 </svelte:head>
 <div class="wrapper" style={colorPalette}>
   <Header />
-  <Login />
+  <Login auth={authObject} />
   <div class="separator" />
   <EmailListInput emailList={emailReceivers} onChange={handleEmailReceiversChange} />
   <EmailContent onChange={handleMessageChange} {messageContent} {enableClientAES} />

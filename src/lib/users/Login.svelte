@@ -1,11 +1,9 @@
 <script lang="ts">
   import Button from '$lib/core/Button.svelte';
-  import { logout, getAuthObject, type AuthObject } from '$lib/users/auth';
-  import { onMount } from 'svelte';
+  import { logout, type AuthObject } from '$lib/users/auth';
   import { fetchAuthorizeUser } from './fetchUsers';
-
+  export let auth: AuthObject;
   let message = 'Testament in the cloud';
-  let auth: AuthObject;
   let disabled = true;
 
   function handleLogin() {
@@ -16,13 +14,12 @@
     disabled = true;
     logout();
   }
-  onMount(async () => {
-    auth = await getAuthObject();
+  $: {
     if (auth) {
       message = 'Welcome, ' + (auth.user_metadata?.full_name ?? auth.email);
     }
     disabled = false;
-  });
+  }
 </script>
 
 <div>
