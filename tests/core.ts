@@ -1,6 +1,9 @@
 import { expect, Page, Route } from '@playwright/test';
 
-export const sleep = (milis: number) => new Promise((resolve) => setTimeout(resolve, milis));
+export const timeout = 200;
+export const delay = 100;
+export const typingDelay = 1;
+export const closeSymbol = '×';
 
 export function generateAuthURL(token: string) {
   // Need to specify complete url since the driver derives protocol & host based on current url
