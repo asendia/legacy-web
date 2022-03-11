@@ -1,8 +1,9 @@
 <script lang="ts">
   import { decryptMessage, getEncryptionSecret, isProbablyEncrypted } from './encryption';
   import type { HTMLElementEvent } from './types';
-  export let messageContent = '';
   export let onChange: (content: string, aes: boolean) => void;
+  export let isLoading = false;
+  export let messageContent = '';
   export let enableClientAES = false;
   let autoToggleClientAES = false;
   const maxRows = 20;
@@ -55,7 +56,8 @@
     autocapitalize="off"
     spellcheck="false"
     {placeholder}
-    style="filter: {toggleShow ? 'none' : 'blur(5px)'}">{messageContent}</textarea
+    style="filter: {toggleShow ? 'none' : 'blur(5px)'}; opacity: {isLoading ? '0' : '1'}"
+    >{messageContent}</textarea
   >
   <div class="toggle aes" on:click={handleAESToggle}>
     <div>client-aes:</div>
@@ -64,6 +66,9 @@
   <div class="toggle show" on:click={handleShowToggle}>
     {toggleShow ? 'hide' : 'show'}
   </div>
+  {#if isLoading}
+    <div class="loading">Loading...</div>
+  {/if}
 </div>
 
 <style>
@@ -121,5 +126,16 @@
   .text:focus {
     outline-style: solid;
     outline-width: 0;
+  }
+  .loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    padding-top: 20px;
+    box-sizing: border-box;
+    color: var(--color-grey);
   }
 </style>

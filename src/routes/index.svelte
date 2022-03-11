@@ -26,8 +26,14 @@
     reminderIntervalDays = 15,
     authObject: AuthObject | undefined,
     enableClientAES = false,
+    isLoading = false,
     disableSubmit = true;
   onMount(async () => {
+    const slowWaitingTime = 1000;
+    const timeoutID = setTimeout(() => {
+      isLoading = true;
+    }, slowWaitingTime);
+    const mountTime = Date.now();
     try {
       await handleQueryVisit();
       authObject = await getAuthObject();
@@ -58,9 +64,19 @@
         default:
           console.error(err);
       }
-    } finally {
-      disableSubmit = false;
     }
+    clearTimeout(timeoutID);
+    const waitingTime = Date.now() - mountTime;
+    setTimeout(
+      () => {
+        disableSubmit = false;
+        isLoading = false;
+      },
+      // If already shown, continue the Loading text at least for 1s to avoid blipping
+      slowWaitingTime < waitingTime && waitingTime < 2 * slowWaitingTime
+        ? 2 * slowWaitingTime - waitingTime
+        : 0,
+    );
   });
   function handleEmailReceiversChange(list: Array<string>) {
     emailReceivers = list;
@@ -135,8 +151,8 @@
   <Header />
   <Login auth={authObject} />
   <div class="separator" />
-  <EmailListInput emailList={emailReceivers} onChange={handleEmailReceiversChange} />
-  <EmailContent onChange={handleMessageChange} {messageContent} {enableClientAES} />
+  <EmailListInput onChange={handleEmailReceiversChange} {isLoading} emailList={emailReceivers} />
+  <EmailContent onChange={handleMessageChange} {isLoading} {messageContent} {enableClientAES} />
   <Scheduler
     onChange={handleSchedulerChange}
     {inactivePeriodDays}

@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { HTMLElementEvent } from './types';
-  export let emailList: Array<string> = [];
   export let onChange: (emailList: Array<string>) => void;
+  export let isLoading = false;
+  export let emailList: Array<string> = [];
   let showInput = false;
   let toText = 'Recipients';
   let text = '';
@@ -81,6 +82,7 @@
       on:focus={handleInputFocus}
       on:keyup={handleInputKeypup}
       bind:this={inputText}
+      disabled={isLoading}
     />
   {/if}
 </div>

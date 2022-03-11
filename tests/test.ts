@@ -186,6 +186,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
 
   await page.click('.toggle.aes', { delay });
   await page.click('text=submit', { delay });
+  await page.isEnabled('text=submit', { timeout });
   expect(messages[0].messageContent.startsWith('aes.utf8:')).toBeTruthy();
   expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 2 });
 
