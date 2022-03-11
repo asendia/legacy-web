@@ -1,5 +1,5 @@
 import test, { expect } from '@playwright/test';
-import { closeSymbol, typingDelay } from './core';
+import { closeSymbol, typingDelay } from './core.js';
 
 test('email input works', async ({ page }) => {
   const errorTexts = [];

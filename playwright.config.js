@@ -6,6 +6,7 @@ const config = {
   },
   // playwright ignore directory included in .gitignore
   testDir: 'tests-out',
+  testMatch: '*.js',
   timeout: 5000,
   use: {
     // headless: false,
