@@ -1,15 +1,29 @@
-name: Check Netlify
+name: Netlify
 on:
   push:
     branches:
       - main
 jobs:
   wait-for-netlify-build:
-    name: Wait for netlify build
+    name: CI/CD
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - run: node .github/scripts/wait-for-netlify.js
+      - name: Install dependency
+        run: npm ci
+      - name: Prettier
+        run: npm run format
+      - name: Install Browsers
+        run: npx playwright install
+      - name: Build and browser test
+        run: npm test
+      - name: Install netlify cli
+        run: npm install netlify-cli
+      - name: Deploy
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: netlify deploy

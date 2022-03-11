@@ -1,4 +1,4 @@
 #!/bin/sh
-npm run lint
-npx playwright install
 npm run format
+npx playwright install
+npm run test
