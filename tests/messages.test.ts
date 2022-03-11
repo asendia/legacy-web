@@ -9,7 +9,7 @@ import {
   mockMessageAPI,
   timeout,
   typingDelay,
-} from './core.js';
+} from './core.test.js';
 
 test('insert/update message keyboard & click', async ({ page }) => {
   const errorTexts = [];

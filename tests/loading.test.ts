@@ -1,5 +1,5 @@
 import test, { expect } from '@playwright/test';
-import { generateAuthURL, mockIdentityUserAPI, mockMessageAPI, timeout } from './core.js';
+import { generateAuthURL, mockIdentityUserAPI, mockMessageAPI, timeout } from './core.test.js';
 
 test('slow api', async ({ page }) => {
   const slowWaitTime = 1000;

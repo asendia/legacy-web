@@ -7,7 +7,7 @@ import {
   mockMessageAPI,
   timeout,
   typingDelay,
-} from './core.js';
+} from './core.test.js';
 
 test('non-login submit prompts user to login', async ({ page }) => {
   const errorTexts = [];
