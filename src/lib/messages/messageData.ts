@@ -6,3 +6,12 @@ export interface MessageData {
   inactivePeriodDays: number;
   reminderIntervalDays: number;
 }
+
+export const defaultMessageData = {
+  emailReceivers: [] as Array<string>,
+  id: '',
+  inactivePeriodDays: 60,
+  isActive: true,
+  messageContent: '',
+  reminderIntervalDays: 15,
+};

@@ -1,10 +1,5 @@
 import test, { expect } from '@playwright/test';
-import {
-  mockIdentityAuthorizeAPI,
-  mockIdentityUserAPI,
-  mockMessageAPI,
-  timeout,
-} from './core.test.js';
+import { mockIdentityAuthorizeAPI, mockIdentityUserAPI, mockMessageAPI } from './core.test.js';
 
 test('non-login submit prompts user to login', async ({ page }) => {
   const errorTexts = [];
@@ -19,7 +14,7 @@ test('non-login submit prompts user to login', async ({ page }) => {
   await page.click('text=submit');
   expect(dialogCounter).toBe(1);
   await page.click('text=submit');
-  expect(await page.locator('text=submit').isEnabled({ timeout })).toBeTruthy();
+  expect(await page.locator('text=submit').isEnabled()).toBeTruthy();
   expect(dialogCounter).toBe(2);
   expect(errorTexts[0]).toBe(undefined);
 });
@@ -33,7 +28,7 @@ test('login/logout', async ({ page }) => {
   await mockMessageAPI(page, token, 'select-messages', { responseBody: { data: [] } });
   await page.goto('/');
   await page.click('text=login');
-  await page.waitForNavigation({ timeout });
+  await page.waitForNavigation();
   expect(await page.innerText('div > span')).toBe('Welcome, ' + fullname);
   let gotrue = await page.evaluate(() => JSON.parse(localStorage.getItem('gotrue.user')));
   expect(gotrue.email).toBe(email);

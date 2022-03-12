@@ -5,7 +5,6 @@ import {
   mockIdentityAuthorizeAPI,
   mockIdentityUserAPI,
   mockMessageAPI,
-  timeout,
   typingDelay,
 } from './core.test.js';
 
@@ -37,9 +36,9 @@ test('draft conflicted use client', async ({ page }) => {
   };
   page.on('dialog', rejectDialog);
   await page.click('text=login');
-  await page.waitForLoadState('networkidle', { timeout });
+  await page.waitForLoadState('networkidle');
   expect(dialogCounter).toBe(1);
-  expect(await page.inputValue('textarea.text', { timeout })).toBe('this is a client draft');
+  expect(await page.inputValue('textarea.text')).toBe('this is a client draft');
   expect(errorTexts.length).toBe(0);
 });
 
@@ -71,9 +70,9 @@ test('draft conflicted use remote', async ({ page }) => {
   };
   page.on('dialog', acceptDialog);
   await page.click('text=login');
-  await page.waitForLoadState('networkidle', { timeout });
+  await page.waitForLoadState('networkidle');
   expect(dialogCounter).toBe(1);
-  expect(await page.inputValue('textarea.text', { timeout })).toBe('remote content');
+  expect(await page.inputValue('textarea.text')).toBe('remote content');
   expect(errorTexts.length).toBe(0);
 });
 
@@ -90,7 +89,7 @@ test('session expired reject draft', async ({ page }) => {
     callback: async () => messageAPICallCtr++,
   });
   await page.goto(generateAuthURL(token));
-  await page.waitForNavigation({ timeout });
+  await page.waitForNavigation();
   const draftText = 'this is a draft';
   await page.type('textarea.text', draftText, { delay: typingDelay });
   await page.evaluate(() => {
@@ -107,7 +106,7 @@ test('session expired reject draft', async ({ page }) => {
   await page.click('text=submit', { delay });
   expect(dialogCtr).toStrictEqual({ accept: 0, reject: 1 });
   expect(messageAPICallCtr).toBe(0);
-  expect(await page.inputValue('textarea.text', { timeout })).toBe('');
+  expect(await page.inputValue('textarea.text')).toBe('');
   expect(await page.innerText('div > span')).toBe('Testament in the cloud');
 });
 
@@ -124,7 +123,7 @@ test('session expired accept draft', async ({ page }) => {
     callback: async () => messageAPICallCtr++,
   });
   await page.goto(generateAuthURL(token));
-  await page.waitForNavigation({ timeout });
+  await page.waitForNavigation();
   const draftText = 'this is a draft';
   await page.type('textarea.text', draftText, { delay: typingDelay });
   await page.evaluate(() => {
@@ -141,7 +140,7 @@ test('session expired accept draft', async ({ page }) => {
   await page.click('text=submit', { delay });
   expect(dialogCtr).toStrictEqual({ accept: 1, reject: 0 });
   expect(messageAPICallCtr).toBe(0);
-  await page.waitForLoadState('networkidle', { timeout });
-  expect(await page.inputValue('textarea.text', { timeout })).toBe(draftText);
+  await page.waitForLoadState('networkidle');
+  expect(await page.inputValue('textarea.text')).toBe(draftText);
   expect(await page.innerText('div > span')).toBe('Testament in the cloud');
 });

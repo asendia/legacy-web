@@ -1,5 +1,5 @@
 import test, { expect } from '@playwright/test';
-import { generateAuthURL, mockIdentityUserAPI, mockMessageAPI, timeout } from './core.test.js';
+import { delay, generateAuthURL, mockIdentityUserAPI, mockMessageAPI } from './core.test.js';
 
 test('slow api', async ({ page }) => {
   const slowWaitTime = 1000;
@@ -14,14 +14,14 @@ test('slow api', async ({ page }) => {
     },
   });
   await page.goto(generateAuthURL(token));
-  expect(await page.isEnabled('text=submit', { timeout })).toBeFalsy();
+  expect(await page.isEnabled('text=submit')).toBeFalsy();
   await page.waitForSelector('.textWrapper .loading', {
     state: 'attached',
-    timeout: slowWaitTime + timeout,
+    timeout: slowWaitTime + delay,
   });
   await page.waitForSelector('.textWrapper .loading', {
     state: 'detached',
-    timeout: slowWaitTime + timeout,
+    timeout: slowWaitTime + delay,
   });
-  expect(await page.isEnabled('text=submit', { timeout })).toBeTruthy();
+  expect(await page.isEnabled('text=submit')).toBeTruthy();
 });

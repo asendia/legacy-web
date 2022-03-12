@@ -1,6 +1,5 @@
 import { expect, Page, Route } from '@playwright/test';
 
-export const timeout = 1000;
 export const delay = 200;
 export const typingDelay = 1;
 export const closeSymbol = '×';

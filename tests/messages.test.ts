@@ -7,7 +7,6 @@ import {
   MessageData,
   mockIdentityUserAPI,
   mockMessageAPI,
-  timeout,
   typingDelay,
 } from './core.test.js';
 
@@ -90,18 +89,18 @@ test('insert/update message keyboard & click', async ({ page }) => {
 
   await page.click('.toggle.aes', { delay });
   await page.click('text=submit', { delay });
-  await page.isEnabled('text=submit', { timeout });
+  await page.isEnabled('text=submit');
   expect(messages[0].messageContent.startsWith('aes.utf8:')).toBeTruthy();
   expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 2 });
 
-  await page.reload();
-  expect(await page.isEnabled('text=submit', { timeout })).toBeTruthy();
+  await page.reload({ waitUntil: 'networkidle' });
+  expect(await page.isEnabled('text=submit')).toBeTruthy();
   expect(await page.inputValue('textarea.text')).toBe(messageContent + additionalMessage);
   expect(messages[0].inactivePeriodDays).toBe(90);
   expect(messages[0].reminderIntervalDays).toBe(30);
   expect(messages.length).toBe(1);
-  expect(await page.innerText('.toggle.aes', { timeout })).toBe('CLIENT-AES:\nON');
-  expect(await page.innerText('.toggle.show', { timeout })).toBe('SHOW');
+  expect(await page.innerText('.toggle.aes')).toBe('CLIENT-AES:\nON');
+  expect(await page.innerText('.toggle.show')).toBe('SHOW');
   expect(await page.textContent(`.wrapper > .email:nth-child(2)`)).toBe(
     recipient + ' ' + closeSymbol,
   );

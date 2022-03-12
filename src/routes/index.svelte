@@ -16,17 +16,10 @@
     setEmailReceiversCache,
     setMessageContentCache,
   } from '$lib/messages/messageCache';
-  import type { MessageData } from '$lib/messages/messageData';
+  import { defaultMessageData, type MessageData } from '$lib/messages/messageData';
   import { getMessageData, submitMessage } from '$lib/messages/formHandler';
 
-  let messageData: MessageData = {
-    emailReceivers: [] as Array<string>,
-    id: '',
-    inactivePeriodDays: 60,
-    isActive: true,
-    messageContent: '',
-    reminderIntervalDays: 15,
-  };
+  let messageData = defaultMessageData;
   let isLoading = false,
     authObject: AuthObject,
     disableSubmit = true,
