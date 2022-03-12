@@ -13,7 +13,14 @@
     addEventListener('popstate', enableButton);
     try {
       auth = getAuthFromLocalStorage();
-    } catch (err) {}
+    } catch (err) {
+      switch (err.message) {
+        case 'auth is undefined':
+          break;
+        case 'auth is expired':
+          break;
+      }
+    }
     return () => removeEventListener('popstate', enableButton);
   });
   function handleLogin() {
