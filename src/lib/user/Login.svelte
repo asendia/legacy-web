@@ -8,11 +8,13 @@
   let disabled = true;
   let color: 'primary' | 'secondary' = 'primary';
   let text = 'login';
-
+  const enableButton = () => (disabled = false);
   onMount(() => {
+    addEventListener('popstate', enableButton);
     try {
       auth = getAuthFromLocalStorage();
     } catch (err) {}
+    return () => removeEventListener('popstate', enableButton);
   });
   function handleLogin() {
     disabled = true;

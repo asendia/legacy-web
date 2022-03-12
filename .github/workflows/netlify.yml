@@ -15,13 +15,13 @@ jobs:
       - name: Install dependency
         run: npm ci
       - name: Prettier
-        run: npm run format
+        run: npm run lint
       - name: Install Browsers
         run: npx playwright install
       - name: Build and browser test
         run: npm test
       - name: Install netlify cli
-        run: yarn global add netlify-cli
+        run: npm install -g netlify-cli
       - name: Deploy
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
