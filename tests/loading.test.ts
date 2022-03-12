@@ -1,7 +1,15 @@
 import test, { expect } from '@playwright/test';
-import { delay, generateAuthURL, mockIdentityUserAPI, mockMessageAPI } from './core.test.js';
+import {
+  corsHeadersAllow,
+  delay,
+  failOnAnyError,
+  generateAuthURL,
+  mockIdentityUserAPI,
+  mockMessageAPI,
+} from './core.test.js';
 
 test('slow api', async ({ page }) => {
+  failOnAnyError(page);
   const slowWaitTime = 1000;
   const token = 'secretjwt2';
   const email = 'test@warisin.com';
@@ -10,7 +18,7 @@ test('slow api', async ({ page }) => {
   await mockMessageAPI(page, token, 'select-messages', {
     callback: async (route) => {
       await page.waitForTimeout(slowWaitTime);
-      route.fulfill({ body: JSON.stringify({ data: [] }) });
+      route.fulfill({ headers: corsHeadersAllow, body: JSON.stringify({ data: [] }) });
     },
   });
   await page.goto(generateAuthURL(token));

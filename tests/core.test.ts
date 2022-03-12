@@ -99,3 +99,18 @@ export async function mockMessageAPI<T>(
     });
   });
 }
+
+export function failOnAnyError<T>(page: Page, callback?: (err: Error) => T) {
+  const fail = (err: Error) => {
+    callback && callback(err);
+    expect('browser log: ' + err.message).toBe(null);
+  };
+  page.on('console', (msg) => {
+    if (msg.type() === 'error') {
+      fail(new Error(msg.text()));
+    }
+  });
+  page.on('pageerror', (err) => {
+    fail(err);
+  });
+}

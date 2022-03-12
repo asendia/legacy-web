@@ -1,9 +1,13 @@
 import test, { expect } from '@playwright/test';
-import { mockIdentityAuthorizeAPI, mockIdentityUserAPI, mockMessageAPI } from './core.test.js';
+import {
+  failOnAnyError,
+  mockIdentityAuthorizeAPI,
+  mockIdentityUserAPI,
+  mockMessageAPI,
+} from './core.test.js';
 
 test('non-login submit prompts user to login', async ({ page }) => {
-  const errorTexts = [];
-  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
+  failOnAnyError(page);
   await page.goto('/');
   let dialogCounter = 0;
   page.on('dialog', (dialog) => {
@@ -16,10 +20,10 @@ test('non-login submit prompts user to login', async ({ page }) => {
   await page.click('text=submit');
   expect(await page.locator('text=submit').isEnabled()).toBeTruthy();
   expect(dialogCounter).toBe(2);
-  expect(errorTexts[0]).toBe(undefined);
 });
 
 test('login/logout', async ({ page }) => {
+  failOnAnyError(page);
   const token = 'secretjwt';
   const email = 'test@warisin.com';
   const fullname = 'Warisin Team';
@@ -28,7 +32,7 @@ test('login/logout', async ({ page }) => {
   await mockMessageAPI(page, token, 'select-messages', { responseBody: { data: [] } });
   await page.goto('/');
   await page.click('text=login');
-  await page.waitForNavigation();
+  await page.waitForNavigation({ waitUntil: 'networkidle' });
   expect(await page.innerText('div > span')).toBe('Welcome, ' + fullname);
   let gotrue = await page.evaluate(() => JSON.parse(localStorage.getItem('gotrue.user')));
   expect(gotrue.email).toBe(email);

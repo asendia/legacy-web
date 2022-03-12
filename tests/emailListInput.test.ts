@@ -1,9 +1,8 @@
 import test, { expect } from '@playwright/test';
-import { closeSymbol, typingDelay } from './core.test.js';
+import { closeSymbol, failOnAnyError, typingDelay } from './core.test.js';
 
 test('email input works', async ({ page }) => {
-  const errorTexts = [];
-  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
+  failOnAnyError(page);
   await page.goto('/');
   await page.click('.toText');
   await expect(page.locator('input.text')).toBeFocused();
@@ -37,5 +36,4 @@ test('email input works', async ({ page }) => {
   expect(emailElements.length).toBe(2);
   expect((await emailElements[0].innerText()).startsWith(validEmails[0]));
   expect((await emailElements[1].innerText()).startsWith('invalidemail@nowvalid.com'));
-  expect(errorTexts[0]).toBe(undefined);
 });

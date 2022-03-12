@@ -3,6 +3,7 @@ import {
   closeSymbol,
   corsHeadersAllow,
   delay,
+  failOnAnyError,
   generateAuthURL,
   MessageData,
   mockIdentityUserAPI,
@@ -11,8 +12,7 @@ import {
 } from './core.test.js';
 
 test('insert/update message keyboard & click', async ({ page }) => {
-  const errorTexts = [];
-  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
+  failOnAnyError(page);
   const token = 'secretjwt2';
   const email = 'test@warisin.com';
   const fullname = 'Warisin Team';
@@ -56,6 +56,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
     },
   });
   await page.goto(generateAuthURL(token));
+  await page.waitForNavigation({ waitUntil: 'networkidle' });
   expect(await page.innerText('div > span')).toBe('Welcome, ' + fullname);
   expect(await page.locator('.toggle.show').innerText()).toBe('HIDE');
   await page.click('.toText');
@@ -107,5 +108,4 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(await page.inputValue('select:nth-child(1)')).toBe('90');
   expect(await page.inputValue('select:nth-child(2)')).toBe('30');
   expect(accessCtr).toStrictEqual({ select: 2, insert: 1, update: 2 });
-  expect(errorTexts[0]).toBe(undefined);
 });

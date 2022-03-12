@@ -1,6 +1,7 @@
 import test, { Dialog, expect } from '@playwright/test';
 import {
   delay,
+  failOnAnyError,
   generateAuthURL,
   mockIdentityAuthorizeAPI,
   mockIdentityUserAPI,
@@ -89,7 +90,7 @@ test('session expired reject draft', async ({ page }) => {
     callback: async () => messageAPICallCtr++,
   });
   await page.goto(generateAuthURL(token));
-  await page.waitForNavigation();
+  await page.waitForNavigation({ waitUntil: 'networkidle' });
   const draftText = 'this is a draft';
   await page.type('textarea.text', draftText, { delay: typingDelay });
   await page.evaluate(() => {
@@ -111,8 +112,7 @@ test('session expired reject draft', async ({ page }) => {
 });
 
 test('session expired accept draft', async ({ page }) => {
-  const errorTexts = [];
-  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
+  failOnAnyError(page);
   const token = 'secretjwt2';
   const email = 'test@warisin.com';
   const fullname = 'Warisin Team';
@@ -123,7 +123,7 @@ test('session expired accept draft', async ({ page }) => {
     callback: async () => messageAPICallCtr++,
   });
   await page.goto(generateAuthURL(token));
-  await page.waitForNavigation();
+  await page.waitForNavigation({ waitUntil: 'networkidle' });
   const draftText = 'this is a draft';
   await page.type('textarea.text', draftText, { delay: typingDelay });
   await page.evaluate(() => {

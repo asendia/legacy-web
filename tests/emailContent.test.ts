@@ -1,8 +1,8 @@
 import test, { expect } from '@playwright/test';
+import { failOnAnyError } from './core.test.js';
 
 test('decrypting without login works', async ({ page }) => {
-  const errorTexts = [];
-  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
+  failOnAnyError(page);
   await page.goto('/');
   const encryptedContent =
     'aes.utf8:U2FsdGVkX1+qokMf7b9lkyHiTvCRI9jjH6BYn4eeUDhzsDa/jqXYNN9sZqUDjraB8QwfTBLjDrPhu8blOAu7Kw==';
@@ -15,5 +15,4 @@ test('decrypting without login works', async ({ page }) => {
   expect(await page.inputValue('textarea.text')).toBe(
     'Testing from playwright\n\nBest,\nWarisin Team',
   );
-  expect(errorTexts[0]).toBe(undefined);
 });
