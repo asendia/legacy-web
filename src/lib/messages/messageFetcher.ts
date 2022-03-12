@@ -1,28 +1,13 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
 import { API_URL } from '$lib/core/urls';
+import type { MessageData } from './messageData';
 
-// action = 'insert-message' | 'update-message'
-export async function upsertMessage(
-  jwt: string,
-  messageID: string,
-  emails: Array<string>,
-  message: string,
-  inactivePeriod: number,
-  reminderInterval: number,
-  isActive: boolean,
-) {
+export async function upsertMessage(jwt: string, data: MessageData) {
   const headers = generateHeaders(jwt);
-  const action = messageID === '' ? 'insert-message' : 'update-message';
+  const action = data.id === '' ? 'insert-message' : 'update-message';
   const res = await fetch(`${API_URL}/legacy-api?action=${action}`, {
     method: 'POST',
-    body: JSON.stringify({
-      id: messageID,
-      emailReceivers: emails,
-      messageContent: message,
-      inactivePeriodDays: inactivePeriod,
-      reminderIntervalDays: reminderInterval,
-      isActive,
-    }),
+    body: JSON.stringify(data),
     headers,
   });
   throwIfNonSuccessResponse(res);

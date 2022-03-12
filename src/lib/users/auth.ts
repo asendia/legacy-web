@@ -1,8 +1,7 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
-import { STORAGE_SECRET_NAME } from '$lib/messages/encryption';
-import { destroyFetchUserTokenPromise, fetchUserToken, type TokenObject } from './fetchUsers';
-
-const STORAGE_NAME_GOTRUE = 'gotrue.user';
+import { STORAGE_GOTRUE, STORAGE_ENCRYPTION_SECRET } from '$lib/core/storageKeys';
+import { clearMessageCache } from '$lib/messages/messageCache';
+import { destroyFetchUserTokenPromise, fetchUserToken, type TokenObject } from './userFetcher';
 
 export interface AuthObject {
   url: string;
@@ -31,11 +30,11 @@ export async function getAuthObject(): Promise<AuthObject> {
       throwIfNonSuccessResponse(res);
       const authObject: AuthObject = await res.json();
       authObject.token = token;
-      localStorage.setItem(STORAGE_NAME_GOTRUE, JSON.stringify(authObject));
+      localStorage.setItem(STORAGE_GOTRUE, JSON.stringify(authObject));
       location.hash = '';
       return authObject;
     } catch (err) {
-      clearStorage();
+      clearUserData();
       return;
     } finally {
       destroyFetchUserTokenPromise();
@@ -43,7 +42,7 @@ export async function getAuthObject(): Promise<AuthObject> {
   }
 
   // From localStorage
-  const authObject = JSON.parse(localStorage.getItem(STORAGE_NAME_GOTRUE));
+  const authObject = JSON.parse(localStorage.getItem(STORAGE_GOTRUE));
   if (!authObject) {
     throw new Error('auth is undefined');
   }
@@ -53,12 +52,14 @@ export async function getAuthObject(): Promise<AuthObject> {
   return authObject;
 }
 
-export function clearStorage() {
-  localStorage.removeItem(STORAGE_NAME_GOTRUE);
-  localStorage.removeItem(STORAGE_SECRET_NAME);
+export function clearUserData() {
+  localStorage.removeItem(STORAGE_GOTRUE);
+  localStorage.removeItem(STORAGE_ENCRYPTION_SECRET);
 }
+
 export function logout() {
-  clearStorage();
+  clearUserData();
+  clearMessageCache();
   location.reload();
 }
 

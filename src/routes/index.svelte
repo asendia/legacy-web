@@ -7,27 +7,30 @@
   import Scheduler from '$lib/messages/Scheduler.svelte';
   import Button from '$lib/core/Button.svelte';
   import Footer from '$lib/core/Footer.svelte';
-  import { selectMessages, upsertMessage } from '$lib/messages/fetchMessages';
-  import { clearStorage, getAuthObject, logout, type AuthObject } from '$lib/users/auth';
+  import { clearUserData, getAuthObject, type AuthObject } from '$lib/users/auth';
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
-  import { handleQueryVisit } from '$lib/email-visit/queryHandler';
+  import { handleQueryVisit } from '$lib/query-string/queryStringHandler';
   import {
-    decryptMessage,
-    encryptMessage,
-    isProbablyEncrypted,
-    STORAGE_SECRET_NAME,
-  } from '$lib/messages/encryption';
+    clearMessageCache,
+    consolidateCache,
+    setEmailReceiversCache,
+    setMessageContentCache,
+  } from '$lib/messages/messageCache';
+  import type { MessageData } from '$lib/messages/messageData';
+  import { getMessageData, submitMessage } from '$lib/messages/formHandler';
 
-  let emailReceivers: Array<string> = [],
-    messageID = '',
-    inactivePeriodDays = 60,
-    isActive = true,
-    messageContent = '',
-    reminderIntervalDays = 15,
-    authObject: AuthObject | undefined,
-    enableClientAES = false,
-    isLoading = false,
-    disableSubmit = true;
+  let messageData: MessageData = {
+    emailReceivers: [] as Array<string>,
+    id: '',
+    inactivePeriodDays: 60,
+    isActive: true,
+    messageContent: '',
+    reminderIntervalDays: 15,
+  };
+  let isLoading = false,
+    authObject: AuthObject,
+    disableSubmit = true,
+    enableClientAES = false;
   onMount(async () => {
     const slowWaitingTime = 1000;
     const timeoutID = setTimeout(() => {
@@ -36,34 +39,32 @@
     const mountTime = Date.now();
     try {
       await handleQueryVisit();
+      // Fetch data from API
       authObject = await getAuthObject();
-      const dataList = await selectMessages(authObject.token.access_token);
-      if (dataList.length === 0) {
-        throw new Error('message length is 0');
-      }
-      const d = dataList[0];
-      let msg = d.messageContent;
-      if (isProbablyEncrypted(msg)) {
-        msg = decryptMessage(msg) || msg;
-        enableClientAES = true;
-      }
-      emailReceivers = d.emailReceivers;
-      messageID = d.id;
-      inactivePeriodDays = d.inactivePeriodDays;
-      isActive = d.isActive;
-      messageContent = msg;
-      reminderIntervalDays = d.reminderIntervalDays;
+      const d = await getMessageData(authObject, enableClientAES);
+      messageData = d.messageData;
+      enableClientAES = d.enableClientAES;
     } catch (err) {
       switch (err.message) {
         case 'auth is undefined':
         case 'message length is 0':
           break;
         case 'auth is expired':
-          clearStorage();
+          clearUserData();
           break;
         default:
-          console.error(err);
+          console.error('Fetch API error', err);
       }
+    }
+    try {
+      const c = consolidateCache(messageData.emailReceivers, messageData.messageContent);
+      messageData = {
+        ...messageData,
+        emailReceivers: c.emailReceivers,
+        messageContent: c.messageContent,
+      };
+    } catch (err) {
+      console.error('Failed to consolidate local data with sessionStorage:', err);
     }
     clearTimeout(timeoutID);
     const waitingTime = Date.now() - mountTime;
@@ -79,64 +80,44 @@
     );
   });
   function handleEmailReceiversChange(list: Array<string>) {
-    emailReceivers = list;
+    messageData = { ...messageData, emailReceivers: list };
+    setEmailReceiversCache(list);
   }
   function handleMessageChange(content: string, aes: boolean) {
-    messageContent = content;
+    messageData = { ...messageData, messageContent: content };
     enableClientAES = aes;
+    setMessageContentCache(content);
   }
   function handleSchedulerChange(value: number, type: 'reminder' | 'inactive') {
     if (type === 'reminder') {
-      reminderIntervalDays = value;
+      messageData = { ...messageData, reminderIntervalDays: value };
     } else if (type === 'inactive') {
-      inactivePeriodDays = value;
+      messageData = { ...messageData, inactivePeriodDays: value };
     }
   }
   async function handleClickSubmit(e: MouseEvent) {
     e.preventDefault();
     disableSubmit = true;
-    submit();
-  }
-  async function submit() {
     try {
       authObject = await getAuthObject();
-      let msg = messageContent;
-      if (enableClientAES) {
-        msg = encryptMessage(msg) || msg;
-      } else {
-        localStorage.removeItem(STORAGE_SECRET_NAME);
-      }
-      const message = await upsertMessage(
-        authObject.token.access_token,
-        messageID,
-        emailReceivers,
-        msg,
-        inactivePeriodDays,
-        reminderIntervalDays,
-        isActive,
-      );
-      messageID = message.id;
+      messageData = await submitMessage(authObject, messageData, enableClientAES);
     } catch (err) {
       switch (err.message) {
         case 'auth is undefined':
           alert('You need to login first');
           break;
         case 'auth is expired':
-          if (
-            confirm(
-              'Your session has expired, do you want to refresh the page? ' +
-                'Press cancel if you want to copy your message first',
-            )
-          ) {
-            logout();
+          if (!confirm('Session expired, want to backup the content first?')) {
+            clearMessageCache();
           }
+          clearUserData();
+          location.reload();
           break;
         default:
           console.error(err);
       }
-    } finally {
-      disableSubmit = false;
     }
+    disableSubmit = false;
   }
   const colorPalette =
     `--color-grey:${grey};--color-blue:${blue};` +
@@ -151,12 +132,21 @@
   <Header />
   <Login auth={authObject} />
   <div class="separator" />
-  <EmailListInput onChange={handleEmailReceiversChange} {isLoading} emailList={emailReceivers} />
-  <EmailContent onChange={handleMessageChange} {isLoading} {messageContent} {enableClientAES} />
+  <EmailListInput
+    onChange={handleEmailReceiversChange}
+    {isLoading}
+    emailList={messageData.emailReceivers}
+  />
+  <EmailContent
+    onChange={handleMessageChange}
+    {isLoading}
+    messageContent={messageData.messageContent}
+    {enableClientAES}
+  />
   <Scheduler
     onChange={handleSchedulerChange}
-    {inactivePeriodDays}
-    {reminderIntervalDays}
+    inactivePeriodDays={messageData.inactivePeriodDays}
+    reminderIntervalDays={messageData.reminderIntervalDays}
     emailCreator={authObject?.email}
   />
   <Button

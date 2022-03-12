@@ -1,4 +1,4 @@
-import { extendMessage, unsubscribeMessage } from '$lib/email-visit/fetchEmailVisit';
+import { extendMessage, unsubscribeMessage } from '$lib/query-string/queryStringFetcher';
 
 // Query string visit for unsubsribe & extend message
 export async function handleQueryVisit() {

@@ -95,13 +95,13 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 2 });
 
   await page.reload();
-  expect(await page.locator('text=submit').isEnabled({ timeout })).toBeTruthy();
+  expect(await page.isEnabled('text=submit', { timeout })).toBeTruthy();
   expect(await page.inputValue('textarea.text')).toBe(messageContent + additionalMessage);
   expect(messages[0].inactivePeriodDays).toBe(90);
   expect(messages[0].reminderIntervalDays).toBe(30);
   expect(messages.length).toBe(1);
-  expect(await page.locator('.toggle.aes').innerText()).toBe('CLIENT-AES:\nON');
-  expect(await page.locator('.toggle.show').innerText()).toBe('SHOW');
+  expect(await page.innerText('.toggle.aes', { timeout })).toBe('CLIENT-AES:\nON');
+  expect(await page.innerText('.toggle.show', { timeout })).toBe('SHOW');
   expect(await page.textContent(`.wrapper > .email:nth-child(2)`)).toBe(
     recipient + ' ' + closeSymbol,
   );

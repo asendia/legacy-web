@@ -1,7 +1,7 @@
 import { expect, Page, Route } from '@playwright/test';
 
-export const timeout = 200;
-export const delay = 100;
+export const timeout = 1000;
+export const delay = 200;
 export const typingDelay = 1;
 export const closeSymbol = '×';
 
@@ -69,11 +69,11 @@ interface MockMessageOptions<T> {
 }
 
 export interface MessageData {
-  emailReceivers: Array<string>;
   id: string;
-  inactivePeriodDays: number;
+  emailReceivers: Array<string>;
   isActive: boolean;
   messageContent: string;
+  inactivePeriodDays: number;
   reminderIntervalDays: number;
 }
 

@@ -1,10 +1,12 @@
 <script lang="ts">
   import Button from '$lib/core/Button.svelte';
   import { logout, type AuthObject } from '$lib/users/auth';
-  import { fetchAuthorizeUser } from './fetchUsers';
+  import { fetchAuthorizeUser } from './userFetcher';
   export let auth: AuthObject;
   let message = 'Testament in the cloud';
   let disabled = true;
+  let color: 'primary' | 'secondary' = 'primary';
+  let text = 'login';
 
   function handleLogin() {
     disabled = true;
@@ -17,6 +19,11 @@
   $: {
     if (auth) {
       message = 'Welcome, ' + (auth.user_metadata?.full_name ?? auth.email);
+      color = 'secondary';
+      text = 'logout';
+    } else {
+      color = 'primary';
+      text = 'login';
     }
     disabled = false;
   }
@@ -24,11 +31,7 @@
 
 <div>
   <span>{message}</span>
-  {#if auth}
-    <Button {disabled} onClick={handleLogout} color="secondary" text="logout" />
-  {:else}
-    <Button {disabled} onClick={handleLogin} text="login" />
-  {/if}
+  <Button onClick={auth ? handleLogout : handleLogin} {disabled} {color} {text} />
 </div>
 
 <style>
