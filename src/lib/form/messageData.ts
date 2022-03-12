@@ -1,10 +1,27 @@
 import { STORAGE_ENCRYPTION_SECRET } from '$lib/core/storageKeys';
-import type { AuthObject } from '$lib/users/auth';
-import { decryptMessage, encryptMessage, isProbablyEncrypted } from './encryption';
-import type { MessageData } from './messageData';
+import type { AuthObject } from '$lib/user/auth';
+import { decryptMessage, encryptMessage, isProbablyEncrypted } from '$lib/content/encryption';
 import { selectMessages, upsertMessage } from './messageFetcher';
 
-export async function submitMessage(
+export interface MessageData {
+  id: string;
+  emailReceivers: Array<string>;
+  isActive: boolean;
+  messageContent: string;
+  inactivePeriodDays: number;
+  reminderIntervalDays: number;
+}
+
+export const defaultMessageData = {
+  emailReceivers: [] as Array<string>,
+  id: '',
+  inactivePeriodDays: 60,
+  isActive: true,
+  messageContent: '',
+  reminderIntervalDays: 15,
+};
+
+export async function submitMessageData(
   authObject: AuthObject,
   messageData: MessageData,
   enableClientAES: boolean,

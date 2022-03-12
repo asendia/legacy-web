@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button from '$lib/core/Button.svelte';
-  import { logout, type AuthObject } from '$lib/users/auth';
+  import { logout, type AuthObject } from '$lib/user/auth';
   import { fetchAuthorizeUser } from './userFetcher';
   export let auth: AuthObject;
   let message = 'Testament in the cloud';

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { HTMLElementEvent } from './types';
+  import type { HTMLElementEvent } from '../core/types';
+  import { isValidEmail } from './emailValidator';
   export let onChange: (emailList: Array<string>) => void;
   export let isLoading = false;
   export let emailList: Array<string> = [];
@@ -7,10 +8,7 @@
   let toText = 'Recipients';
   let text = '';
   let inputText: HTMLInputElement;
-  const isValidEmail = (email: string) =>
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-      email,
-    );
+
   function addEmail(email: string) {
     if (!isValidEmail(email) || emailList.length >= 3) {
       return;

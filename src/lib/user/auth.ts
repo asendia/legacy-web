@@ -1,6 +1,6 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
 import { STORAGE_GOTRUE, STORAGE_ENCRYPTION_SECRET } from '$lib/core/storageKeys';
-import { clearMessageCache } from '$lib/messages/messageCache';
+import { clearDraft } from '$lib/content/contentDraft';
 import { destroyFetchUserTokenPromise, fetchUserToken, type TokenObject } from './userFetcher';
 
 export interface AuthObject {
@@ -59,7 +59,7 @@ export function clearUserData() {
 
 export function logout() {
   clearUserData();
-  clearMessageCache();
+  clearDraft();
   location.reload();
 }
 

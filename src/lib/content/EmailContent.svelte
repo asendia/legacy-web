@@ -1,6 +1,6 @@
 <script lang="ts">
   import { decryptMessage, getEncryptionSecret, isProbablyEncrypted } from './encryption';
-  import type { HTMLElementEvent } from './types';
+  import type { HTMLElementEvent } from '../core/types';
   export let onChange: (content: string, aes: boolean) => void;
   export let isLoading = false;
   export let messageContent = '';

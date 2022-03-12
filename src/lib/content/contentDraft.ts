@@ -1,30 +1,30 @@
 import { STORAGE_MESSAGE_CONTENT, STORAGE_EMAIL_RECEIVERS } from '$lib/core/storageKeys';
 
-export function setEmailReceiversCache(emailReceivers: Array<string>) {
+export function setDraftEmailReceivers(emailReceivers: Array<string>) {
   sessionStorage.setItem(STORAGE_EMAIL_RECEIVERS, JSON.stringify(emailReceivers));
 }
 
-export function setMessageContentCache(messageContent: string) {
+export function setDraftMessageContent(messageContent: string) {
   sessionStorage.setItem(STORAGE_MESSAGE_CONTENT, messageContent);
 }
 
-export function getEmailReceiversCache(): Array<string> {
+export function getDraftEmailReceivers(): Array<string> {
   return JSON.parse(sessionStorage.getItem(STORAGE_EMAIL_RECEIVERS)) || [];
 }
 
-export function getMessageContentCache(): string {
+export function getDraftMessageContent(): string {
   return sessionStorage.getItem(STORAGE_MESSAGE_CONTENT) || '';
 }
 
-export function clearMessageCache() {
+export function clearDraft() {
   sessionStorage.removeItem(STORAGE_EMAIL_RECEIVERS);
   sessionStorage.removeItem(STORAGE_MESSAGE_CONTENT);
 }
 
-export function consolidateCache(emailReceivers: Array<string>, messageContent: string) {
+export function consolidateDraft(emailReceivers: Array<string>, messageContent: string) {
   // Consolidate API response with user cache
-  const cReceivers = getEmailReceiversCache();
-  const cContent = getMessageContentCache();
+  const cReceivers = getDraftEmailReceivers();
+  const cContent = getDraftMessageContent();
   const isConflicted =
     (() => {
       if (emailReceivers.length === 0 || cReceivers.length === 0) {
@@ -55,7 +55,7 @@ export function consolidateCache(emailReceivers: Array<string>, messageContent: 
     emailReceivers = emailReceivers.length ? emailReceivers : cReceivers;
     messageContent = messageContent || cContent;
   }
-  setEmailReceiversCache(emailReceivers);
-  setMessageContentCache(messageContent);
+  setDraftEmailReceivers(emailReceivers);
+  setDraftMessageContent(messageContent);
   return { emailReceivers, messageContent };
 }

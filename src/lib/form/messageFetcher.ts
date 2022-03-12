@@ -2,7 +2,7 @@ import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
 import { API_URL } from '$lib/core/urls';
 import type { MessageData } from './messageData';
 
-export async function upsertMessage(jwt: string, data: MessageData) {
+export async function upsertMessage(jwt: string, data: MessageData): Promise<MessageData> {
   const headers = generateHeaders(jwt);
   const action = data.id === '' ? 'insert-message' : 'update-message';
   const res = await fetch(`${API_URL}/legacy-api?action=${action}`, {
@@ -16,7 +16,7 @@ export async function upsertMessage(jwt: string, data: MessageData) {
   return newMessage;
 }
 
-export async function selectMessages(jwt: string) {
+export async function selectMessages(jwt: string): Promise<Array<MessageData>> {
   const headers = generateHeaders(jwt);
   const res = await fetch(`${API_URL}/legacy-api?action=select-messages`, { headers });
   throwIfNonSuccessResponse(res);
