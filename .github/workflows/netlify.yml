@@ -21,9 +21,9 @@ jobs:
       - name: Build and browser test
         run: npm test
       - name: Install netlify cli
-        run: npm install netlify-cli
+        run: yarn global add netlify-cli
       - name: Deploy
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        run: netlify deploy
+        run: netlify deploy --prod
