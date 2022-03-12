@@ -23,7 +23,7 @@ export async function fetchUserToken(token: TokenObject) {
   });
 }
 
-export async function destroyFetchUserTokenPromise() {
+export function destroyFetchUserTokenPromise() {
   apiReqPromise = undefined;
 }
 

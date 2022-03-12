@@ -22,26 +22,28 @@ export interface AuthObject {
   updated_at: string;
 }
 
-export async function getAuthObject(): Promise<AuthObject> {
+export async function handleHashVisit() {
   const token = getTokenFromHash();
-  if (token) {
-    try {
-      const res = await fetchUserToken(token);
-      throwIfNonSuccessResponse(res);
-      const authObject: AuthObject = await res.json();
-      authObject.token = token;
-      localStorage.setItem(STORAGE_GOTRUE, JSON.stringify(authObject));
-      location.hash = '';
-      return authObject;
-    } catch (err) {
-      clearUserData();
-      return;
-    } finally {
-      destroyFetchUserTokenPromise();
-    }
+  if (!token) {
+    return;
   }
+  let res: Response;
+  try {
+    res = await fetchUserToken(token);
+  } catch (err) {
+    destroyFetchUserTokenPromise();
+    throw new Error(err);
+  }
+  throwIfNonSuccessResponse(res);
+  const authObject: AuthObject = await res.json();
+  authObject.token = token;
+  localStorage.setItem(STORAGE_GOTRUE, JSON.stringify(authObject));
+  location.hash = '';
+  destroyFetchUserTokenPromise();
+  location.reload();
+}
 
-  // From localStorage
+export function getAuthFromLocalStorage(): AuthObject {
   const authObject = JSON.parse(localStorage.getItem(STORAGE_GOTRUE));
   if (!authObject) {
     throw new Error('auth is undefined');

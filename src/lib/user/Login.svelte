@@ -1,13 +1,19 @@
 <script lang="ts">
   import Button from '$lib/core/Button.svelte';
-  import { logout, type AuthObject } from '$lib/user/auth';
+  import { getAuthFromLocalStorage, logout, type AuthObject } from '$lib/user/auth';
+  import { onMount } from 'svelte';
   import { fetchAuthorizeUser } from './userFetcher';
-  export let auth: AuthObject;
+  let auth: AuthObject;
   let message = 'Testament in the cloud';
   let disabled = true;
   let color: 'primary' | 'secondary' = 'primary';
   let text = 'login';
 
+  onMount(() => {
+    try {
+      auth = getAuthFromLocalStorage();
+    } catch (err) {}
+  });
   function handleLogin() {
     disabled = true;
     fetchAuthorizeUser('google');

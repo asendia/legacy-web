@@ -40,6 +40,9 @@ export async function submitMessageData(
 }
 
 export async function getMessageData(authObject: AuthObject, enableClientAES: boolean) {
+  if (!authObject) {
+    throw new Error('auth is undefined');
+  }
   const dataList = await selectMessages(authObject.token.access_token);
   if (dataList.length === 0) {
     throw new Error('message length is 0');

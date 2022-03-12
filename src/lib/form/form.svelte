@@ -4,8 +4,7 @@
   import EmailContent from '$lib/content/EmailContent.svelte';
   import Scheduler from '$lib/schedule/Scheduler.svelte';
   import Button from '$lib/core/Button.svelte';
-  import { clearUserData, getAuthObject, type AuthObject } from '$lib/user/auth';
-  import { handleQueryVisit } from '$lib/query-string/queryStringHandler';
+  import { clearUserData, getAuthFromLocalStorage, type AuthObject } from '$lib/user/auth';
   import {
     clearDraft,
     consolidateDraft,
@@ -14,34 +13,30 @@
   } from '$lib/content/contentDraft';
   import { defaultMessageData, getMessageData, submitMessageData } from '$lib/form/messageData';
 
-  export let auth: AuthObject;
+  let auth: AuthObject;
   let messageData = defaultMessageData;
-  let isLoading = false,
-    disableSubmit = true,
-    enableClientAES = false;
+  let isLoading = false;
+  let disableSubmit = true;
+  let enableClientAES = false;
   onMount(async () => {
     const slowWaitingTime = 1000;
-    const timeoutID = setTimeout(() => {
-      isLoading = true;
-    }, slowWaitingTime);
+    const timeoutID = setTimeout(() => (isLoading = true), slowWaitingTime);
     const mountTime = Date.now();
     try {
-      await handleQueryVisit();
-      // Fetch data from API
-      auth = await getAuthObject();
+      auth = getAuthFromLocalStorage();
       const d = await getMessageData(auth, enableClientAES);
       messageData = d.messageData;
       enableClientAES = d.enableClientAES;
     } catch (err) {
       switch (err.message) {
-        case 'auth is undefined':
         case 'message length is 0':
           break;
+        case 'auth is undefined':
         case 'auth is expired':
           clearUserData();
           break;
         default:
-          console.error('Fetch API error', err);
+          console.error(err);
       }
     }
     try {
@@ -56,16 +51,15 @@
     }
     clearTimeout(timeoutID);
     const waitingTime = Date.now() - mountTime;
-    setTimeout(
-      () => {
-        disableSubmit = false;
-        isLoading = false;
-      },
-      // If already shown, continue the Loading text at least for 1s to avoid blipping
+    // If already shown, continue the Loading text at least for 1s to avoid blipping
+    const additionalWaitingTime =
       slowWaitingTime < waitingTime && waitingTime < 2 * slowWaitingTime
         ? 2 * slowWaitingTime - waitingTime
-        : 0,
-    );
+        : 0;
+    setTimeout(() => {
+      disableSubmit = false;
+      isLoading = false;
+    }, additionalWaitingTime);
   });
   function handleEmailReceiversChange(list: Array<string>) {
     messageData = { ...messageData, emailReceivers: list };
@@ -87,7 +81,7 @@
     e.preventDefault();
     disableSubmit = true;
     try {
-      auth = await getAuthObject();
+      auth = getAuthFromLocalStorage();
       messageData = await submitMessageData(auth, messageData, enableClientAES);
     } catch (err) {
       switch (err.message) {

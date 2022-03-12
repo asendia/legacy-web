@@ -5,10 +5,18 @@
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import Form from '$lib/form/form.svelte';
   import { onMount } from 'svelte';
-  import { getAuthObject, type AuthObject } from '$lib/user/auth';
-  let auth: AuthObject;
+  import { handleHashVisit } from '$lib/user/auth';
+  import { handleQueryVisit } from '$lib/query-string/queryStringHandler';
   onMount(async () => {
-    auth = await getAuthObject();
+    try {
+      await handleQueryVisit();
+      await handleHashVisit();
+    } catch (err) {
+      switch (err.message) {
+        default:
+          console.error(err);
+      }
+    }
   });
   const colorPalette =
     `--color-grey:${grey};--color-blue:${blue};` +
@@ -21,9 +29,9 @@
 </svelte:head>
 <div class="wrapper" style={colorPalette}>
   <Header />
-  <Login {auth} />
+  <Login />
   <div class="separator" />
-  <Form {auth} />
+  <Form />
   <Footer />
 </div>
 
