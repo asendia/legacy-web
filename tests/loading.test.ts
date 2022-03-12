@@ -22,6 +22,7 @@ test('slow api', async ({ page }) => {
     },
   });
   await page.goto(generateAuthURL(token));
+  await page.waitForNavigation({ waitUntil: 'networkidle' });
   expect(await page.isEnabled('text=submit')).toBeFalsy();
   await page.waitForSelector('.textWrapper .loading', {
     state: 'attached',
