@@ -4,7 +4,12 @@
   import EmailContent from '$lib/content/EmailContent.svelte';
   import Scheduler from '$lib/schedule/Scheduler.svelte';
   import Button from '$lib/core/Button.svelte';
-  import { clearUserData, getAuthFromLocalStorage, type AuthObject } from '$lib/user/auth';
+  import {
+    clearUserData,
+    getAuthFromLocalStorage,
+    getTokenFromHash,
+    type AuthObject,
+  } from '$lib/user/auth';
   import {
     clearDraft,
     consolidateDraft,
@@ -19,6 +24,9 @@
   let disableSubmit = true;
   let enableClientAES = false;
   onMount(async () => {
+    if (getTokenFromHash()) {
+      return; // Don't init form if there is netlify token
+    }
     const slowWaitingTime = 1000;
     const timeoutID = setTimeout(() => (isLoading = true), slowWaitingTime);
     const mountTime = Date.now();

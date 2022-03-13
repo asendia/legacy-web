@@ -65,7 +65,7 @@ export function logout() {
   location.reload();
 }
 
-function getTokenFromHash() {
+export function getTokenFromHash() {
   const h = new URLSearchParams(location.hash.substring(1));
   const access_token = h.get('access_token');
   if (!access_token) {
