@@ -10,8 +10,11 @@ export function generateAuthURL(token: string) {
   return `http://localhost:3000/#access_token=${token}&expires_in=3600&refresh_token=refresh&token_type=bearer`;
 }
 
-export async function mockIdentityAuthorizeAPI(page: Page, token: string) {
+export async function mockIdentityAuthorizeAPI(page: Page, token: string, delay?: number) {
   return page.route('**/.netlify/identity/authorize?provider=google', async (route) => {
+    if (delay) {
+      await page.waitForTimeout(delay);
+    }
     route.fulfill({
       status: 302,
       headers: {
@@ -33,8 +36,12 @@ export async function mockIdentityUserAPI(
   token: string,
   email: string,
   fullname: string,
+  delay?: number,
 ) {
   return page.route('**/.netlify/identity/user', async (route) => {
+    if (delay) {
+      await page.waitForTimeout(delay);
+    }
     const request = route.request();
     const headerValue = await request.headerValue('authorization');
     expect(headerValue).toBe('Bearer ' + token);

@@ -1,5 +1,6 @@
 import test, { Dialog, expect } from '@playwright/test';
 import {
+  corsHeadersAllow,
   delay,
   failOnAnyError,
   generateAuthURL,
@@ -10,8 +11,7 @@ import {
 } from './core.test.js';
 
 test('draft conflicted use client', async ({ page }) => {
-  const errorTexts = [];
-  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
+  failOnAnyError(page);
   const token = 'secretjwt2';
   await page.goto('/');
   const draftText = 'this is a client draft';
@@ -19,15 +19,20 @@ test('draft conflicted use client', async ({ page }) => {
   const email = 'test@warisin.com';
   const fullname = 'Warisin Team';
   await mockIdentityAuthorizeAPI(page, token);
-  await mockIdentityUserAPI(page, token, email, fullname);
+  await mockIdentityUserAPI(page, token, email, fullname, delay);
   await mockMessageAPI(page, token, 'select-messages', {
-    responseBody: {
-      data: [
-        {
-          emailReceivers: ['remote@email.com'],
-          messageContent: 'remote content',
-        },
-      ],
+    callback: async (route) => {
+      route.fulfill({
+        headers: corsHeadersAllow,
+        body: JSON.stringify({
+          data: [
+            {
+              emailReceivers: ['remote@email.com'],
+              messageContent: 'remote content',
+            },
+          ],
+        }),
+      });
     },
   });
   let dialogCounter = 0;
@@ -37,15 +42,16 @@ test('draft conflicted use client', async ({ page }) => {
   };
   page.on('dialog', rejectDialog);
   await page.click('text=login');
+  await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  // Ensure no flash state
+  expect(await page.inputValue('textarea.text')).toBe('');
   await page.waitForLoadState('networkidle');
   expect(dialogCounter).toBe(1);
   expect(await page.inputValue('textarea.text')).toBe('this is a client draft');
-  expect(errorTexts.length).toBe(0);
 });
 
 test('draft conflicted use remote', async ({ page }) => {
-  const errorTexts = [];
-  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
+  failOnAnyError(page);
   const token = 'secretjwt2';
   await page.goto('/');
   const draftText = 'this is a client draft';
@@ -74,12 +80,10 @@ test('draft conflicted use remote', async ({ page }) => {
   await page.waitForLoadState('networkidle');
   expect(dialogCounter).toBe(1);
   expect(await page.inputValue('textarea.text')).toBe('remote content');
-  expect(errorTexts.length).toBe(0);
 });
 
 test('session expired reject draft', async ({ page }) => {
-  const errorTexts = [];
-  page.on('console', async (msg) => msg.type() === 'error' && errorTexts.push(msg.text()));
+  failOnAnyError(page);
   const token = 'secretjwt2';
   const email = 'test@warisin.com';
   const fullname = 'Warisin Team';
