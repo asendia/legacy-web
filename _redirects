@@ -1,7 +1,7 @@
+http://warisin.com/* https://sejiwo.com/:splat 301
+https://warisin.com/* https://sejiwo.com/:splat 301
+
 /pesangon/* https://pesangon.netlify.app/pesangon/:splat 200
 http://sejiwo.com/* https://sejiwo.com/:splat 301
 http://www.sejiwo.com/* https://sejiwo.com/:splat 301
 https://www.sejiwo.com/* https://sejiwo.com/:splat 301
-
-http://warisin.com/* https://sejiwo.com/:splat 301
-https://warisin.com/* https://sejiwo.com/:splat 301
