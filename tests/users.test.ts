@@ -25,7 +25,7 @@ test('non-login submit prompts user to login', async ({ page }) => {
 test('login/logout', async ({ page }) => {
   failOnAnyError(page);
   const token = 'secretjwt';
-  const email = 'test@warisin.com';
+  const email = 'test@sejiwo.com';
   const fullname = 'Warisin Team';
   await mockIdentityAuthorizeAPI(page, token);
   await mockIdentityUserAPI(page, token, email, fullname);

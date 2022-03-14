@@ -14,7 +14,7 @@ import {
 test('insert/update message keyboard & click', async ({ page }) => {
   failOnAnyError(page);
   const token = 'secretjwt2';
-  const email = 'test@warisin.com';
+  const email = 'test@sejiwo.com';
   const fullname = 'Warisin Team';
   const messageID = 'server-generated-id';
   const messageContent =
@@ -60,7 +60,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(await page.innerText('div > span')).toBe('Welcome, ' + fullname);
   expect(await page.locator('.toggle.show').innerText()).toBe('HIDE');
   await page.click('.toText');
-  const recipient = 'recipient@warisin.com';
+  const recipient = 'recipient@sejiwo.com';
   await page.keyboard.type(recipient, { delay: typingDelay });
   await page.keyboard.press('Tab', { delay });
   await page.keyboard.type(messageContent, { delay: typingDelay });

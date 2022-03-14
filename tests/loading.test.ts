@@ -12,7 +12,7 @@ test('slow api', async ({ page }) => {
   failOnAnyError(page);
   const slowWaitTime = 1000;
   const token = 'secretjwt2';
-  const email = 'test@warisin.com';
+  const email = 'test@sejiwo.com';
   const fullname = 'Warisin Team';
   await mockIdentityUserAPI(page, token, email, fullname);
   await mockMessageAPI(page, token, 'select-messages', {

@@ -7,7 +7,7 @@ test('email input works', async ({ page }) => {
   await page.click('.toText');
   await expect(page.locator('input.text')).toBeFocused();
   // Enter 2 valid emails
-  const validEmails = ['test@warisin.com', 'admin1@warisin.com'];
+  const validEmails = ['test@sejiwo.com', 'admin1@sejiwo.com'];
   for (let i = 0; i < validEmails.length; i++) {
     const email = validEmails[i];
     await page.keyboard.type(email, { delay: typingDelay });

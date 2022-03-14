@@ -16,7 +16,7 @@ test('draft conflicted use client', async ({ page }) => {
   await page.goto('/');
   const draftText = 'this is a client draft';
   await page.type('textarea.text', draftText, { delay: typingDelay });
-  const email = 'test@warisin.com';
+  const email = 'test@sejiwo.com';
   const fullname = 'Warisin Team';
   await mockIdentityAuthorizeAPI(page, token);
   await mockIdentityUserAPI(page, token, email, fullname, delay);
@@ -56,7 +56,7 @@ test('draft conflicted use remote', async ({ page }) => {
   await page.goto('/');
   const draftText = 'this is a client draft';
   await page.type('textarea.text', draftText, { delay: typingDelay });
-  const email = 'test@warisin.com';
+  const email = 'test@sejiwo.com';
   const fullname = 'Warisin Team';
   await mockIdentityAuthorizeAPI(page, token);
   await mockIdentityUserAPI(page, token, email, fullname);
@@ -85,7 +85,7 @@ test('draft conflicted use remote', async ({ page }) => {
 test('session expired reject draft', async ({ page }) => {
   failOnAnyError(page);
   const token = 'secretjwt2';
-  const email = 'test@warisin.com';
+  const email = 'test@sejiwo.com';
   const fullname = 'Warisin Team';
   await mockIdentityUserAPI(page, token, email, fullname);
   await mockMessageAPI(page, token, 'select-messages', { responseBody: { data: [] } });
@@ -118,7 +118,7 @@ test('session expired reject draft', async ({ page }) => {
 test('session expired accept draft', async ({ page }) => {
   failOnAnyError(page);
   const token = 'secretjwt2';
-  const email = 'test@warisin.com';
+  const email = 'test@sejiwo.com';
   const fullname = 'Warisin Team';
   await mockIdentityUserAPI(page, token, email, fullname);
   await mockMessageAPI(page, token, 'select-messages', { responseBody: { data: [] } });

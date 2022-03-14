@@ -1,4 +1,4 @@
-const AUTH_URL = 'https://warisin.com/.netlify/identity';
+const AUTH_URL = 'https://sejiwo.com/.netlify/identity';
 
 export interface TokenObject {
   access_token: string;
