@@ -26,7 +26,7 @@ test('login/logout', async ({ page }) => {
   failOnAnyError(page);
   const token = 'secretjwt';
   const email = 'test@sejiwo.com';
-  const fullname = 'Warisin Team';
+  const fullname = 'Sejiwo Team';
   await mockIdentityAuthorizeAPI(page, token);
   await mockIdentityUserAPI(page, token, email, fullname);
   await mockMessageAPI(page, token, 'select-messages', { responseBody: { data: [] } });

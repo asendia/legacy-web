@@ -1,7 +1,7 @@
 <footer>
   2018 - 2022
   <br />
-  warisin - source code:
+  sejiwo - source code:
   <a target="_blank" rel="noopener noreferrer" href="https://github.com/asendia/legacy-web">
     web
   </a>

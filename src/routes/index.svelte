@@ -24,8 +24,8 @@
 </script>
 
 <svelte:head>
-  <title>Warisin - Your testament in the cloud</title>
-  <meta name="description" content="Warisin is a secure testament storage and delivery service" />
+  <title>Sejiwo - Your testament in the cloud</title>
+  <meta name="description" content="Sejiwo is a secure testament storage and delivery service" />
 </svelte:head>
 <div class="wrapper" style={colorPalette}>
   <Header />

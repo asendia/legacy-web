@@ -15,10 +15,10 @@ test('insert/update message keyboard & click', async ({ page }) => {
   failOnAnyError(page);
   const token = 'secretjwt2';
   const email = 'test@sejiwo.com';
-  const fullname = 'Warisin Team';
+  const fullname = 'Sejiwo Team';
   const messageID = 'server-generated-id';
   const messageContent =
-    'Hello world!\n\nThis message is written in playwright.\n\nBest,\nWarisin Team';
+    'Hello world!\n\nThis message is written in playwright.\n\nBest,\nSejiwo Team';
   const messages: Array<MessageData> = [];
   const accessCtr = { select: 0, insert: 0, update: 0 };
   await mockIdentityUserAPI(page, token, email, fullname);

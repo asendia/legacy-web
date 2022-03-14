@@ -1,15 +1,15 @@
 <script lang="ts">
-  import Logo from './warisin-logo.png';
+  import Logo from './sejiwo-logo.png';
 </script>
 
 <header class="header">
   <div class="iconWrapper">
-    <img src={Logo} width={'30px'} height={'30px'} alt={'warisin logo'} />
+    <img src={Logo} width={'30px'} height={'30px'} alt={'sejiwo logo'} />
     <div class="logoLine" style="left: -45px" />
     <div class="logoLine" style="right: -45px" />
   </div>
   <h1 class="heading">
-    {'warisin'}
+    {'sejiwo'}
   </h1>
 </header>
 
