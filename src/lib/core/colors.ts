@@ -1,8 +1,8 @@
 export const blue = 'rgb(25, 118, 210)';
 export const black = 'rgb(0, 0, 0)';
 export const white = 'rgb(255, 255, 255)';
-export const lightGrey = 'rgb(226 226 226)';
-export const grey = 'rgb(166, 166, 166)';
+export const lightGrey = 'rgb(156, 156, 156)';
+export const grey = 'rgb(117, 117, 117)';
 export const darkGrey = 'rgb(77, 77, 77)';
 
 export const colors = {

@@ -1,16 +1,24 @@
 <script lang="ts">
-  import type { HTMLElementEvent } from '../core/types';
+  import type { HTMLElementEvent } from '$lib/core/types';
+  import { onMount } from 'svelte';
   import { isValidEmail } from './emailValidator';
   export let onChange: (emailList: Array<string>) => void;
   export let isLoading = false;
   export let emailList: Array<string> = [];
+  const txtRecipients = 'Recipient emails';
   let showInput = false;
-  let toText = 'Recipients';
+  let toText = 'To';
   let text = '';
   let inputText: HTMLInputElement;
+  let isInvalidInput = false;
+  let timeoutID: number;
 
   function addEmail(email: string) {
-    if (!isValidEmail(email) || emailList.length >= 3) {
+    clearTimeout(timeoutID);
+    const validEmail = isValidEmail(email);
+    isInvalidInput = !validEmail && emailList.length === 0;
+    timeoutID = window.setTimeout(() => (isInvalidInput = false), 3000);
+    if (!validEmail || emailList.length >= 3) {
       return;
     }
     emailList.push(email);
@@ -34,7 +42,7 @@
     addEmail(text);
     if (emailList.length === 0 && text === '') {
       showInput = false;
-      toText = 'Recipients';
+      toText = txtRecipients;
     }
   }
   const createHandleDeleteEmail = (id: number) => () => deleteEmail(id);
@@ -55,15 +63,17 @@
         break;
     }
   }
+  // Not sure where to put this
+  onMount(() => inputText.focus());
   $: {
     if (typeof document !== 'undefined') {
-      toText = emailList.length > 0 || document.activeElement === inputText ? 'To' : 'Recipients';
+      toText = emailList.length > 0 || document.activeElement === inputText ? 'To' : txtRecipients;
     }
   }
 </script>
 
 <div class="wrapper" on:click={handleWrapperClick}>
-  <div class="toText">{toText}</div>
+  <div class="toText" style={toText === 'To' ? '' : 'color: var(--color-lightgrey);'}>{toText}</div>
   {#each emailList as email, id}
     <div class="email" on:click={handleEmailClick}>
       {email}
@@ -83,6 +93,9 @@
       disabled={isLoading}
     />
   {/if}
+  <div class="customValidity" style="opacity: {isInvalidInput ? '100%' : '0%'};">
+    Email format should be like name@host.com
+  </div>
 </div>
 
 <style>
@@ -90,8 +103,8 @@
     display: flex;
     width: 100%;
     flex-wrap: wrap;
-    border-bottom: 1px solid var(--color-grey);
-    margin: 0 0 20px 0;
+    border-bottom: 1px solid var(--color-lightgrey);
+    margin: 0 0 25px 0;
     cursor: text;
     position: relative;
     box-sizing: border-box;
@@ -102,7 +115,6 @@
   }
   .toText {
     font-size: 14px;
-    color: var(--color-darkgrey);
     line-height: 16px;
     margin: 1px 5px 4px 0;
     position: absolute;
@@ -112,7 +124,7 @@
   .email {
     position: relative;
     border-radius: 2px;
-    background-color: var(--color-grey);
+    background-color: var(--color-lightgrey);
     padding: 0 18px 0 5px;
     margin: 0 4px 4px 0;
     font-size: 14px;
@@ -123,10 +135,10 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: 0 2px 4px 4px;
+    padding: 2px 2px 4px 4px;
     cursor: pointer;
     font-size: 16px;
-    line-height: 14px;
+    line-height: 12px;
   }
   .text {
     border: none;
@@ -141,5 +153,16 @@
   .text:focus {
     outline-style: solid;
     outline-width: 0;
+  }
+  .customValidity {
+    position: absolute;
+    font-size: 12px;
+    line-height: 16px;
+    left: 0;
+    bottom: -18px;
+    color: #f44336;
+    font-weight: 300;
+    border-radius: 2px;
+    transition: opacity 1s;
   }
 </style>

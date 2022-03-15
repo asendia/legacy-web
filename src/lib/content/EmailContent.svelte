@@ -74,7 +74,6 @@
 <style>
   .textWrapper {
     position: relative;
-    border: 1px solid var(--color-grey);
     border-radius: 4px;
     padding-bottom: 30px;
   }
@@ -115,13 +114,16 @@
     width: 100%;
     border: none;
     line-height: 16px;
-    padding: 10px;
     resize: none;
     box-sizing: border-box;
     font-size: 14px;
     font-family: 'Roboto', sans-serif;
     letter-spacing: 1px;
     background: none;
+    padding: 0;
+  }
+  .text::placeholder {
+    color: var(--color-lightgrey);
   }
   .text:focus {
     outline-style: solid;

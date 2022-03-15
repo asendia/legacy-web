@@ -36,9 +36,6 @@
 </div>
 
 <style>
-  :global(html) {
-    background-color: #e2e2e2;
-  }
   :global(body) {
     margin: 0;
     padding: 0;

@@ -28,7 +28,7 @@
       return; // Don't init form if there is netlify token
     }
     const slowWaitingTime = 1000;
-    const timeoutID = setTimeout(() => (isLoading = true), slowWaitingTime);
+    const timeoutID = window.setTimeout(() => (isLoading = true), slowWaitingTime);
     const mountTime = Date.now();
     try {
       auth = getAuthFromLocalStorage();
