@@ -1,12 +1,15 @@
 <script lang="ts">
   import type { HTMLElementEvent } from '$lib/core/types';
+  import type { TranslationFunction } from '$lib/i18n/translation';
+  import { getContext } from 'svelte';
   import { isValidEmail } from './emailValidator';
   export let onChange: (emailList: Array<string>) => void;
   export let isLoading = false;
   export let emailList: Array<string> = [];
   export const focus = () => inputText.focus();
-  const txtRecipients = 'Recipient emails';
-  const txtTo = 'To';
+  const tr = getContext<TranslationFunction>('tr');
+  const txtPlaceholder = tr('emailListPlaceholder');
+  const txtTo = tr('emailListTo');
   let showInput = false;
   let labelText = txtTo;
   let text = '';
@@ -43,7 +46,7 @@
     addEmail(text);
     if (emailList.length === 0 && text === '') {
       showInput = false;
-      labelText = txtRecipients;
+      labelText = txtPlaceholder;
     }
   }
   const createHandleDeleteEmail = (id: number) => () => deleteEmail(id);
@@ -67,7 +70,7 @@
 </script>
 
 <div class="wrapper" on:click={handleWrapperClick}>
-  <div class="toText" style={labelText === 'To' ? '' : 'color: var(--color-lightgrey);'}>
+  <div class="toText" style={labelText === txtTo ? '' : 'color: var(--color-lightgrey);'}>
     {labelText}
   </div>
   {#each emailList as email, id}
@@ -92,7 +95,7 @@
 </div>
 <div class="customValidityWrapper">
   <div class="customValidity" style="opacity: {isInvalidInput ? '100%' : '0%'};">
-    Email address should conform to name@host.com
+    {tr('emailListValidity')}
   </div>
 </div>
 
@@ -106,7 +109,6 @@
     cursor: text;
     position: relative;
     box-sizing: border-box;
-    padding-left: 20px;
   }
   .wrapper:focus {
     outline-width: 1px;
@@ -115,9 +117,6 @@
     font-size: 14px;
     line-height: 16px;
     margin: 1px 5px 4px 0;
-    position: absolute;
-    left: 0;
-    top: 0;
   }
   .email {
     position: relative;

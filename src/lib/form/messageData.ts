@@ -1,7 +1,12 @@
 import { STORAGE_ENCRYPTION_SECRET } from '$lib/core/storageKeys';
 import type { AuthObject } from '$lib/user/auth';
-import { decryptMessage, encryptMessage, isProbablyEncrypted } from '$lib/content/encryption';
+import {
+  decryptMessageWithPrompt,
+  encryptMessageWithPrompt,
+  isProbablyEncrypted,
+} from '$lib/content/encryption';
 import { selectMessages, upsertMessage } from './messageFetcher';
+import type { TranslationFunction } from '$lib/i18n/translation';
 
 export interface MessageData {
   id: string;
@@ -25,10 +30,11 @@ export async function submitMessageData(
   authObject: AuthObject,
   messageData: MessageData,
   enableClientAES: boolean,
+  tr: TranslationFunction,
 ) {
   let msg = messageData.messageContent;
   if (enableClientAES) {
-    msg = encryptMessage(msg) || msg;
+    msg = encryptMessageWithPrompt(msg, tr) || msg;
   } else {
     localStorage.removeItem(STORAGE_ENCRYPTION_SECRET);
   }
@@ -39,7 +45,11 @@ export async function submitMessageData(
   return { ...messageData, id: message.id };
 }
 
-export async function getMessageData(authObject: AuthObject, enableClientAES: boolean) {
+export async function getMessageData(
+  authObject: AuthObject,
+  enableClientAES: boolean,
+  tr: TranslationFunction,
+) {
   if (!authObject) {
     throw new Error('auth is undefined');
   }
@@ -50,7 +60,7 @@ export async function getMessageData(authObject: AuthObject, enableClientAES: bo
   const d = dataList[0];
   let msg = d.messageContent;
   if (isProbablyEncrypted(msg)) {
-    msg = decryptMessage(msg) || msg;
+    msg = decryptMessageWithPrompt(msg, tr) || msg;
     enableClientAES = true;
   }
   return { messageData: { ...d, messageContent: msg }, enableClientAES };

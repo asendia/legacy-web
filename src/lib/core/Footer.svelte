@@ -1,7 +1,13 @@
+<script lang="ts">
+  import type { TranslationFunction } from '$lib/i18n/translation';
+  import { getContext } from 'svelte';
+  const tr = getContext<TranslationFunction>('tr');
+</script>
+
 <footer>
   2018 - 2022
   <br />
-  sejiwo - source code:
+  sejiwo - {tr('sourceCode')}:
   <a target="_blank" rel="noopener noreferrer" href="https://github.com/asendia/legacy-web">
     web
   </a>

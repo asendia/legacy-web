@@ -21,7 +21,11 @@ export function clearDraft() {
   sessionStorage.removeItem(STORAGE_MESSAGE_CONTENT);
 }
 
-export function consolidateDraft(emailReceivers: Array<string>, messageContent: string) {
+export function consolidateDraft(
+  emailReceivers: Array<string>,
+  messageContent: string,
+  confirmCallback: () => boolean,
+) {
   // Consolidate API response with user cache
   const cReceivers = getDraftEmailReceivers();
   const cContent = getDraftMessageContent();
@@ -40,14 +44,7 @@ export function consolidateDraft(emailReceivers: Array<string>, messageContent: 
       return false;
     })() || !(messageContent === '' || cContent === '' || messageContent === cContent);
   if (isConflicted) {
-    if (
-      !confirm(
-        'Data conflict, do you want to use data from the server instead?\nRecipients: ' +
-          emailReceivers.join(', ') +
-          '\nContent: ' +
-          messageContent,
-      )
-    ) {
+    if (!confirmCallback()) {
       emailReceivers = cReceivers;
       messageContent = cContent;
     }

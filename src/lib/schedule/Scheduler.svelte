@@ -1,10 +1,12 @@
 <script lang="ts">
+  import type { TranslationFunction } from '$lib/i18n/translation';
+  import { getContext } from 'svelte';
+  const tr = getContext<TranslationFunction>('tr');
   import type { HTMLElementEvent } from '$lib/core/types';
-  export let emailCreator = 'me';
   export let reminderIntervalDays: number;
   export let inactivePeriodDays: number;
   export let onChange: (value: number, type: 'reminder' | 'inactive') => void;
-
+  export let emailCreator = tr('yourEmailPlaceholder');
   const inactivePeriodDaysOptions = [30, 60, 90];
   const reminderIntervalDaysOptions = [15, 30];
 
@@ -19,27 +21,28 @@
 </script>
 
 <div class="wrapper">
-  Send this message to recipients after
+  {tr('scheduler_pt1')}
   <select on:change={handleInactivePeriodChange}>
     {#each inactivePeriodDaysOptions as i}
       {#if i === inactivePeriodDays}
-        <option value={i} selected>{i} days</option>
+        <option value={i} selected>{i} {tr('schedulerDays')}</option>
       {:else}
-        <option value={i}>{i} days</option>
+        <option value={i}>{i} {tr('schedulerDays')}</option>
       {/if}
     {/each}
   </select>
-  of inactivity. Every
+  {tr('scheduler_pt2')}
   <select on:change={handleReminderIntervalChange}>
     {#each reminderIntervalDaysOptions as i}
       {#if i === reminderIntervalDays}
-        <option value={i} selected>{i} days</option>
+        <option value={i} selected>{i} {tr('schedulerDays')}</option>
       {:else}
-        <option value={i}>{i} days</option>
+        <option value={i}>{i} {tr('schedulerDays')}</option>
       {/if}
     {/each}
   </select>
-  a reminder will be sent to {emailCreator}.
+  {tr('scheduler_pt3')}
+  {emailCreator}.
 </div>
 
 <style>

@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { decryptMessage, getEncryptionSecret, isProbablyEncrypted } from './encryption';
+  import { decryptMessageWithPrompt, getEncryptionSecret, isProbablyEncrypted } from './encryption';
   import type { HTMLElementEvent } from '../core/types';
+  import { getContext } from 'svelte';
+  import type { TranslationFunction } from '$lib/i18n/translation';
   export let onChange: (content: string, aes: boolean) => void;
   export let isLoading = false;
   export let messageContent = '';
   export let enableClientAES = false;
+  const tr = getContext<TranslationFunction>('tr');
   let autoToggleClientAES = false;
   const maxRows = 20;
   const minRows = 12;
@@ -14,7 +17,7 @@
   const handleChange = (content: string, aes: boolean) => {
     autoToggleClientAES = false;
     if (aes) {
-      content = decryptMessage(content) || content;
+      content = decryptMessageWithPrompt(content, tr) || content;
     }
     onChange(content, aes);
   };
@@ -27,7 +30,7 @@
     toggleShow = !toggleShow;
   }
   const handleFocus = () => (autoToggleShow = false);
-  const placeholder = 'Message is encrypted by default';
+  const placeholder = tr('contentPlaceholder');
   $: {
     if (autoToggleShow) {
       toggleShow = messageContent.length === 0;
@@ -59,15 +62,17 @@
     style="filter: {toggleShow ? 'none' : 'blur(5px)'}; opacity: {isLoading ? '0' : '1'}"
     >{messageContent}</textarea
   >
-  <div class="toggle aes" on:click={handleAESToggle}>
-    <div>client-aes:</div>
-    <div>{enableClientAES ? 'on' : 'off'}</div>
-  </div>
-  <div class="toggle show" on:click={handleShowToggle}>
-    {toggleShow ? 'hide' : 'show'}
+  <div class="toggleWrapper">
+    <div class="toggle aes" on:click={handleAESToggle}>
+      <div>client-aes:</div>
+      <div>{enableClientAES ? tr('on') : tr('off')}</div>
+    </div>
+    <div class="toggle show" on:click={handleShowToggle}>
+      {toggleShow ? tr('hide') : tr('show')}
+    </div>
   </div>
   {#if isLoading}
-    <div class="loading">Loading...</div>
+    <div class="loading">{tr('loading')}</div>
   {/if}
 </div>
 
@@ -77,11 +82,15 @@
     margin-bottom: 30px;
     border-bottom: 1px solid var(--color-lightgrey);
   }
-  .toggle {
+  .toggleWrapper {
     position: absolute;
+    right: 2px;
+    bottom: -24px;
+    display: flex;
+  }
+  .toggle {
     padding: 4px 6px;
     text-align: center;
-    bottom: -24px;
     cursor: pointer;
     background-color: var(--color-darkgrey);
     text-transform: uppercase;
@@ -94,12 +103,11 @@
     justify-content: space-between;
   }
   .toggle.aes {
-    width: 108px;
-    right: 52px;
+    min-width: 108px;
+    margin-right: 4px;
   }
   .toggle.show {
-    width: 48px;
-    right: 2px;
+    min-width: 48px;
     justify-content: center;
   }
   .toggle div:nth-child(2) {
