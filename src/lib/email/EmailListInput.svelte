@@ -90,7 +90,7 @@
     />
   {/if}
   <div class="customValidity" style="opacity: {isInvalidInput ? '100%' : '0%'};">
-    Email format should be like name@host.com
+    Email address format should conform to name@domain.com
   </div>
 </div>
 
