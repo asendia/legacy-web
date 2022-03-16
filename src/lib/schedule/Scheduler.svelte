@@ -45,7 +45,7 @@
 <style>
   .wrapper {
     font-size: 14px;
-    padding: 16px 0;
+    padding: 0 0 16px 0;
     line-height: 22px;
     font-weight: 300;
   }
