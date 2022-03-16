@@ -117,6 +117,7 @@
     font-family: 'Roboto', sans-serif;
     letter-spacing: 1px;
     background: none;
+    padding: 0;
   }
   .text::placeholder {
     color: var(--color-lightgrey);
