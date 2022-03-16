@@ -70,7 +70,7 @@
 </script>
 
 <div class="wrapper" on:click={handleWrapperClick}>
-  <div class="toText" style={labelText === 'To' ? '' : 'color: var(--color-lightgrey);'}>
+  <div class="toText" style={labelText === txtTo ? '' : 'color: var(--color-lightgrey);'}>
     {labelText}
   </div>
   {#each emailList as email, id}
@@ -109,7 +109,6 @@
     cursor: text;
     position: relative;
     box-sizing: border-box;
-    padding-left: 20px;
   }
   .wrapper:focus {
     outline-width: 1px;
@@ -118,9 +117,6 @@
     font-size: 14px;
     line-height: 16px;
     margin: 1px 5px 4px 0;
-    position: absolute;
-    left: 0;
-    top: 0;
   }
   .email {
     position: relative;

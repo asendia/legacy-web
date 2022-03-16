@@ -1,9 +1,14 @@
 <script lang="ts" context="module">
   import { initTranslation, type TranslationData } from '$lib/i18n/translation';
-  export async function load() {
-    const locale = 'en';
+  export async function load({ url }) {
+    const p = new URLSearchParams(url.search);
+    const locale = p.get('hl') || 'en';
     let translationData: TranslationData;
     switch (locale) {
+      case 'id': {
+        translationData = (await import('$lib/i18n/translationData_id')).translationData;
+        break;
+      }
       case 'en':
       default: {
         translationData = (await import('$lib/i18n/translationData_en')).translationData;

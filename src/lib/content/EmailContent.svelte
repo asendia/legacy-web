@@ -62,12 +62,14 @@
     style="filter: {toggleShow ? 'none' : 'blur(5px)'}; opacity: {isLoading ? '0' : '1'}"
     >{messageContent}</textarea
   >
-  <div class="toggle aes" on:click={handleAESToggle}>
-    <div>client-aes:</div>
-    <div>{enableClientAES ? tr('on') : tr('off')}</div>
-  </div>
-  <div class="toggle show" on:click={handleShowToggle}>
-    {toggleShow ? tr('hide') : tr('show')}
+  <div class="toggleWrapper">
+    <div class="toggle aes" on:click={handleAESToggle}>
+      <div>client-aes:</div>
+      <div>{enableClientAES ? tr('on') : tr('off')}</div>
+    </div>
+    <div class="toggle show" on:click={handleShowToggle}>
+      {toggleShow ? tr('hide') : tr('show')}
+    </div>
   </div>
   {#if isLoading}
     <div class="loading">{tr('loading')}</div>
@@ -80,11 +82,15 @@
     margin-bottom: 30px;
     border-bottom: 1px solid var(--color-lightgrey);
   }
-  .toggle {
+  .toggleWrapper {
     position: absolute;
+    right: 2px;
+    bottom: -24px;
+    display: flex;
+  }
+  .toggle {
     padding: 4px 6px;
     text-align: center;
-    bottom: -24px;
     cursor: pointer;
     background-color: var(--color-darkgrey);
     text-transform: uppercase;
@@ -97,12 +103,11 @@
     justify-content: space-between;
   }
   .toggle.aes {
-    width: 108px;
-    right: 52px;
+    min-width: 108px;
+    margin-right: 4px;
   }
   .toggle.show {
-    width: 48px;
-    right: 2px;
+    min-width: 48px;
     justify-content: center;
   }
   .toggle div:nth-child(2) {

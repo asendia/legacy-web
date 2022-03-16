@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { HTMLElementEvent } from '$lib/core/types';
   import type { TranslationFunction } from '$lib/i18n/translation';
   import { getContext } from 'svelte';
-  export let emailCreator = 'me';
+  const tr = getContext<TranslationFunction>('tr');
+  import type { HTMLElementEvent } from '$lib/core/types';
   export let reminderIntervalDays: number;
   export let inactivePeriodDays: number;
   export let onChange: (value: number, type: 'reminder' | 'inactive') => void;
-  const tr = getContext<TranslationFunction>('tr');
+  export let emailCreator = tr('yourEmailPlaceholder');
   const inactivePeriodDaysOptions = [30, 60, 90];
   const reminderIntervalDaysOptions = [15, 30];
 

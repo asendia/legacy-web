@@ -35,5 +35,7 @@ export const translationData: TranslationData = {
   scheduler_pt1: 'Send this message to recipients after',
   scheduler_pt2: 'of inactivity. Every',
   scheduler_pt3: 'a reminder will be sent to',
+  yourEmailPlaceholder: 'me',
   schedulerDays: 'days',
+  sourceCode: 'source code',
 };

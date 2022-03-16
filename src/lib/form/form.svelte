@@ -143,7 +143,7 @@
 <Button
   onClick={handleClickSubmit}
   disabled={disableSubmit}
-  text={tr('submit')}
+  text={tr('formSubmit')}
   variant={auth ? 'filled' : 'outlined'}
   style="display: block; width: 100%;"
 />
