@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { getContext, onMount } from 'svelte';
   import EmailListInput from '$lib/email/EmailListInput.svelte';
   import EmailContent from '$lib/content/EmailContent.svelte';
   import Scheduler from '$lib/schedule/Scheduler.svelte';
@@ -15,8 +15,10 @@
     consolidateDraft,
     setDraftEmailReceivers,
     setDraftMessageContent,
-  } from '$lib/content/contentDraft';
+  } from '$lib/form/draft';
   import { defaultMessageData, getMessageData, submitMessageData } from '$lib/form/messageData';
+  import type { TranslationFunction } from '$lib/i18n/translation';
+  const tr = getContext<TranslationFunction>('tr');
   let emailListInput: EmailListInput;
   let auth: AuthObject;
   let messageData = defaultMessageData;
@@ -32,7 +34,7 @@
     const mountTime = Date.now();
     try {
       auth = getAuthFromLocalStorage();
-      const d = await getMessageData(auth, enableClientAES);
+      const d = await getMessageData(auth, enableClientAES, tr);
       messageData = d.messageData;
       enableClientAES = d.enableClientAES;
     } catch (err) {
@@ -48,7 +50,13 @@
       }
     }
     try {
-      const c = consolidateDraft(messageData.emailReceivers, messageData.messageContent);
+      const c = consolidateDraft(messageData.emailReceivers, messageData.messageContent, () =>
+        confirm(
+          `${tr('draftConflict')}\n\n${tr('draftRecipients')}: ${messageData.emailReceivers.join(
+            ', ',
+          )}\n` + `${tr('draftContent')}: ${messageData.messageContent}`,
+        ),
+      );
       messageData = {
         ...messageData,
         emailReceivers: c.emailReceivers,
@@ -93,14 +101,14 @@
     disableSubmit = true;
     try {
       auth = getAuthFromLocalStorage();
-      messageData = await submitMessageData(auth, messageData, enableClientAES);
+      messageData = await submitMessageData(auth, messageData, enableClientAES, tr);
     } catch (err) {
       switch (err.message) {
         case 'auth is undefined':
-          alert('You need to login first');
+          alert(tr('authUndefined'));
           break;
         case 'auth is expired':
-          if (!confirm('Session expired, want to backup the content first?')) {
+          if (!confirm(tr('authExpired'))) {
             clearDraft();
           }
           clearUserData();
@@ -135,7 +143,7 @@
 <Button
   onClick={handleClickSubmit}
   disabled={disableSubmit}
-  text="submit"
+  text={tr('submit')}
   variant={auth ? 'filled' : 'outlined'}
   style="display: block; width: 100%;"
 />

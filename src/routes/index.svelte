@@ -1,15 +1,44 @@
+<script lang="ts" context="module">
+  import { initTranslation, type TranslationData } from '$lib/i18n/translation';
+  export async function load() {
+    const locale = 'en';
+    let translationData: TranslationData;
+    switch (locale) {
+      case 'en':
+      default: {
+        translationData = (await import('$lib/i18n/translationData_en')).translationData;
+      }
+    }
+    const tr = initTranslation(translationData);
+    return {
+      status: 200,
+      props: {
+        tr,
+        locale,
+      },
+    };
+  }
+</script>
+
 <script lang="ts">
   import Header from '$lib/core/Header.svelte';
   import Login from '$lib/user/Login.svelte';
   import Footer from '$lib/core/Footer.svelte';
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import Form from '$lib/form/form.svelte';
-  import { onMount } from 'svelte';
+  import { onMount, setContext } from 'svelte';
   import { handleHashVisit } from '$lib/user/auth';
   import { handleQueryVisit } from '$lib/query-string/queryStringHandler';
+  import type { TranslationFunction } from '$lib/i18n/translation';
+  export let tr: TranslationFunction;
+  setContext('tr', tr);
   onMount(async () => {
     try {
-      await handleQueryVisit();
+      await handleQueryVisit(
+        tr('messageExtended'),
+        tr('messageUnsubscribed'),
+        tr('queryActionError'),
+      );
       await handleHashVisit();
     } catch (err) {
       switch (err.message) {
@@ -24,8 +53,8 @@
 </script>
 
 <svelte:head>
-  <title>Sejiwo - Your testament in the cloud</title>
-  <meta name="description" content="Sejiwo is a secure testament storage and delivery service" />
+  <title>{tr('title')}</title>
+  <meta name="description" content={tr('description')} />
 </svelte:head>
 <div class="wrapper" style={colorPalette}>
   <Header />

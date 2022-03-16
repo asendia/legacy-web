@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { decryptMessage, getEncryptionSecret, isProbablyEncrypted } from './encryption';
+  import { decryptMessageWithPrompt, getEncryptionSecret, isProbablyEncrypted } from './encryption';
   import type { HTMLElementEvent } from '../core/types';
+  import { getContext } from 'svelte';
+  import type { TranslationFunction } from '$lib/i18n/translation';
   export let onChange: (content: string, aes: boolean) => void;
   export let isLoading = false;
   export let messageContent = '';
   export let enableClientAES = false;
+  const tr = getContext<TranslationFunction>('tr');
   let autoToggleClientAES = false;
   const maxRows = 20;
   const minRows = 12;
@@ -14,7 +17,7 @@
   const handleChange = (content: string, aes: boolean) => {
     autoToggleClientAES = false;
     if (aes) {
-      content = decryptMessage(content) || content;
+      content = decryptMessageWithPrompt(content, tr) || content;
     }
     onChange(content, aes);
   };
@@ -27,7 +30,7 @@
     toggleShow = !toggleShow;
   }
   const handleFocus = () => (autoToggleShow = false);
-  const placeholder = 'Message is encrypted by default';
+  const placeholder = tr('contentPlaceholder');
   $: {
     if (autoToggleShow) {
       toggleShow = messageContent.length === 0;
@@ -61,13 +64,13 @@
   >
   <div class="toggle aes" on:click={handleAESToggle}>
     <div>client-aes:</div>
-    <div>{enableClientAES ? 'on' : 'off'}</div>
+    <div>{enableClientAES ? tr('on') : tr('off')}</div>
   </div>
   <div class="toggle show" on:click={handleShowToggle}>
-    {toggleShow ? 'hide' : 'show'}
+    {toggleShow ? tr('hide') : tr('show')}
   </div>
   {#if isLoading}
-    <div class="loading">Loading...</div>
+    <div class="loading">{tr('loading')}</div>
   {/if}
 </div>
 

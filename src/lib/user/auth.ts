@@ -1,6 +1,6 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
 import { STORAGE_GOTRUE, STORAGE_ENCRYPTION_SECRET } from '$lib/core/storageKeys';
-import { clearDraft } from '$lib/content/contentDraft';
+import { clearDraft } from '$lib/form/draft';
 import { destroyFetchUserTokenPromise, fetchUserToken, type TokenObject } from './userFetcher';
 
 export interface AuthObject {

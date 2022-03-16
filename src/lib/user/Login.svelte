@@ -1,13 +1,15 @@
 <script lang="ts">
   import Button from '$lib/core/Button.svelte';
+  import type { TranslationFunction } from '$lib/i18n/translation';
   import { getAuthFromLocalStorage, logout, type AuthObject } from '$lib/user/auth';
-  import { onMount } from 'svelte';
+  import { getContext, onMount } from 'svelte';
   import { fetchAuthorizeUser } from './userFetcher';
+  const tr = getContext<TranslationFunction>('tr');
   let auth: AuthObject;
-  let message = 'Testament in the cloud';
+  let message = tr('subheading');
   let disabled = true;
   let color: 'primary' | 'secondary' = 'primary';
-  let text = 'login';
+  let text = tr('login');
   const enableButton = () => (disabled = false);
   onMount(() => {
     addEventListener('popstate', enableButton);
@@ -37,12 +39,12 @@
   }
   $: {
     if (auth) {
-      message = 'Welcome, ' + (auth.user_metadata?.full_name ?? auth.email);
+      message = tr('welcome') + ', ' + (auth.user_metadata?.full_name ?? auth.email);
       color = 'secondary';
-      text = 'logout';
+      text = tr('logout');
     } else {
       color = 'primary';
-      text = 'login';
+      text = tr('login');
     }
     disabled = false;
   }

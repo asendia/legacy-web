@@ -1,4 +1,5 @@
 import { STORAGE_ENCRYPTION_SECRET } from '$lib/core/storageKeys';
+import type { TranslationFunction } from '$lib/i18n/translation';
 import AES from 'crypto-js/aes.js';
 import cryptoJS_UTF8 from 'crypto-js/enc-utf8.js';
 
@@ -16,7 +17,7 @@ const defaultConfig: EncryptionConfig = {
 const secretLength = 32;
 const encryptPrefixText = `${defaultConfig.cipher}.${defaultConfig.encoding}:`;
 
-export function encryptMessage(text: string) {
+export function encryptMessageWithPrompt(text: string, tr: TranslationFunction) {
   // Prevent double encryption
   if (isProbablyEncrypted(text) || text === '') {
     return text;
@@ -28,11 +29,7 @@ export function encryptMessage(text: string) {
       secret = randomString(secretLength);
       localStorage.setItem(STORAGE_ENCRYPTION_SECRET, secret);
     }
-    prompt(
-      'Please make a copy of this secret and send it to the recipients. ' +
-        'No one will be able to decrypt the message if you lost it.',
-      secret,
-    );
+    prompt(tr('backupSecret'), secret);
     const encryptedText = encryptPrefixText + AES.encrypt(text, secret).toString();
     return encryptedText;
   } catch (err) {
@@ -41,7 +38,7 @@ export function encryptMessage(text: string) {
   }
 }
 
-export function decryptMessage(text: string) {
+export function decryptMessageWithPrompt(text: string, tr: TranslationFunction) {
   // Prevent decrypting non encrypted text
   if (!isProbablyEncrypted(text)) {
     return text;
@@ -50,10 +47,7 @@ export function decryptMessage(text: string) {
     text = text.replace(encryptPrefixText, '');
     let secret = localStorage.getItem(STORAGE_ENCRYPTION_SECRET);
     if (!secret) {
-      secret = prompt(
-        'It seems like your message is encrypted. ' +
-          'Please enter your secret if you wish to decrypt it.',
-      );
+      secret = prompt(tr('provideSecret'));
       if (!secret) {
         return null;
       }
