@@ -1,17 +1,20 @@
-import { getHostLanguageFromSearch, locales } from '$lib/i18n/i18n';
+import { locales } from '$lib/i18n/i18n';
 import type { Handle } from '@sveltejs/kit';
 export const handle: Handle = async function handle({ event, resolve }) {
   // Search locale based on hl query string
-  const hl = getHostLanguageFromSearch(event.url.search);
+  const hl = event.url.searchParams.get('hl');
   const hlLocale = getHostLanguageLocale(hl);
   // Search locale based on accept-language header
   const accLang = event.request.headers.get('accept-language') ?? '';
   const prefLocale = getUserPreferredLocale(accLang);
-  if (!hlLocale && prefLocale !== locales[0]) {
+  if (!hl && prefLocale !== locales[0]) {
+    const p = event.url.searchParams;
+    p.set('hl', prefLocale);
+    const location = event.url.pathname + '?' + p.toString();
     const r = new Response('', {
       status: 302,
       headers: {
-        location: '/?hl=' + prefLocale,
+        location,
       },
     });
     return r;
