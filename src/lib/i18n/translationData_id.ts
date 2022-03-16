@@ -23,8 +23,7 @@ export const translationData: TranslationData = {
   backupSecret:
     'Silahkan membuat copy dari kode berikut dan kirim secara aman ke penerima wasiat. ' +
     'Jika kode hilang maka pesan ini tidak akan bisa dibaca.',
-  provideSecret:
-    'Silahkan masukan kode untuk membaca pesan.',
+  provideSecret: 'Silahkan masukan kode untuk membaca pesan.',
   authUndefined: 'Silahkan login terlebih dahulu',
   authExpired: 'Sesi berakhir, apakah Anda ingin menyalin data terlebih dahulu?',
   formSubmit: 'simpan',
@@ -32,8 +31,8 @@ export const translationData: TranslationData = {
   messageUnsubscribed: 'Anda berhasil berhenti berlangganan',
   queryActionError: 'Kembali ke halaman utama?',
   scheduler_pt1: 'Kirim pesan ini jika Anda tidak aktif dalam',
-  scheduler_pt2: '. Untuk memberitahu bahwa Anda masih aktif, klik ' +
-    'link yang akan kami kirim setiap',
+  scheduler_pt2:
+    '. Untuk memberitahu bahwa Anda masih aktif, klik ' + 'link yang akan kami kirim setiap',
   scheduler_pt3: 'ke',
   yourEmailPlaceholder: 'email Anda',
   schedulerDays: 'hari',
