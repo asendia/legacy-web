@@ -17,7 +17,7 @@
     setDraftMessageContent,
   } from '$lib/content/contentDraft';
   import { defaultMessageData, getMessageData, submitMessageData } from '$lib/form/messageData';
-
+  let emailListInput: EmailListInput;
   let auth: AuthObject;
   let messageData = defaultMessageData;
   let isLoading = false;
@@ -56,6 +56,9 @@
       };
     } catch (err) {
       console.error('Failed to consolidate local data with sessionStorage:', err);
+    }
+    if (messageData.emailReceivers.length === 0) {
+      emailListInput.focus();
     }
     clearTimeout(timeoutID);
     const waitingTime = Date.now() - mountTime;
@@ -112,6 +115,7 @@
 </script>
 
 <EmailListInput
+  bind:this={emailListInput}
   onChange={handleEmailReceiversChange}
   {isLoading}
   emailList={messageData.emailReceivers}

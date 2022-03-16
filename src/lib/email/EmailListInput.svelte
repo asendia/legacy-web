@@ -1,13 +1,14 @@
 <script lang="ts">
   import type { HTMLElementEvent } from '$lib/core/types';
-  import { onMount } from 'svelte';
   import { isValidEmail } from './emailValidator';
   export let onChange: (emailList: Array<string>) => void;
   export let isLoading = false;
   export let emailList: Array<string> = [];
+  export const focus = () => inputText.focus();
   const txtRecipients = 'Recipient emails';
+  const txtTo = 'To';
   let showInput = false;
-  let toText = 'To';
+  let labelText = txtTo;
   let text = '';
   let inputText: HTMLInputElement;
   let isInvalidInput = false;
@@ -35,14 +36,14 @@
   const handleWrapperClick = () => inputText.focus();
   const handleEmailClick = (e: Event) => e.stopPropagation();
   function handleInputFocus() {
-    toText = 'To';
+    labelText = txtTo;
     showInput = true;
   }
   function handleInputBlur() {
     addEmail(text);
     if (emailList.length === 0 && text === '') {
       showInput = false;
-      toText = txtRecipients;
+      labelText = txtRecipients;
     }
   }
   const createHandleDeleteEmail = (id: number) => () => deleteEmail(id);
@@ -63,17 +64,12 @@
         break;
     }
   }
-  // Not sure where to put this
-  onMount(() => inputText.focus());
-  $: {
-    if (typeof document !== 'undefined') {
-      toText = emailList.length > 0 || document.activeElement === inputText ? 'To' : txtRecipients;
-    }
-  }
 </script>
 
 <div class="wrapper" on:click={handleWrapperClick}>
-  <div class="toText" style={toText === 'To' ? '' : 'color: var(--color-lightgrey);'}>{toText}</div>
+  <div class="toText" style={labelText === 'To' ? '' : 'color: var(--color-lightgrey);'}>
+    {labelText}
+  </div>
   {#each emailList as email, id}
     <div class="email" on:click={handleEmailClick}>
       {email}

@@ -74,15 +74,14 @@
 <style>
   .textWrapper {
     position: relative;
-    border-radius: 4px;
-    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--color-lightgrey);
   }
   .toggle {
     position: absolute;
     padding: 4px 6px;
     text-align: center;
-    bottom: 2px;
-    right: 2px;
+    bottom: -24px;
     cursor: pointer;
     background-color: var(--color-darkgrey);
     text-transform: uppercase;
@@ -96,12 +95,10 @@
   }
   .toggle.aes {
     width: 108px;
-    bottom: 2px;
     right: 52px;
   }
   .toggle.show {
     width: 48px;
-    bottom: 2px;
     right: 2px;
     justify-content: center;
   }
@@ -120,7 +117,6 @@
     font-family: 'Roboto', sans-serif;
     letter-spacing: 1px;
     background: none;
-    padding: 0;
   }
   .text::placeholder {
     color: var(--color-lightgrey);
