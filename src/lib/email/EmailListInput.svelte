@@ -18,7 +18,7 @@
     clearTimeout(timeoutID);
     const validEmail = isValidEmail(email);
     isInvalidInput = !validEmail && emailList.length === 0;
-    timeoutID = window.setTimeout(() => (isInvalidInput = false), 3000);
+    timeoutID = window.setTimeout(() => (isInvalidInput = false), 5000);
     if (!validEmail || emailList.length >= 3) {
       return;
     }
@@ -89,8 +89,10 @@
       disabled={isLoading}
     />
   {/if}
+</div>
+<div class="customValidityWrapper">
   <div class="customValidity" style="opacity: {isInvalidInput ? '100%' : '0%'};">
-    Email address format should conform to name@domain.com
+    Email address should conform to name@host.com
   </div>
 </div>
 
@@ -150,13 +152,18 @@
     outline-style: solid;
     outline-width: 0;
   }
+  .customValidityWrapper {
+    position: relative;
+  }
   .customValidity {
     position: absolute;
     font-size: 12px;
     line-height: 16px;
+    top: -22px;
     left: 0;
-    bottom: -18px;
     color: #f44336;
+    background-color: white;
+    z-index: 1;
     font-weight: 300;
     border-radius: 2px;
     transition: opacity 1s;
