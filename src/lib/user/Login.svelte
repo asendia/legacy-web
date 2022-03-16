@@ -11,6 +11,7 @@
   const enableButton = () => (disabled = false);
   onMount(() => {
     addEventListener('popstate', enableButton);
+    addEventListener('pageshow', enableButton);
     try {
       auth = getAuthFromLocalStorage();
     } catch (err) {
@@ -21,7 +22,10 @@
           break;
       }
     }
-    return () => removeEventListener('popstate', enableButton);
+    return () => {
+      removeEventListener('popstate', enableButton);
+      removeEventListener('pageshow', enableButton);
+    };
   });
   function handleLogin() {
     disabled = true;
