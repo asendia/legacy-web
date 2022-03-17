@@ -18,9 +18,3 @@ export async function i18n(locale: string) {
   const tr = initTranslation(translationData);
   return { tr, locale };
 }
-
-export function getHostLanguageFromSearch(search: string) {
-  const p = new URLSearchParams(search);
-  const hl = p.get('hl');
-  return hl;
-}

@@ -19,7 +19,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 10px 0;
+    margin: 0 0 10px 0;
   }
   .iconWrapper {
     position: relative;

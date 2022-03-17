@@ -145,5 +145,5 @@
   disabled={disableSubmit}
   text={tr('formSubmit')}
   variant={auth ? 'filled' : 'outlined'}
-  style="display: block; width: 100%;"
+  style="display: block; margin: 0 auto; min-width: 100px"
 />

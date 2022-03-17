@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
   import type { Load } from '@sveltejs/kit';
-  import { getHostLanguageFromSearch, i18n } from '$lib/i18n/i18n';
+  import { i18n } from '$lib/i18n/i18n';
   export const load: Load = async function load({ url }) {
-    const hl = getHostLanguageFromSearch(url.search);
+    const hl = url.searchParams.get('hl');
     const { tr, locale } = await i18n(hl);
     return {
       status: 200,
@@ -47,7 +47,7 @@
   });
   const colorPalette =
     `--color-grey:${grey};--color-blue:${blue};` +
-    `--color-darkgrey:${darkGrey};--color-lightgrey:${lightGrey}`;
+    `--color-darkgrey:${darkGrey};--color-lightgrey:${lightGrey};`;
 </script>
 
 <svelte:head>
@@ -70,12 +70,17 @@
     font-family: 'Roboto', sans-serif;
   }
   .wrapper {
-    max-width: 450px;
     margin: auto;
     letter-spacing: 1px;
-    padding: 0 24px;
+    box-sizing: border-box;
+    padding: 10px 24px 0 24px;
   }
   .separator {
     height: 30px;
+  }
+  @media screen and (min-width: 800px) {
+    .wrapper {
+      padding: 10px 100px;
+    }
   }
 </style>
