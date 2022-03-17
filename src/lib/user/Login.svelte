@@ -1,12 +1,12 @@
 <script lang="ts">
   import Button from '$lib/core/Button.svelte';
-  import type { TranslationFunction } from '$lib/i18n/translation';
+  import type { I18nContext } from '$lib/i18n/i18n';
   import { getAuthFromLocalStorage, logout, type AuthObject } from '$lib/user/auth';
   import { getContext, onMount } from 'svelte';
   import { fetchAuthorizeUser } from './userFetcher';
-  const tr = getContext<TranslationFunction>('tr');
+  const { tr } = getContext<I18nContext>('i18n');
   let auth: AuthObject;
-  let message = tr('subheading');
+  let message = '';
   let disabled = true;
   let color: 'primary' | 'secondary' = 'primary';
   let text = tr('login');
@@ -39,7 +39,7 @@
   }
   $: {
     if (auth) {
-      message = tr('welcome') + ', ' + (auth.user_metadata?.full_name ?? auth.email);
+      message = auth.user_metadata?.full_name?.split(' ')[0] ?? auth.email + ',';
       color = 'secondary';
       text = tr('logout');
     } else {
@@ -52,7 +52,13 @@
 
 <div>
   <span>{message}</span>
-  <Button onClick={auth ? handleLogout : handleLogin} {disabled} {color} {text} />
+  <Button
+    onClick={auth ? handleLogout : handleLogin}
+    {disabled}
+    {color}
+    {text}
+    style="border: none; padding: 0;"
+  />
 </div>
 
 <style>
@@ -65,5 +71,6 @@
     font-size: 14px;
     font-weight: 300;
     margin-right: 10px;
+    padding-bottom: 1px;
   }
 </style>

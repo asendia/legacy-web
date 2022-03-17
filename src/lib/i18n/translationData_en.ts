@@ -4,8 +4,6 @@ export const translationData: TranslationData = {
   // Index page
   title: 'Sejiwo - Your testament in the cloud',
   description: 'Sejiwo is a secure testament storage and delivery service',
-  subheading: 'Testament in the cloud',
-  welcome: 'Welcome',
   login: 'login',
   logout: 'logout',
   emailListTo: 'To',

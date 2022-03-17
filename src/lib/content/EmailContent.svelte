@@ -2,12 +2,12 @@
   import { decryptMessageWithPrompt, getEncryptionSecret, isProbablyEncrypted } from './encryption';
   import type { HTMLElementEvent } from '../core/types';
   import { getContext } from 'svelte';
-  import type { TranslationFunction } from '$lib/i18n/translation';
+  import type { I18nContext } from '$lib/i18n/i18n';
   export let onChange: (content: string, aes: boolean) => void;
   export let isLoading = false;
   export let messageContent = '';
   export let enableClientAES = false;
-  const tr = getContext<TranslationFunction>('tr');
+  const { tr } = getContext<I18nContext>('i18n');
   let autoToggleClientAES = false;
   const maxRows = 20;
   const minRows = 12;

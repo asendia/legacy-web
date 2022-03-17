@@ -57,7 +57,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
   });
   await page.goto(generateAuthURL(token));
   await page.waitForNavigation({ waitUntil: 'networkidle' });
-  expect(await page.innerText('div > span')).toBe('Welcome, ' + fullname);
+  expect(await page.innerText('div > span')).toBe(fullname.split(' ')[0]);
   expect(await page.locator('.toggle.show').innerText()).toBe('HIDE');
   await page.click('.toText');
   const recipient = 'recipient@sejiwo.com';
@@ -65,9 +65,9 @@ test('insert/update message keyboard & click', async ({ page }) => {
   await page.keyboard.press('Tab', { delay });
   await page.keyboard.type(messageContent, { delay: typingDelay });
   await page.keyboard.press('Tab', { delay });
-  await expect(page.locator('select:nth-child(1)')).toBeFocused();
+  await expect(page.locator('.scheduler select:nth-child(1)')).toBeFocused();
   await page.keyboard.press('Tab', { delay });
-  await expect(page.locator('select:nth-child(2)')).toBeFocused();
+  await expect(page.locator('.scheduler select:nth-child(2)')).toBeFocused();
   await page.keyboard.press('Tab', { delay });
   await expect(page.locator('text=submit')).toBeFocused();
   await page.keyboard.press('Enter', { delay });
@@ -79,13 +79,13 @@ test('insert/update message keyboard & click', async ({ page }) => {
 
   const additionalMessage = '\n\nnew line';
   await page.locator('textarea.text').type(additionalMessage, { delay: typingDelay });
-  await page.selectOption('select:nth-child(1)', { index: 2 });
-  await page.selectOption('select:nth-child(2)', { index: 1 });
+  await page.selectOption('.scheduler select:nth-child(1)', { index: 2 });
+  await page.selectOption('.scheduler select:nth-child(2)', { index: 1 });
   await page.click('text=submit', { delay });
   expect(messages[0].inactivePeriodDays).toBe(90);
   expect(messages[0].reminderIntervalDays).toBe(30);
-  expect(await page.inputValue('select:nth-child(1)')).toBe('90');
-  expect(await page.inputValue('select:nth-child(2)')).toBe('30');
+  expect(await page.inputValue('.scheduler select:nth-child(1)')).toBe('90');
+  expect(await page.inputValue('.scheduler select:nth-child(2)')).toBe('30');
   expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 1 });
 
   await page.click('.toggle.aes', { delay });
@@ -105,7 +105,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
   expect(await page.textContent(`.wrapper > .email:nth-child(2)`)).toBe(
     recipient + ' ' + closeSymbol,
   );
-  expect(await page.inputValue('select:nth-child(1)')).toBe('90');
-  expect(await page.inputValue('select:nth-child(2)')).toBe('30');
+  expect(await page.inputValue('.scheduler select:nth-child(1)')).toBe('90');
+  expect(await page.inputValue('.scheduler select:nth-child(2)')).toBe('30');
   expect(accessCtr).toStrictEqual({ select: 2, insert: 1, update: 2 });
 });

@@ -1,6 +1,12 @@
-import { initTranslation, type TranslationData } from './translation';
+import { initTranslation, type TranslationData, type TranslationFunction } from './translation';
 
 export const locales = ['en', 'id'];
+
+export interface I18nContext {
+  tr: TranslationFunction;
+  locale: string;
+  url: URL;
+}
 
 export async function i18n(locale: string) {
   let translationData: TranslationData;

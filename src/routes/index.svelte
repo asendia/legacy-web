@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import type { Load } from '@sveltejs/kit';
-  import { i18n } from '$lib/i18n/i18n';
+  import { i18n, type I18nContext } from '$lib/i18n/i18n';
   export const load: Load = async function load({ url }) {
     const hl = url.searchParams.get('hl');
     const { tr, locale } = await i18n(hl);
@@ -17,7 +17,6 @@
 
 <script lang="ts">
   import Header from '$lib/core/Header.svelte';
-  import Login from '$lib/user/Login.svelte';
   import Footer from '$lib/core/Footer.svelte';
   import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
   import Form from '$lib/form/form.svelte';
@@ -29,7 +28,7 @@
   export let tr: TranslationFunction;
   export let locale: string;
   export let url: URL;
-  setContext('tr', tr);
+  setContext<I18nContext>('i18n', { tr, locale, url });
   onMount(async () => {
     try {
       await handleQueryVisit(
@@ -57,7 +56,6 @@
 </svelte:head>
 <div class="wrapper" style={colorPalette}>
   <Header />
-  <Login />
   <div class="separator" />
   <Form />
   <Footer />

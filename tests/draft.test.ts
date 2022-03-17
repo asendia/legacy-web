@@ -112,7 +112,7 @@ test('session expired reject draft', async ({ page }) => {
   expect(dialogCtr).toStrictEqual({ accept: 0, reject: 1 });
   expect(messageAPICallCtr).toBe(0);
   expect(await page.inputValue('textarea.text')).toBe('');
-  expect(await page.innerText('div > span')).toBe('Testament in the cloud');
+  expect(await page.innerText('div > span')).toBe('');
 });
 
 test('session expired accept draft', async ({ page }) => {
@@ -146,5 +146,5 @@ test('session expired accept draft', async ({ page }) => {
   expect(messageAPICallCtr).toBe(0);
   await page.waitForLoadState('networkidle');
   expect(await page.inputValue('textarea.text')).toBe(draftText);
-  expect(await page.innerText('div > span')).toBe('Testament in the cloud');
+  expect(await page.innerText('div > span')).toBe('');
 });

@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { HTMLElementEvent } from '$lib/core/types';
-  import type { TranslationFunction } from '$lib/i18n/translation';
+  import type { I18nContext } from '$lib/i18n/i18n';
   import { getContext } from 'svelte';
   import { isValidEmail } from './emailValidator';
   export let onChange: (emailList: Array<string>) => void;
   export let isLoading = false;
   export let emailList: Array<string> = [];
   export const focus = () => inputText.focus();
-  const tr = getContext<TranslationFunction>('tr');
+  const { tr } = getContext<I18nContext>('i18n');
   const txtPlaceholder = tr('emailListPlaceholder');
   const txtTo = tr('emailListTo');
   let showInput = false;

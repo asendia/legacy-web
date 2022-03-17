@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { TranslationFunction } from '$lib/i18n/translation';
+  import type { I18nContext } from '$lib/i18n/i18n';
   import { getContext } from 'svelte';
-  const tr = getContext<TranslationFunction>('tr');
+  const { tr } = getContext<I18nContext>('i18n');
 </script>
 
 <footer>

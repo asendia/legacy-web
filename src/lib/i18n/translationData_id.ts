@@ -4,8 +4,6 @@ export const translationData: TranslationData = {
   // Index page
   title: 'Sejiwo - Surat wasiat online',
   description: 'Sejiwo adalah jasa pengiriman surat wasiat yang terpercaya',
-  subheading: 'Surat wasiat online',
-  welcome: 'Selamat datang',
   login: 'masuk',
   logout: 'keluar',
   emailListTo: 'Kepada',
