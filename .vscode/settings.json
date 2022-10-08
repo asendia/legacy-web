@@ -1,0 +1,10 @@
+{
+	"[svelte]": {
+		"editor.tabSize": 2,
+		"editor.formatOnSave": true
+	},
+	"[typescript]": {
+		"editor.formatOnSave": true,
+		"editor.tabSize": 2
+	}
+}

@@ -1,4 +1,4 @@
 export interface HTMLElementEvent<T extends HTMLElement> extends Event {
-  target: T;
-  currentTarget: T;
+	target: T;
+	currentTarget: T;
 }

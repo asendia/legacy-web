@@ -6,6 +6,5 @@ node_modules
 .env
 .env.*
 !.env.example
-.netlify
-playwright.screenshot*.png
 tests-out/
+.netlify/
