@@ -7,24 +7,31 @@
 <footer>
 	2018 - 2022
 	<br />
-	sejiwo - {tr('sourceCode')}:
-	<a target="_blank" rel="noopener noreferrer" href="https://github.com/asendia/legacy-web">
-		web
-	</a>
-	<a target="_blank" rel="noopener noreferrer" href="https://github.com/asendia/legacy-api">
-		api
-	</a>
+	<div>
+		sejiwo - {tr('sourceCode')}:
+		<a target="_blank" rel="noopener noreferrer" href="https://github.com/asendia/legacy-web">
+			web
+		</a>
+		<a target="_blank" rel="noopener noreferrer" href="https://github.com/asendia/legacy-api">
+			api
+		</a>
+	</div>
 </footer>
 
 <style>
 	footer {
-		margin-top: 20px;
-		padding-bottom: 20px;
 		font-size: 12px;
 		font-weight: 300;
 		text-align: center;
+		height: 10vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 	}
-	a {
+	footer > div {
+		color: var(--color-darkgrey);
+	}
+	footer a {
 		color: var(--color-blue);
 	}
 </style>

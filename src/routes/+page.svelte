@@ -38,9 +38,11 @@
 	<SEO {locale} pathname={url.pathname} />
 </svelte:head>
 <div class="wrapper" style={colorPalette}>
-	<Header />
-	<div class="separator" />
-	<Form />
+	<div>
+		<Header />
+		<div class="separator" />
+		<Form />
+	</div>
 	<Footer />
 </div>
 
@@ -55,6 +57,9 @@
 		letter-spacing: 1px;
 		box-sizing: border-box;
 		padding: 10px 24px 0 24px;
+	}
+	.wrapper > div {
+		min-height: 90vh;
 	}
 	.separator {
 		height: 30px;
