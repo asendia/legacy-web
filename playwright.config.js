@@ -7,6 +7,7 @@ const config = {
 	// playwright ignore directory included in .gitignore
 	testDir: 'tests-out',
 	timeout: 5000,
+	workers: process.env.CI ? 2 : undefined,
 	use: {
 		headless: true
 	}
