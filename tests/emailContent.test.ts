@@ -1,5 +1,5 @@
 import test, { expect } from '@playwright/test';
-import { delay, failOnAnyError } from './core.test.js';
+import { timeout, failOnAnyError } from './core.test.js';
 
 test('decrypting without login works', async ({ page }) => {
 	failOnAnyError(page);
@@ -15,6 +15,6 @@ test('decrypting without login works', async ({ page }) => {
 	const textArea = page.locator('textarea.text');
 	await expect(textArea).toHaveValue(
 		'Testing from sejiwo.com\n\nBrand new hehehe\n\nBest,\nHassan',
-		{ timeout: delay }
+		{ timeout }
 	);
 });

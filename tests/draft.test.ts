@@ -7,6 +7,7 @@ import {
 	mockIdentityAuthorizeAPI,
 	mockIdentityUserAPI,
 	mockMessageAPI,
+	timeout,
 	typingDelay
 } from './core.test.js';
 
@@ -48,7 +49,7 @@ test('draft conflicted use client', async ({ page }) => {
 	await page.waitForLoadState('networkidle');
 	expect(dialogCounter).toBe(1);
 	const textArea = page.locator('textarea.text');
-	await expect(textArea).toHaveValue('this is a client draft', { timeout: delay });
+	await expect(textArea).toHaveValue('this is a client draft', { timeout });
 });
 
 test('draft conflicted use remote', async ({ page }) => {
@@ -147,6 +148,6 @@ test('session expired accept draft', async ({ page }) => {
 	expect(messageAPICallCtr).toBe(0);
 
 	const textArea = page.locator('textarea.text');
-	await expect(textArea).toHaveValue(draftText, { timeout: delay });
+	await expect(textArea).toHaveValue(draftText, { timeout });
 	expect(await page.innerText('div > span')).toBe('');
 });

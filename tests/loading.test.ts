@@ -5,19 +5,19 @@ import {
 	failOnAnyError,
 	generateAuthURL,
 	mockIdentityUserAPI,
-	mockMessageAPI
+	mockMessageAPI,
+	timeout
 } from './core.test.js';
 
 test('slow api', async ({ page }) => {
 	failOnAnyError(page);
-	const slowWaitTime = 1000;
 	const token = 'secretjwt2';
 	const email = 'test@sejiwo.com';
 	const fullname = 'Sejiwo Team';
 	await mockIdentityUserAPI(page, token, email, fullname);
 	await mockMessageAPI(page, token, 'select-messages', {
 		callback: async (route) => {
-			await page.waitForTimeout(slowWaitTime);
+			await page.waitForTimeout(timeout);
 			route.fulfill({ headers: corsHeadersAllow, body: JSON.stringify({ data: [] }) });
 		}
 	});
@@ -26,11 +26,11 @@ test('slow api', async ({ page }) => {
 	expect(await page.isEnabled('text=submit')).toBeFalsy();
 	await page.waitForSelector('.textWrapper .loading', {
 		state: 'attached',
-		timeout: slowWaitTime + delay
+		timeout: timeout + delay
 	});
 	await page.waitForSelector('.textWrapper .loading', {
 		state: 'detached',
-		timeout: slowWaitTime + delay
+		timeout: timeout + delay
 	});
 	expect(await page.isEnabled('text=submit')).toBeTruthy();
 });
