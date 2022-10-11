@@ -17,11 +17,7 @@ const config = {
 				'manifest-src': ['self'],
 				'style-src': ['unsafe-inline', 'self'],
 				'img-src': ['self', 'data:'],
-				'connect-src': [
-					'self',
-					'https://sejiwo.com',
-					'https://asia-southeast1-monarch-public.cloudfunctions.net'
-				]
+				'connect-src': ['self', 'https://sejiwo.com', 'https://legacy-api-kg4uaex4ca-as.a.run.app']
 			}
 		}
 	}
