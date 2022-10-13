@@ -1,35 +1,27 @@
 <script lang="ts">
-	import Header from '$lib/core/Header.svelte';
-	import Footer from '$lib/core/Footer.svelte';
 	import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
+	import Footer from '$lib/core/Footer.svelte';
+	import Header from '$lib/core/Header.svelte';
 	import Form from '$lib/form/form.svelte';
-	import { onMount, setContext } from 'svelte';
-	import { handleHashVisit } from '$lib/user/auth';
-	import { handleQueryVisit } from '$lib/query-string/queryStringHandler';
-	import type { TranslationFunction } from '$lib/i18n/translation';
-	import SEO from '$lib/i18n/SEO.svelte';
 	import type { I18nContext } from '$lib/i18n/i18n';
+	import SEO from '$lib/i18n/SEO.svelte';
+	import type { TranslationFunction } from '$lib/i18n/translation';
+	import { handleHashVisit } from '$lib/user/auth';
+	import { onMount, setContext } from 'svelte';
 	export let data: { tr: TranslationFunction; locale: string; url: URL };
 	const { tr, locale, url } = data;
 	setContext<I18nContext>('i18n', { tr, locale, url });
-	onMount(async () => {
-		try {
-			await handleQueryVisit(
-				tr('messageExtended'),
-				tr('messageUnsubscribed'),
-				tr('queryActionError')
-			);
-			await handleHashVisit();
-		} catch (err) {
-			switch ((err as Error).message) {
-				default:
-					console.error(err);
-			}
-		}
-	});
 	const colorPalette =
 		`--color-grey:${grey};--color-blue:${blue};` +
 		`--color-darkgrey:${darkGrey};--color-lightgrey:${lightGrey};`;
+
+	onMount(async () => {
+		try {
+			await handleHashVisit();
+		} catch (err) {
+			console.error(err);
+		}
+	});
 </script>
 
 <svelte:head>

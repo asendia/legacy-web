@@ -1,0 +1,49 @@
+<script lang="ts">
+	import type { TranslationFunction } from '$lib/i18n/translation';
+	import { unsubscribeMessage } from '$lib/query-string/queryStringFetcher';
+	import { onMount } from 'svelte';
+
+	export let data: { tr: TranslationFunction; locale: string; url: URL };
+	const { tr } = data;
+
+	let state: 'loading' | 'success' | 'error' | 'invalid-request' = 'loading';
+	onMount(async () => {
+		const qs = new URLSearchParams(location.search);
+		const secret = qs.get('secret');
+		const id = qs.get('id');
+		if (id && secret) {
+			try {
+				await unsubscribeMessage(id, secret);
+				state = 'success';
+				return;
+			} catch (err) {
+				state = 'error';
+				return;
+			}
+		}
+		state = 'invalid-request';
+	});
+</script>
+
+<svelte:head>
+	<title>{tr('unsubscribeTitle')}</title>
+</svelte:head>
+<div class="text-center">
+	{#if state === 'success'}
+		{tr('messageExtended')}
+	{:else if state === 'error'}
+		<p>Error: {tr('secretAPIError')}</p>
+		<a href="/">Home</a>
+	{:else if state === 'invalid-request'}
+		<p>Error: {tr('secretAPIInvalidRequest')}</p>
+		<a href="/">Home</a>
+	{:else if state === 'loading'}
+		{tr('loading')}
+	{/if}
+</div>
+
+<style>
+	.text-center {
+		text-align: center;
+	}
+</style>
