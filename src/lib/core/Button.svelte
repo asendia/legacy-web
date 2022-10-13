@@ -1,15 +1,19 @@
 <script lang="ts">
-	import type { colors } from './colors';
 	export let onClick: (e: MouseEvent) => void;
 	export let text: string;
 	export let variant: 'filled' | 'outlined' = 'outlined';
 	export let color: 'primary' | 'secondary' = 'primary';
 	export let style: string | undefined;
 	export let disabled = false;
-	let key: keyof typeof colors;
+	let key:
+		| 'filledprimary'
+		| 'filledsecondary'
+		| 'outlinedprimary'
+		| 'outlinedsecondary'
+		| 'disabled';
 
 	$: {
-		key = disabled ? 'disabled' : ((variant + color) as keyof typeof colors);
+		key = disabled ? 'disabled' : ((variant + color) as typeof key);
 	}
 </script>
 

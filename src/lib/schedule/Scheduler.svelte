@@ -14,7 +14,7 @@
 	{tr('scheduler_pt1')}
 	<select
 		data-test-id="select-inactive"
-		class="border border-[transparent] text-lg border-b-blue text-blue cursor-pointer bg-none font-light rounded-sm focus:outline-0 focus:border-blue"
+		class="border border-[transparent] border-b-blue text-blue cursor-pointer bg-none font-light rounded-sm focus:outline-0 focus:border-blue"
 		on:change={(e) => {
 			const days = parseInt(e.currentTarget.value, 10);
 			onChange(days, 'inactive');
@@ -31,7 +31,7 @@
 	{tr('scheduler_pt2')}
 	<select
 		data-test-id="select-reminder"
-		class="border border-[transparent] text-lg border-b-blue text-blue cursor-pointer bg-none font-light rounded-sm focus:outline-0 focus:border-blue"
+		class="border border-[transparent] border-b-blue text-blue cursor-pointer bg-none font-light rounded-sm focus:outline-0 focus:border-blue"
 		on:change={(e) => {
 			const days = parseInt(e.currentTarget.value, 10);
 			onChange(days, 'reminder');

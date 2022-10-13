@@ -42,9 +42,9 @@
 	}
 </script>
 
-<div class="relative mb-7 border-b border-b-grey-light">
+<div class="relative mb-10 border-b border-b-grey-light">
 	<textarea
-		class="block w-full border-none leading-4 resize-none box-border tracking-wider bg-none p-0 placeholder:text-grey-light focus:outline focus:outline-0"
+		class="block w-full border-none leading-4 resize-none box-border tracking-wider bg-none p-0 placeholder:text-grey-light focus:outline focus:outline-0 tap-transparent"
 		on:change={(e) => handleChange(e.currentTarget.value, enableClientAES)}
 		on:keydown={handleKeydown}
 		on:focus={handleFocus}

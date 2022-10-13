@@ -52,20 +52,26 @@
 </script>
 
 <div
-	class="flex w-full flex-wrap border-b border-grey-light m-0 mb-6 cursor-text relative box-border focus:outline-1"
+	class="relative flex w-full flex-wrap border-b border-grey-light m-0 mb-6 cursor-text box-border focus:outline-1"
 	on:click={handleWrapperClick}
 >
 	<div
 		data-test-id="email-list-label"
-		class="text-sm leading-4 mt-[1px] mr-[5px] mb-[4px]"
-		style={labelText === txtTo ? '' : 'color: var(--color-lightgrey);'}
+		class={`text-sm leading-4 mt-[1px] mr-[5px] mb-[4px]${labelText === txtTo ? '' : ' opacity-0'}`}
 	>
-		{labelText}
+		{txtTo}
+	</div>
+	<div
+		class={`absolute text-sm leading-4 mt-[1px] mr-[5px] mb-[4px]${
+			labelText === txtTo ? ' hidden' : ''
+		}`}
+	>
+		{txtPlaceholder}
 	</div>
 	{#each emailList as email, id}
 		<div
 			data-test-id="email-{id}"
-			class="relative rounded-sm bg-grey-light pr-[18px] pl-[5px] mr-[4px] mb-[4px] text-sm leading-4 text-grey-dark"
+			class="relative rounded-sm bg-grey-light pr-[18px] pl-[5px] mr-1 mb-1 text-sm h-5 text-grey-dark"
 			on:click={handleEmailClick}
 		>
 			{email}
@@ -83,7 +89,7 @@
 			data-test-id="email-input"
 			type="email"
 			aria-label="Receiver Email"
-			class="border-none m-0 mb-1 flex-grow bg-none leading-[18px] p-0 focus:outline focus:outline-0"
+			class="border-none m-0 mb-1 flex-grow bg-none leading-[18px] p-0 h-5 focus:outline focus:outline-0 tap-transparent"
 			style="width: {showInput ? '100px' : '1px'}"
 			value={text}
 			on:blur={handleInputBlur}
