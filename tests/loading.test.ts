@@ -24,11 +24,11 @@ test('slow api', async ({ page }) => {
 	await page.goto(generateAuthURL(token));
 	await page.waitForNavigation({ waitUntil: 'networkidle' });
 	expect(await page.isEnabled('text=submit')).toBeFalsy();
-	await page.waitForSelector('.textWrapper .loading', {
+	await page.waitForSelector('data-test-id=loading', {
 		state: 'attached',
 		timeout: timeout + delay
 	});
-	await page.waitForSelector('.textWrapper .loading', {
+	await page.waitForSelector('data-test-id=loading', {
 		state: 'detached',
 		timeout: timeout + delay
 	});

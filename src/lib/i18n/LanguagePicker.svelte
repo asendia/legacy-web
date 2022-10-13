@@ -5,6 +5,7 @@
 </script>
 
 <select
+	class="border border-[transparent] text-blue cursor-pointer bg-none font-light mr-2 focus:outline-0 focus:border focus:border-blue focus:rounded-sm"
 	on:change={(e) => {
 		url.searchParams.set('hl', e.currentTarget.value);
 		location.href = url.pathname + '?' + url.searchParams.toString();
@@ -14,20 +15,3 @@
 		<option selected={loc === locale} value={loc}>{loc.toUpperCase()}</option>
 	{/each}
 </select>
-
-<style>
-	select {
-		border: none;
-		border: 1px solid transparent;
-		color: var(--color-blue);
-		cursor: pointer;
-		background: none;
-		font-weight: 300;
-		margin-right: 10px;
-	}
-	select:focus {
-		outline-width: 0;
-		border: 1px solid var(--color-blue);
-		border-radius: 3px;
-	}
-</style>

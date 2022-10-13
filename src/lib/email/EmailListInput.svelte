@@ -51,21 +51,39 @@
 	const createHandleDeleteEmail = (id: number) => () => deleteEmail(id);
 </script>
 
-<div class="wrapper" on:click={handleWrapperClick}>
-	<div class="toText" style={labelText === txtTo ? '' : 'color: var(--color-lightgrey);'}>
+<div
+	class="flex w-full flex-wrap border-b border-grey-light m-0 mb-6 cursor-text relative box-border focus:outline-1"
+	on:click={handleWrapperClick}
+>
+	<div
+		data-test-id="email-list-label"
+		class="text-sm leading-4 mt-[1px] mr-[5px] mb-[4px]"
+		style={labelText === txtTo ? '' : 'color: var(--color-lightgrey);'}
+	>
 		{labelText}
 	</div>
 	{#each emailList as email, id}
-		<div class="email" on:click={handleEmailClick}>
+		<div
+			data-test-id="email-{id}"
+			class="relative rounded-sm bg-grey-light pr-[18px] pl-[5px] mr-[4px] mb-[4px] text-sm leading-4 text-grey-dark"
+			on:click={handleEmailClick}
+		>
 			{email}
-			<div class="deleteEmail" on:click={createHandleDeleteEmail(id)}>×</div>
+			<div
+				data-test-id="email-delete-{id}"
+				class="absolute top-0 right-0 pt-[2px] pr-[2px] pb-1 pl-1 cursor-pointer leading-3"
+				on:click={createHandleDeleteEmail(id)}
+			>
+				×
+			</div>
 		</div>
 	{/each}
 	{#if emailList.length < 3}
 		<input
+			data-test-id="email-input"
 			type="email"
 			aria-label="Receiver Email"
-			class="text"
+			class="border-none m-0 mb-1 flex-grow bg-none leading-[18px] p-0 focus:outline focus:outline-0"
 			style="width: {showInput ? '100px' : '1px'}"
 			value={text}
 			on:blur={handleInputBlur}
@@ -92,78 +110,11 @@
 		/>
 	{/if}
 </div>
-<div class="customValidityWrapper">
-	<div class="customValidity" style="opacity: {isInvalidInput ? '100%' : '0%'};">
+<div class="relative">
+	<div
+		class="absolute text-xs leading-4 top-[-22px] left-0 text-red bg-white z-10 font-light rounded-sm transition-opacity duration-1000"
+		style="opacity: {isInvalidInput ? '100%' : '0%'};"
+	>
 		{tr('emailListValidity')}
 	</div>
 </div>
-
-<style>
-	.wrapper {
-		display: flex;
-		width: 100%;
-		flex-wrap: wrap;
-		border-bottom: 1px solid var(--color-lightgrey);
-		margin: 0 0 25px 0;
-		cursor: text;
-		position: relative;
-		box-sizing: border-box;
-	}
-	.wrapper:focus {
-		outline-width: 1px;
-	}
-	.toText {
-		font-size: 14px;
-		line-height: 16px;
-		margin: 1px 5px 4px 0;
-	}
-	.email {
-		position: relative;
-		border-radius: 2px;
-		background-color: var(--color-lightgrey);
-		padding: 0 18px 0 5px;
-		margin: 0 4px 4px 0;
-		font-size: 14px;
-		line-height: 18px;
-		color: var(--color-darkgrey);
-	}
-	.deleteEmail {
-		position: absolute;
-		top: 0;
-		right: 0;
-		padding: 2px 2px 4px 4px;
-		cursor: pointer;
-		font-size: 16px;
-		line-height: 12px;
-	}
-	.text {
-		border: none;
-		margin: 0 0 4px 0;
-		flex-grow: 1;
-		background: none;
-		font-size: 16px;
-		line-height: 18px;
-		font-family: 'Roboto', sans-serif;
-		padding: 0;
-	}
-	.text:focus {
-		outline-style: solid;
-		outline-width: 0;
-	}
-	.customValidityWrapper {
-		position: relative;
-	}
-	.customValidity {
-		position: absolute;
-		font-size: 12px;
-		line-height: 16px;
-		top: -22px;
-		left: 0;
-		color: #f44336;
-		background-color: white;
-		z-index: 1;
-		font-weight: 300;
-		border-radius: 2px;
-		transition: opacity 1s;
-	}
-</style>

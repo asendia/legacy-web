@@ -4,34 +4,26 @@
 	const { tr } = getContext<I18nContext>('i18n');
 </script>
 
-<footer>
+<footer class="text-xs font-light text-center h-[8vh] flex flex-col justify-center">
 	2018 - 2022
 	<br />
-	<div>
+	<div class="text-grey-dark">
 		sejiwo - {tr('sourceCode')}:
-		<a target="_blank" rel="noopener noreferrer" href="https://github.com/asendia/legacy-web">
+		<a
+			class="text-blue"
+			target="_blank"
+			rel="noopener noreferrer"
+			href="https://github.com/asendia/legacy-web"
+		>
 			web
 		</a>
-		<a target="_blank" rel="noopener noreferrer" href="https://github.com/asendia/legacy-api">
+		<a
+			class="text-blue"
+			target="_blank"
+			rel="noopener noreferrer"
+			href="https://github.com/asendia/legacy-api"
+		>
 			api
 		</a>
 	</div>
 </footer>
-
-<style>
-	footer {
-		font-size: 12px;
-		font-weight: 300;
-		text-align: center;
-		height: 10vh;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
-	footer > div {
-		color: var(--color-darkgrey);
-	}
-	footer a {
-		color: var(--color-blue);
-	}
-</style>

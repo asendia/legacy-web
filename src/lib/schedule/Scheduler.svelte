@@ -10,9 +10,11 @@
 	const reminderIntervalDaysOptions = [15, 30];
 </script>
 
-<div class="scheduler">
+<div class="text-sm pb-4 leading-5 font-light">
 	{tr('scheduler_pt1')}
 	<select
+		data-test-id="select-inactive"
+		class="border border-[transparent] text-lg border-b-blue text-blue cursor-pointer bg-none font-light rounded-sm focus:outline-0 focus:border-blue"
 		on:change={(e) => {
 			const days = parseInt(e.currentTarget.value, 10);
 			onChange(days, 'inactive');
@@ -28,6 +30,8 @@
 	</select>
 	{tr('scheduler_pt2')}
 	<select
+		data-test-id="select-reminder"
+		class="border border-[transparent] text-lg border-b-blue text-blue cursor-pointer bg-none font-light rounded-sm focus:outline-0 focus:border-blue"
 		on:change={(e) => {
 			const days = parseInt(e.currentTarget.value, 10);
 			onChange(days, 'reminder');
@@ -44,27 +48,3 @@
 	{tr('scheduler_pt3')}
 	{emailCreator}.
 </div>
-
-<style>
-	.scheduler {
-		font-size: 14px;
-		padding: 0 0 16px 0;
-		line-height: 22px;
-		font-weight: 300;
-	}
-	select {
-		border: none;
-		border: 1px solid transparent;
-		border-bottom: 1px solid var(--color-blue);
-		color: var(--color-blue);
-		cursor: pointer;
-		font-size: 18px;
-		background: none;
-		font-weight: 300;
-	}
-	select:focus {
-		outline-width: 0;
-		border: 1px solid var(--color-blue);
-		border-radius: 3px;
-	}
-</style>

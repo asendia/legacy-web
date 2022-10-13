@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { blue, darkGrey, grey, lightGrey } from '$lib/core/colors';
 	import Footer from '$lib/core/Footer.svelte';
 	import Header from '$lib/core/Header.svelte';
 	import Form from '$lib/form/form.svelte';
@@ -11,9 +10,6 @@
 	export let data: { tr: TranslationFunction; locale: string; url: URL };
 	const { tr, locale, url } = data;
 	setContext<I18nContext>('i18n', { tr, locale, url });
-	const colorPalette =
-		`--color-grey:${grey};--color-blue:${blue};` +
-		`--color-darkgrey:${darkGrey};--color-lightgrey:${lightGrey};`;
 
 	onMount(async () => {
 		try {
@@ -29,36 +25,11 @@
 	<meta name="description" content={tr('description')} />
 	<SEO {locale} pathname={url.pathname} />
 </svelte:head>
-<div class="wrapper" style={colorPalette}>
-	<div>
+<div class="m-auto tracking-wider box-border px-6 py-2 md:px-24">
+	<div class="min-h-[90vh]">
 		<Header />
-		<div class="separator" />
+		<div class="h-7" />
 		<Form />
 	</div>
 	<Footer />
 </div>
-
-<style>
-	:global(body) {
-		margin: 0;
-		padding: 0;
-		font-family: 'Roboto', sans-serif;
-	}
-	.wrapper {
-		margin: auto;
-		letter-spacing: 1px;
-		box-sizing: border-box;
-		padding: 10px 24px 0 24px;
-	}
-	.wrapper > div {
-		min-height: 90vh;
-	}
-	.separator {
-		height: 30px;
-	}
-	@media screen and (min-width: 800px) {
-		.wrapper {
-			padding: 10px 100px;
-		}
-	}
-</style>

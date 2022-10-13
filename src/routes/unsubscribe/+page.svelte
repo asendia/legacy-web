@@ -41,9 +41,3 @@
 		{tr('loading')}
 	{/if}
 </div>
-
-<style>
-	.text-center {
-		text-align: center;
-	}
-</style>

@@ -58,16 +58,16 @@ test('insert/update message keyboard & click', async ({ page }) => {
 	await page.goto(generateAuthURL(token));
 	await page.waitForNavigation({ waitUntil: 'networkidle' });
 	expect(await page.innerText('div > span')).toBe(fullname.split(' ')[0]);
-	expect(await page.locator('.toggle.show').innerText()).toBe('HIDE');
-	await page.click('.toText');
+	expect(await page.locator('data-test-id=toggle-show').innerText()).toBe('HIDE');
+	await page.click('data-test-id=email-list-label');
 	const recipient = 'recipient@sejiwo.com';
 	await page.keyboard.type(recipient, { delay: typingDelay });
 	await page.keyboard.press('Tab', { delay });
 	await page.keyboard.type(messageContent, { delay: typingDelay });
 	await page.keyboard.press('Tab', { delay });
-	await expect(page.locator('.scheduler select:nth-child(1)')).toBeFocused();
+	await expect(page.locator('data-test-id=select-inactive')).toBeFocused();
 	await page.keyboard.press('Tab', { delay });
-	await expect(page.locator('.scheduler select:nth-child(2)')).toBeFocused();
+	await expect(page.locator('data-test-id=select-reminder')).toBeFocused();
 	await page.keyboard.press('Tab', { delay });
 	await expect(page.locator('text=submit')).toBeFocused();
 	await page.keyboard.press('Enter', { delay });
@@ -78,17 +78,17 @@ test('insert/update message keyboard & click', async ({ page }) => {
 	expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 0 });
 
 	const additionalMessage = '\n\nnew line';
-	await page.locator('textarea.text').type(additionalMessage, { delay: typingDelay });
-	await page.selectOption('.scheduler select:nth-child(1)', { index: 2 });
-	await page.selectOption('.scheduler select:nth-child(2)', { index: 1 });
+	await page.locator('textarea').type(additionalMessage, { delay: typingDelay });
+	await page.selectOption('data-test-id=select-inactive', { index: 2 });
+	await page.selectOption('data-test-id=select-reminder', { index: 1 });
 	await page.click('text=submit', { delay });
 	expect(messages[0].inactivePeriodDays).toBe(90);
 	expect(messages[0].reminderIntervalDays).toBe(30);
-	expect(await page.inputValue('.scheduler select:nth-child(1)')).toBe('90');
-	expect(await page.inputValue('.scheduler select:nth-child(2)')).toBe('30');
+	expect(await page.inputValue('data-test-id=select-inactive')).toBe('90');
+	expect(await page.inputValue('data-test-id=select-reminder')).toBe('30');
 	expect(accessCtr).toStrictEqual({ select: 1, insert: 1, update: 1 });
 
-	await page.click('.toggle.aes', { delay });
+	await page.click('data-test-id=toggle-aes', { delay });
 	await page.click('text=submit', { delay });
 	await page.isEnabled('text=submit');
 	expect(messages[0].messageContent.startsWith('aes.utf8:')).toBeTruthy();
@@ -97,16 +97,14 @@ test('insert/update message keyboard & click', async ({ page }) => {
 	await page.reload();
 	await page.waitForResponse((res) => res.url().includes('/legacy-api'));
 	expect(await page.isEnabled('text=submit')).toBeTruthy();
-	expect(await page.inputValue('textarea.text')).toBe(messageContent + additionalMessage);
+	expect(await page.inputValue('textarea')).toBe(messageContent + additionalMessage);
 	expect(messages[0].inactivePeriodDays).toBe(90);
 	expect(messages[0].reminderIntervalDays).toBe(30);
 	expect(messages.length).toBe(1);
-	expect(await page.innerText('.toggle.aes')).toBe('CLIENT-AES:\nON');
-	expect(await page.innerText('.toggle.show')).toBe('SHOW');
-	expect(await page.textContent(`.wrapper > .email:nth-child(2)`)).toBe(
-		recipient + ' ' + closeSymbol
-	);
-	expect(await page.inputValue('.scheduler select:nth-child(1)')).toBe('90');
-	expect(await page.inputValue('.scheduler select:nth-child(2)')).toBe('30');
+	expect(await page.innerText('data-test-id=toggle-aes')).toBe('CLIENT-AES:\nON');
+	expect(await page.innerText('data-test-id=toggle-show')).toBe('SHOW');
+	expect(await page.textContent('data-test-id=email-0')).toBe(recipient + ' ' + closeSymbol);
+	expect(await page.inputValue('data-test-id=select-inactive')).toBe('90');
+	expect(await page.inputValue('data-test-id=select-reminder')).toBe('30');
 	expect(accessCtr).toStrictEqual({ select: 2, insert: 1, update: 2 });
 });

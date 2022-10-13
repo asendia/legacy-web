@@ -16,7 +16,7 @@ test('draft conflicted use client', async ({ page }) => {
 	const token = 'secretjwt2';
 	await page.goto('/');
 	const draftText = 'this is a client draft';
-	await page.type('textarea.text', draftText, { delay: typingDelay });
+	await page.type('textarea', draftText, { delay: typingDelay });
 	const email = 'test@sejiwo.com';
 	const fullname = 'Sejiwo Team';
 	await mockIdentityAuthorizeAPI(page, token);
@@ -45,10 +45,10 @@ test('draft conflicted use client', async ({ page }) => {
 	await page.click('text=login');
 	await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
 	// Ensure no flash state
-	expect(await page.inputValue('textarea.text')).toBe('');
+	expect(await page.inputValue('textarea')).toBe('');
 	await page.waitForLoadState('networkidle');
 	expect(dialogCounter).toBe(1);
-	const textArea = page.locator('textarea.text');
+	const textArea = page.locator('textarea');
 	await expect(textArea).toHaveValue('this is a client draft', { timeout });
 });
 
@@ -57,7 +57,7 @@ test('draft conflicted use remote', async ({ page }) => {
 	const token = 'secretjwt2';
 	await page.goto('/');
 	const draftText = 'this is a client draft';
-	await page.type('textarea.text', draftText, { delay: typingDelay });
+	await page.type('textarea', draftText, { delay: typingDelay });
 	const email = 'test@sejiwo.com';
 	const fullname = 'Sejiwo Team';
 	await mockIdentityAuthorizeAPI(page, token);
@@ -81,7 +81,7 @@ test('draft conflicted use remote', async ({ page }) => {
 	await page.click('text=login');
 	await page.waitForLoadState('networkidle');
 	expect(dialogCounter).toBe(1);
-	expect(await page.inputValue('textarea.text')).toBe('remote content');
+	expect(await page.inputValue('textarea')).toBe('remote content');
 });
 
 test('session expired reject draft', async ({ page }) => {
@@ -98,7 +98,7 @@ test('session expired reject draft', async ({ page }) => {
 	await page.goto(generateAuthURL(token));
 	await page.waitForNavigation({ waitUntil: 'networkidle' });
 	const draftText = 'this is a draft';
-	await page.type('textarea.text', draftText, { delay: typingDelay });
+	await page.type('textarea', draftText, { delay: typingDelay });
 	await page.evaluate(() => {
 		const gotrue = JSON.parse(localStorage.getItem('gotrue.user'));
 		gotrue.token.expires_at = Date.now() - 60000;
@@ -113,7 +113,7 @@ test('session expired reject draft', async ({ page }) => {
 	await page.click('text=submit', { delay });
 	expect(dialogCtr).toStrictEqual({ accept: 0, reject: 1 });
 	expect(messageAPICallCtr).toBe(0);
-	expect(await page.inputValue('textarea.text')).toBe('');
+	expect(await page.inputValue('textarea')).toBe('');
 	expect(await page.innerText('div > span')).toBe('');
 });
 
@@ -131,7 +131,7 @@ test('session expired accept draft', async ({ page }) => {
 	await page.goto(generateAuthURL(token));
 	await page.waitForNavigation({ waitUntil: 'networkidle' });
 	const draftText = 'this is a draft';
-	await page.type('textarea.text', draftText, { delay: typingDelay });
+	await page.type('textarea', draftText, { delay: typingDelay });
 	await page.evaluate(() => {
 		const gotrue = JSON.parse(localStorage.getItem('gotrue.user'));
 		gotrue.token.expires_at = Date.now() - 60000;
@@ -147,7 +147,7 @@ test('session expired accept draft', async ({ page }) => {
 	expect(dialogCtr).toStrictEqual({ accept: 1, reject: 0 });
 	expect(messageAPICallCtr).toBe(0);
 
-	const textArea = page.locator('textarea.text');
+	const textArea = page.locator('textarea');
 	await expect(textArea).toHaveValue(draftText, { timeout });
 	expect(await page.innerText('div > span')).toBe('');
 });

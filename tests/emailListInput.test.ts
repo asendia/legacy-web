@@ -4,36 +4,30 @@ import { closeSymbol, failOnAnyError, typingDelay } from './core.test.js';
 test('email input works', async ({ page }) => {
 	failOnAnyError(page);
 	await page.goto('/');
-	await page.click('.toText');
-	await expect(page.locator('input.text')).toBeFocused();
+	await page.click('data-test-id=email-list-label');
+	await expect(page.locator('data-test-id=email-input')).toBeFocused();
 	// Enter 2 valid emails
 	const validEmails = ['test@sejiwo.com', 'admin1@sejiwo.com'];
 	for (let i = 0; i < validEmails.length; i++) {
 		const email = validEmails[i];
 		await page.keyboard.type(email, { delay: typingDelay });
 		await page.keyboard.press('Enter');
-		expect(await page.textContent(`.wrapper > .email:nth-child(${i + 2})`)).toBe(
-			email + ' ' + closeSymbol
-		);
+		expect(await page.textContent(`data-test-id=email-${i}`)).toBe(email + ' ' + closeSymbol);
 	}
 	// Enter 1 invalid email
 	await page.keyboard.type('invalidemail', { delay: typingDelay });
 	await page.keyboard.press('Enter');
-	expect(await page.inputValue('input.text')).toBe('invalidemail');
+	expect(await page.inputValue('data-test-id=email-input')).toBe('invalidemail');
 	// Make it valid
 	await page.keyboard.type('@nowvalid.com', { delay: typingDelay });
 	await page.keyboard.press('Enter');
-	expect(await page.textContent(`.wrapper > .email:nth-child(4)`)).toBe(
+	expect(await page.textContent(`data-test-id=email-2`)).toBe(
 		'invalidemail@nowvalid.com' + ' ' + closeSymbol
 	);
 	// Max email list is 3
-	expect(await page.locator('input.text').isVisible()).toBeFalsy();
+	expect(await page.locator('data-test-id=email-input').isVisible()).toBeFalsy();
 	// Delete second email
-	let emailElements = await page.$$('.wrapper > .email');
-	expect(emailElements.length).toBe(3);
-	await (await page.$$('.deleteEmail'))[1].click();
-	emailElements = await page.$$('.wrapper > .email');
-	expect(emailElements.length).toBe(2);
-	expect((await emailElements[0].innerText()).startsWith(validEmails[0]));
-	expect((await emailElements[1].innerText()).startsWith('invalidemail@nowvalid.com'));
+	await page.locator('data-test-id=email-delete-1').click();
+	expect((await page.textContent('data-test-id=email-0')).startsWith(validEmails[0]));
+	expect((await page.textContent('data-test-id=email-1')).startsWith('invalidemail@nowvalid.com'));
 });

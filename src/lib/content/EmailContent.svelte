@@ -42,9 +42,9 @@
 	}
 </script>
 
-<div class="textWrapper">
+<div class="relative mb-7 border-b border-b-grey-light">
 	<textarea
-		class="text"
+		class="block w-full border-none leading-4 resize-none box-border tracking-wider bg-none p-0 placeholder:text-grey-light focus:outline focus:outline-0"
 		on:change={(e) => handleChange(e.currentTarget.value, enableClientAES)}
 		on:keydown={handleKeydown}
 		on:focus={handleFocus}
@@ -59,87 +59,29 @@
 		style="filter: {toggleShow ? 'none' : 'blur(5px)'}; opacity: {isLoading ? '0' : '1'}"
 		>{messageContent}</textarea
 	>
-	<div class="toggleWrapper">
-		<div class="toggle aes" on:click={handleAESToggle}>
+	<div class="absolute right-[2px] -bottom-7 flex">
+		<div
+			data-test-id="toggle-aes"
+			class="py-1 px-2 text-center cursor-pointer bg-grey-dark uppercase text-xs text-white font-light rounded-sm box-border flex justify-between min-w-[108px] mr-1"
+			on:click={handleAESToggle}
+		>
 			<div>client-aes:</div>
-			<div>{enableClientAES ? tr('on') : tr('off')}</div>
+			<div class="flex-grow text-right">{enableClientAES ? tr('on') : tr('off')}</div>
 		</div>
-		<div class="toggle show" on:click={handleShowToggle}>
+		<div
+			data-test-id="toggle-show"
+			class="py-1 px-2 text-center cursor-pointer bg-grey-dark uppercase text-xs text-white font-light rounded-sm box-border flex min-w-[48px] justify-center"
+			on:click={handleShowToggle}
+		>
 			{toggleShow ? tr('hide') : tr('show')}
 		</div>
 	</div>
 	{#if isLoading}
-		<div class="loading">{tr('loading')}</div>
+		<div
+			data-test-id="loading"
+			class="absolute top-0 right-0 bottom-0 left-0 text-center pt-5 box-border text-grey"
+		>
+			{tr('loading')}
+		</div>
 	{/if}
 </div>
-
-<style>
-	.textWrapper {
-		position: relative;
-		margin-bottom: 30px;
-		border-bottom: 1px solid var(--color-lightgrey);
-	}
-	.toggleWrapper {
-		position: absolute;
-		right: 2px;
-		bottom: -24px;
-		display: flex;
-	}
-	.toggle {
-		padding: 4px 6px;
-		text-align: center;
-		cursor: pointer;
-		background-color: var(--color-darkgrey);
-		text-transform: uppercase;
-		font-size: 10px;
-		color: white;
-		font-weight: 300;
-		border-radius: 2px;
-		box-sizing: border-box;
-		display: flex;
-		justify-content: space-between;
-	}
-	.toggle.aes {
-		min-width: 108px;
-		margin-right: 4px;
-	}
-	.toggle.show {
-		min-width: 48px;
-		justify-content: center;
-	}
-	.toggle div:nth-child(2) {
-		flex-grow: 1;
-		text-align: right;
-	}
-	.text {
-		display: block;
-		width: 100%;
-		border: none;
-		line-height: 16px;
-		resize: none;
-		box-sizing: border-box;
-		font-size: 16px;
-		font-family: 'Roboto', sans-serif;
-		letter-spacing: 1px;
-		background: none;
-		padding: 0;
-	}
-	.text::placeholder {
-		color: var(--color-lightgrey);
-	}
-	.text:focus {
-		outline-style: solid;
-		outline-width: 0;
-	}
-	.loading {
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		text-align: center;
-		padding-top: 20px;
-		box-sizing: border-box;
-		color: var(--color-grey);
-	}
-</style>

@@ -50,8 +50,8 @@
 	}
 </script>
 
-<div>
-	<span>{message}</span>
+<div class="flex justify-center items-center">
+	<span class="text-sm font-light mr-2 pb-[1px]">{message}</span>
 	<Button
 		onClick={auth ? handleLogout : handleLogin}
 		{disabled}
@@ -60,17 +60,3 @@
 		style="border: none; padding: 0;"
 	/>
 </div>
-
-<style>
-	div {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	span {
-		font-size: 14px;
-		font-weight: 300;
-		margin-right: 10px;
-		padding-bottom: 1px;
-	}
-</style>
