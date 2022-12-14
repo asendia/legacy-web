@@ -54,6 +54,7 @@
 <div
 	class="relative flex w-full flex-wrap border-b border-grey-light m-0 mb-6 cursor-text box-border focus:outline-1"
 	on:click={handleWrapperClick}
+	on:keypress={handleWrapperClick}
 >
 	<div
 		data-test-id="email-list-label"
@@ -69,20 +70,20 @@
 		{txtPlaceholder}
 	</div>
 	{#each emailList as email, id}
-		<div
+		<button
 			data-test-id="email-{id}"
 			class="relative rounded-sm bg-grey-light pr-[18px] pl-[5px] mr-1 mb-1 text-sm h-5 text-grey-dark"
 			on:click={handleEmailClick}
 		>
 			{email}
-			<div
+			<button
 				data-test-id="email-delete-{id}"
 				class="absolute top-0 right-0 pt-[2px] pr-[2px] pb-1 pl-1 cursor-pointer leading-3"
 				on:click={createHandleDeleteEmail(id)}
 			>
 				×
-			</div>
-		</div>
+			</button>
+		</button>
 	{/each}
 	{#if emailList.length < 3}
 		<input

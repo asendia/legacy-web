@@ -65,6 +65,8 @@ test('insert/update message keyboard & click', async ({ page }) => {
 	await page.keyboard.press('Tab', { delay });
 	await page.keyboard.type(messageContent, { delay: typingDelay });
 	await page.keyboard.press('Tab', { delay });
+	await page.keyboard.press('Tab', { delay });
+	await page.keyboard.press('Tab', { delay });
 	await expect(page.locator('data-test-id=select-inactive')).toBeFocused();
 	await page.keyboard.press('Tab', { delay });
 	await expect(page.locator('data-test-id=select-reminder')).toBeFocused();

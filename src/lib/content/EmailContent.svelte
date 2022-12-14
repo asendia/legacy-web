@@ -60,21 +60,21 @@
 		>{messageContent}</textarea
 	>
 	<div class="absolute right-[2px] -bottom-7 flex">
-		<div
+		<button
 			data-test-id="toggle-aes"
 			class="py-1 px-2 text-center cursor-pointer bg-grey-dark uppercase text-xs text-white font-light rounded-sm box-border flex justify-between min-w-[108px] mr-1"
 			on:click={handleAESToggle}
 		>
 			<div>client-aes:</div>
 			<div class="flex-grow text-right">{enableClientAES ? tr('on') : tr('off')}</div>
-		</div>
-		<div
+		</button>
+		<button
 			data-test-id="toggle-show"
 			class="py-1 px-2 text-center cursor-pointer bg-grey-dark uppercase text-xs text-white font-light rounded-sm box-border flex min-w-[48px] justify-center"
 			on:click={handleShowToggle}
 		>
 			{toggleShow ? tr('hide') : tr('show')}
-		</div>
+		</button>
 	</div>
 	{#if isLoading}
 		<div
