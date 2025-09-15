@@ -52,11 +52,10 @@
 		rows={Math.max(minRows, Math.min(rows, maxRows))}
 		maxlength="2000"
 		autocomplete="off"
-		autocorrect="off"
 		autocapitalize="off"
 		spellcheck="false"
 		{placeholder}
-		style="filter: {toggleShow ? 'none' : 'blur(5px)'}; opacity: {isLoading ? '0' : '1'}"
+		style="filter: {toggleShow ? 'none' : 'blur(5px)'}; opacity: {isLoading ? '0' : '1'}; -webkit-text-stroke: 0;"
 		>{messageContent}</textarea
 	>
 	<div class="absolute right-[2px] -bottom-7 flex">
