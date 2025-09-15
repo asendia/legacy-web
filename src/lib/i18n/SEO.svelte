@@ -13,7 +13,7 @@
 	});
 </script>
 
-{#each alternateURLs as url, id}
+{#each alternateURLs as url, id (id)}
 	<link rel="alternate" hreflang={locales[id]} href={url} />
 {/each}
 <link rel="canonical" href={canonicalURL} />

@@ -19,18 +19,18 @@
 
 <button
 	type="button"
-	class={`uppercase no-underline py-0 px-3 border focus:outline rounded-sm text-sm leading-7 ${
+	class={`rounded-sm border px-3 py-0 text-sm leading-7 uppercase no-underline focus:outline ${
 		key === 'filledprimary'
 			? 'bg-blue border-none text-white outline-none'
 			: key === 'filledsecondary'
-			? 'bg-black border-none text-white outline-none'
-			: key === 'outlinedprimary'
-			? 'bg-none border border-blue outline-blue text-blue'
-			: key === 'outlinedsecondary'
-			? 'bg-none border border-black outline-black'
-			: key === 'disabled'
-			? 'bg-none border border-grey text-grey tap-transparent outline-grey'
-			: ''
+				? 'border-none bg-black text-white outline-none'
+				: key === 'outlinedprimary'
+					? 'border-blue outline-blue text-blue border bg-none'
+					: key === 'outlinedsecondary'
+						? 'border border-black bg-none outline-black'
+						: key === 'disabled'
+							? 'border-grey text-grey tap-transparent outline-grey border bg-none'
+							: ''
 	}`}
 	{style}
 	{disabled}

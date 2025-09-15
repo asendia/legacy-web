@@ -71,7 +71,7 @@
 	>
 		{txtPlaceholder}
 	</div>
-	{#each emailList as email, id}
+	{#each emailList as email, id (id)}
 		<div
 			role="button"
 			tabindex="0"

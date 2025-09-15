@@ -4,10 +4,10 @@
 	import Logo from './sejiwo-logo.png';
 </script>
 
-<header class="flex justify-between items-end m-0 mb-2">
-	<div class="relative flex items-center mr-6">
-		<img src={Logo} width={'30px'} height={'30px'} alt={'sejiwo logo'} />
-		<h1 class="text-2xl m-0 ml-2 font-extralight tracking-wider">sejiwo</h1>
+<header class="m-0 mb-2 flex items-end justify-between">
+	<div class="relative mr-6 flex items-center">
+		<img src={Logo} width="30px" height="30px" alt="sejiwo logo" />
+		<h1 class="m-0 ml-2 text-2xl font-extralight tracking-wider">sejiwo</h1>
 	</div>
 	<div class="flex">
 		<LanguagePicker />

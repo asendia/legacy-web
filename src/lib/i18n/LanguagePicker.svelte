@@ -5,13 +5,13 @@
 </script>
 
 <select
-	class="border border-[transparent] text-blue cursor-pointer bg-none font-light mr-2 focus:outline-0 focus:border focus:border-blue focus:rounded-sm"
+	class="text-blue focus:border-blue mr-2 cursor-pointer border border-[transparent] bg-none font-light focus:rounded-sm focus:border focus:outline-0"
 	on:change={(e) => {
 		url.searchParams.set('hl', e.currentTarget.value);
 		location.href = url.pathname + '?' + url.searchParams.toString();
 	}}
 >
-	{#each locales as loc}
+	{#each locales as loc (loc)}
 		<option selected={loc === locale} value={loc}>{loc.toUpperCase()}</option>
 	{/each}
 </select>

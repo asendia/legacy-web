@@ -4,7 +4,7 @@
 	const { tr } = getContext<I18nContext>('i18n');
 </script>
 
-<footer class="text-xs font-light text-center h-[8vh] flex flex-col justify-center">
+<footer class="flex h-[8vh] flex-col justify-center text-center text-xs font-light">
 	2018 - 2022
 	<br />
 	<div class="text-grey-dark">
