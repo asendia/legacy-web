@@ -9,4 +9,4 @@
   """
   publish = "build/"
   functions = "functions/"
-  environment = { NODE_VERSION = "22.x" }
+  environment = { NODE_VERSION = "22" }
