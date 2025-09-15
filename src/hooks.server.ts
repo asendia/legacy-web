@@ -50,8 +50,10 @@ function getUserPreferredLocale(accLang: string) {
 	let userPreferredLocale = 'en';
 	const accLangList = accLang.split(',');
 	for (const accL of accLangList) {
+		// Trim whitespace and extract the language part (before any ';' for quality values)
+		const cleanAccL = accL.trim().split(';')[0];
 		for (const l of locales) {
-			if (accL.startsWith(l)) {
+			if (cleanAccL.startsWith(l)) {
 				userPreferredLocale = l;
 				return userPreferredLocale;
 			}
