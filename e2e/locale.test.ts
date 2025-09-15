@@ -1,7 +1,7 @@
 import test, { expect } from '@playwright/test';
 
-const subheadingEN = 'LOGIN';
-const subheadingID = 'MASUK';
+const subheadingEN = 'login';
+const subheadingID = 'masuk';
 
 test('accept-language "en" no redirect', async ({ browser }) => {
 	const context = await browser.newContext({ locale: 'en-US,en;q=0.8' });

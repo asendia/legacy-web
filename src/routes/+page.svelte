@@ -25,11 +25,12 @@
 	<meta name="description" content={tr('description')} />
 	<SEO {locale} pathname={url.pathname} />
 </svelte:head>
-<div class="m-auto box-border px-6 py-2 tracking-wider md:px-24">
-	<div class="min-h-[90vh]">
+<div class="mx-auto max-w-4xl px-6 py-4 md:px-8">
+	<div class="min-h-[85vh]">
 		<Header />
-		<div class="h-7"></div>
-		<Form />
+		<main class="space-y-8">
+			<Form />
+		</main>
 	</div>
 	<Footer />
 </div>

@@ -54,19 +54,19 @@
 <div
 	role="button"
 	tabindex="0"
-	class="border-grey-light relative m-0 mb-6 box-border flex w-full cursor-text flex-wrap border-b focus:outline-1"
+	class="relative mb-8 rounded-md border border-gray-300 bg-white p-4 transition-colors focus-within:border-gray-500 hover:border-gray-400"
 	on:click={handleWrapperClick}
 	on:keypress={handleWrapperClick}
 >
 	<div
 		data-test-id="email-list-label"
-		class={`mt-[1px] mr-[5px] text-sm leading-4 mb-[4px]${labelText === txtTo ? '' : ' opacity-0'}`}
+		class={`mb-2 block text-sm font-medium text-gray-700 transition-opacity ${labelText === txtTo ? 'opacity-100' : 'opacity-0'}`}
 	>
 		{txtTo}
 	</div>
 	<div
-		class={`absolute mt-[1px] mr-[5px] text-sm leading-4 mb-[4px]${
-			labelText === txtTo ? ' hidden' : ''
+		class={`absolute top-4 left-4 text-sm text-gray-400 transition-opacity ${
+			labelText === txtTo ? 'opacity-0' : 'opacity-100'
 		}`}
 	>
 		{txtPlaceholder}
@@ -76,14 +76,14 @@
 			role="button"
 			tabindex="0"
 			data-test-id="email-{id}"
-			class="bg-grey-light text-grey-dark relative mr-1 mb-1 h-5 rounded-sm pr-[18px] pl-[5px] text-sm"
+			class="relative mr-2 mb-2 inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700"
 			on:click={handleEmailClick}
 			on:keypress={() => {}}
 		>
 			{email}
 			<button
 				data-test-id="email-delete-{id}"
-				class="absolute top-0 right-0 cursor-pointer pt-[2px] pr-[2px] pb-1 pl-1 leading-3"
+				class="ml-2 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-gray-600 transition-colors hover:bg-gray-300 hover:text-gray-800"
 				on:click={createHandleDeleteEmail(id)}
 			>
 				×
@@ -95,8 +95,8 @@
 			data-test-id="email-input"
 			type="email"
 			aria-label="Receiver Email"
-			class="tap-transparent m-0 mb-1 h-5 flex-grow border-none bg-none p-0 leading-[18px] focus:outline-0"
-			style="width: {showInput ? '100px' : '1px'}"
+			class="flex-1 border-none bg-transparent p-0 text-gray-700 placeholder-gray-400 focus:outline-none"
+			style="width: {showInput ? '200px' : '1px'}"
 			value={text}
 			on:blur={handleInputBlur}
 			on:focus={handleInputFocus}
@@ -124,7 +124,7 @@
 </div>
 <div class="relative">
 	<div
-		class="text-red absolute top-[-22px] left-0 z-10 rounded-sm bg-white text-xs leading-4 font-light transition-opacity duration-1000"
+		class="absolute -top-8 left-0 z-10 rounded-md bg-red-50 px-3 py-1 text-xs font-medium text-red-600 transition-opacity duration-300"
 		style="opacity: {isInvalidInput ? '100%' : '0%'};"
 	>
 		{tr('emailListValidity')}

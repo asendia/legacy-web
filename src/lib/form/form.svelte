@@ -118,27 +118,30 @@
 	}
 </script>
 
-<EmailListInput
-	onChange={handleEmailReceiversChange}
-	{isLoading}
-	emailList={messageData.emailReceivers}
-/>
-<EmailContent
-	onChange={handleMessageChange}
-	{isLoading}
-	messageContent={messageData.messageContent}
-	{enableClientAES}
-/>
-<Scheduler
-	onChange={handleSchedulerChange}
-	inactivePeriodDays={messageData.inactivePeriodDays}
-	reminderIntervalDays={messageData.reminderIntervalDays}
-	emailCreator={auth?.email}
-/>
-<Button
-	onClick={handleClickSubmit}
-	disabled={disableSubmit}
-	text={tr('formSubmit')}
-	variant={auth ? 'filled' : 'outlined'}
-	style="display: block; margin: 0 auto; min-width: 100px"
-/>
+<div class="space-y-6">
+	<EmailListInput
+		onChange={handleEmailReceiversChange}
+		{isLoading}
+		emailList={messageData.emailReceivers}
+	/>
+	<EmailContent
+		onChange={handleMessageChange}
+		{isLoading}
+		messageContent={messageData.messageContent}
+		{enableClientAES}
+	/>
+	<Scheduler
+		onChange={handleSchedulerChange}
+		inactivePeriodDays={messageData.inactivePeriodDays}
+		reminderIntervalDays={messageData.reminderIntervalDays}
+		emailCreator={auth?.email}
+	/>
+	<div class="flex justify-center pt-4">
+		<Button
+			onClick={handleClickSubmit}
+			disabled={disableSubmit}
+			text={tr('formSubmit')}
+			variant={auth ? 'filled' : 'outlined'}
+		/>
+	</div>
+</div>

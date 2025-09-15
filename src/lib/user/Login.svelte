@@ -50,13 +50,21 @@
 	}
 </script>
 
-<div class="flex items-center justify-center">
-	<span class="mr-2 pb-[1px] text-sm font-light">{message}</span>
+<div class="flex min-w-0 items-center gap-3">
+	{#if message}
+		<span
+			id="user-message"
+			class="max-w-[120px] truncate text-sm font-medium text-gray-600 sm:max-w-[160px]"
+			title={message}
+		>
+			{message}
+		</span>
+	{/if}
 	<Button
 		onClick={auth ? handleLogout : handleLogin}
 		{disabled}
 		{color}
 		{text}
-		style="border: none; padding: 0;"
+		style="padding: 8px 16px; font-size: 14px; flex-shrink: 0;"
 	/>
 </div>

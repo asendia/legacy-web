@@ -42,9 +42,15 @@
 	}
 </script>
 
-<div class="border-b-grey-light relative mb-10 border-b">
+<div
+	class="relative mb-12 rounded-md border border-gray-300 bg-white p-4 transition-colors focus-within:border-gray-500"
+>
+	<label for="message-content" class="mb-2 block text-sm font-medium text-gray-700"
+		>Message Content</label
+	>
 	<textarea
-		class="placeholder:text-grey-light tap-transparent box-border block w-full resize-none border-none bg-none p-0 leading-4 tracking-wider focus:outline-0"
+		id="message-content"
+		class="block w-full resize-none border-none bg-transparent p-0 text-gray-700 placeholder-gray-400 focus:outline-none"
 		on:change={(e) => handleChange(e.currentTarget.value, enableClientAES)}
 		on:keydown={handleKeydown}
 		on:focus={handleFocus}
@@ -59,18 +65,18 @@
 			? '0'
 			: '1'}; -webkit-text-stroke: 0;">{messageContent}</textarea
 	>
-	<div class="absolute right-[2px] -bottom-7 flex">
+	<div class="absolute right-0 -bottom-12 flex gap-2">
 		<button
 			data-test-id="toggle-aes"
-			class="bg-grey-dark mr-1 box-border flex min-w-[108px] cursor-pointer justify-between rounded-sm px-2 py-1 text-center text-xs font-light text-white uppercase"
+			class="flex min-w-[120px] items-center justify-between rounded-md bg-gray-700 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-gray-800"
 			on:click={handleAESToggle}
 		>
-			<div>client-aes:</div>
-			<div class="flex-grow text-right">{enableClientAES ? tr('on') : tr('off')}</div>
+			<span>Client AES:</span>
+			<span class="font-semibold">{enableClientAES ? tr('on') : tr('off')}</span>
 		</button>
 		<button
 			data-test-id="toggle-show"
-			class="bg-grey-dark box-border flex min-w-[48px] cursor-pointer justify-center rounded-sm px-2 py-1 text-center text-xs font-light text-white uppercase"
+			class="flex min-w-[60px] items-center justify-center rounded-md bg-gray-700 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-gray-800"
 			on:click={handleShowToggle}
 		>
 			{toggleShow ? tr('hide') : tr('show')}
@@ -79,9 +85,14 @@
 	{#if isLoading}
 		<div
 			data-test-id="loading"
-			class="text-grey absolute top-0 right-0 bottom-0 left-0 box-border pt-5 text-center"
+			class="absolute inset-0 flex items-center justify-center rounded-lg bg-white/90 text-gray-500"
 		>
-			{tr('loading')}
+			<div class="flex items-center gap-2">
+				<div
+					class="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600"
+				></div>
+				{tr('loading')}
+			</div>
 		</div>
 	{/if}
 </div>

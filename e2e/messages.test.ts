@@ -57,8 +57,8 @@ test('insert/update message keyboard & click', async ({ page }) => {
 	});
 	await page.goto(generateAuthURL(token));
 	await page.waitForNavigation({ waitUntil: 'networkidle' });
-	expect(await page.innerText('div > span')).toBe(fullname.split(' ')[0]);
-	expect(await page.locator('data-test-id=toggle-show').innerText()).toBe('HIDE');
+	expect(await page.innerText('#user-message')).toBe(fullname.split(' ')[0]);
+	expect(await page.locator('data-test-id=toggle-show').innerText()).toBe('hide');
 	await page.click('data-test-id=email-list-label');
 	const recipient = 'recipient@sejiwo.com';
 	await page.keyboard.type(recipient, { delay: typingDelay });
@@ -103,8 +103,8 @@ test('insert/update message keyboard & click', async ({ page }) => {
 	expect(messages[0].inactivePeriodDays).toBe(90);
 	expect(messages[0].reminderIntervalDays).toBe(30);
 	expect(messages.length).toBe(1);
-	expect(await page.innerText('data-test-id=toggle-aes')).toBe('CLIENT-AES:\nON');
-	expect(await page.innerText('data-test-id=toggle-show')).toBe('SHOW');
+	expect(await page.innerText('data-test-id=toggle-aes')).toBe('Client AES:\non');
+	expect(await page.innerText('data-test-id=toggle-show')).toBe('show');
 	expect(await page.textContent('data-test-id=email-0')).toBe(recipient + ' ' + closeSymbol);
 	expect(await page.inputValue('data-test-id=select-inactive')).toBe('90');
 	expect(await page.inputValue('data-test-id=select-reminder')).toBe('30');

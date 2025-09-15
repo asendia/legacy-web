@@ -10,41 +10,43 @@
 	const reminderIntervalDaysOptions = [15, 30];
 </script>
 
-<div class="pb-4 text-sm leading-5 font-light">
-	{tr('scheduler_pt1')}
-	<select
-		data-test-id="select-inactive"
-		class="border-b-blue text-blue focus:border-blue cursor-pointer rounded-sm border border-[transparent] bg-none font-light focus:outline-0"
-		on:change={(e) => {
-			const days = parseInt(e.currentTarget.value, 10);
-			onChange(days, 'inactive');
-		}}
-	>
-		{#each inactivePeriodDaysOptions as i (i)}
-			{#if i === inactivePeriodDays}
-				<option value={i} selected>{i} {tr('schedulerDays')}</option>
-			{:else}
-				<option value={i}>{i} {tr('schedulerDays')}</option>
-			{/if}
-		{/each}
-	</select>
-	{tr('scheduler_pt2')}
-	<select
-		data-test-id="select-reminder"
-		class="border-b-blue text-blue focus:border-blue cursor-pointer rounded-sm border border-[transparent] bg-none font-light focus:outline-0"
-		on:change={(e) => {
-			const days = parseInt(e.currentTarget.value, 10);
-			onChange(days, 'reminder');
-		}}
-	>
-		{#each reminderIntervalDaysOptions as i (i)}
-			{#if i === reminderIntervalDays}
-				<option value={i} selected>{i} {tr('schedulerDays')}</option>
-			{:else}
-				<option value={i}>{i} {tr('schedulerDays')}</option>
-			{/if}
-		{/each}
-	</select>
-	{tr('scheduler_pt3')}
-	{emailCreator}.
+<div class="mb-6 rounded-lg bg-gray-50 p-4 text-sm leading-relaxed text-gray-700">
+	<p class="mb-2">
+		{tr('scheduler_pt1')}
+		<select
+			data-test-id="select-inactive"
+			class="mx-1 cursor-pointer rounded-md border border-gray-300 bg-white px-2 py-1 text-gray-600 transition-colors focus:border-gray-500 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:outline-none"
+			on:change={(e) => {
+				const days = parseInt(e.currentTarget.value, 10);
+				onChange(days, 'inactive');
+			}}
+		>
+			{#each inactivePeriodDaysOptions as i (i)}
+				{#if i === inactivePeriodDays}
+					<option value={i} selected>{i} {tr('schedulerDays')}</option>
+				{:else}
+					<option value={i}>{i} {tr('schedulerDays')}</option>
+				{/if}
+			{/each}
+		</select>
+		{tr('scheduler_pt2')}
+		<select
+			data-test-id="select-reminder"
+			class="mx-1 cursor-pointer rounded-md border border-gray-300 bg-white px-2 py-1 text-gray-600 transition-colors focus:border-gray-500 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:outline-none"
+			on:change={(e) => {
+				const days = parseInt(e.currentTarget.value, 10);
+				onChange(days, 'reminder');
+			}}
+		>
+			{#each reminderIntervalDaysOptions as i (i)}
+				{#if i === reminderIntervalDays}
+					<option value={i} selected>{i} {tr('schedulerDays')}</option>
+				{:else}
+					<option value={i}>{i} {tr('schedulerDays')}</option>
+				{/if}
+			{/each}
+		</select>
+		{tr('scheduler_pt3')}
+		<span class="font-medium text-gray-900">{emailCreator}</span>.
+	</p>
 </div>

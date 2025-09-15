@@ -33,11 +33,11 @@ test('login/logout', async ({ page }) => {
 	await page.goto('/');
 	await page.click('text=login');
 	await page.waitForNavigation({ waitUntil: 'networkidle' });
-	expect(await page.innerText('div > span')).toBe(fullname.split(' ')[0]);
+	expect(await page.innerText('#user-message')).toBe(fullname.split(' ')[0]);
 	let gotrue = await page.evaluate(() => JSON.parse(localStorage.getItem('gotrue.user')));
 	expect(gotrue.email).toBe(email);
 	await page.click('text=logout');
-	expect(await page.innerText('div > span')).toBe('');
+	await expect(page.locator('#user-message')).toHaveCount(0);
 	gotrue = await page.evaluate(() => localStorage.getItem('gotrue.user'));
 	expect(gotrue).toBe(null);
 });

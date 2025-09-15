@@ -3,7 +3,7 @@
 	export let text: string;
 	export let variant: 'filled' | 'outlined' = 'outlined';
 	export let color: 'primary' | 'secondary' = 'primary';
-	export let style: string | undefined;
+	export let style: string | undefined = undefined;
 	export let disabled = false;
 	let key:
 		| 'filledprimary'
@@ -19,17 +19,17 @@
 
 <button
 	type="button"
-	class={`rounded-sm border px-3 py-0 text-sm leading-7 uppercase no-underline focus:outline ${
+	class={`rounded-md px-6 py-3 text-sm font-medium transition-all duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none ${
 		key === 'filledprimary'
-			? 'bg-blue border-none text-white outline-none'
+			? 'bg-gray-800 text-white shadow-sm hover:bg-gray-900 active:bg-gray-700'
 			: key === 'filledsecondary'
-				? 'border-none bg-black text-white outline-none'
+				? 'bg-gray-600 text-white shadow-sm hover:bg-gray-700 active:bg-gray-800'
 				: key === 'outlinedprimary'
-					? 'border-blue outline-blue text-blue border bg-none'
+					? 'border border-gray-400 text-gray-700 hover:bg-gray-50 active:bg-gray-100'
 					: key === 'outlinedsecondary'
-						? 'border border-black bg-none outline-black'
+						? 'border border-gray-300 text-gray-600 hover:bg-gray-50 active:bg-gray-100'
 						: key === 'disabled'
-							? 'border-grey text-grey tap-transparent outline-grey border bg-none'
+							? 'cursor-not-allowed border border-gray-200 bg-gray-50 text-gray-400'
 							: ''
 	}`}
 	{style}

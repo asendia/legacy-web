@@ -114,7 +114,7 @@ test('session expired reject draft', async ({ page }) => {
 	expect(dialogCtr).toStrictEqual({ accept: 0, reject: 1 });
 	expect(messageAPICallCtr).toBe(0);
 	expect(await page.inputValue('textarea')).toBe('');
-	expect(await page.innerText('div > span')).toBe('');
+	expect(await page.isHidden('#user-message')).toBe(true);
 });
 
 test('session expired accept draft', async ({ page }) => {
@@ -149,5 +149,5 @@ test('session expired accept draft', async ({ page }) => {
 
 	const textArea = page.locator('textarea');
 	await expect(textArea).toHaveValue(draftText, { timeout });
-	expect(await page.innerText('div > span')).toBe('');
+	expect(await page.isHidden('#user-message')).toBe(true);
 });

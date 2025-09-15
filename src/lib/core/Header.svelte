@@ -4,12 +4,14 @@
 	import Logo from './sejiwo-logo.png';
 </script>
 
-<header class="m-0 mb-2 flex items-end justify-between">
-	<div class="relative mr-6 flex items-center">
-		<img src={Logo} width="30px" height="30px" alt="sejiwo logo" />
-		<h1 class="m-0 ml-2 text-2xl font-extralight tracking-wider">sejiwo</h1>
+<header class="mb-8 flex items-center justify-between py-4">
+	<div class="flex min-w-0 items-center gap-3">
+		<div class="flex-shrink-0 rounded-md bg-gray-800 p-2 shadow-sm">
+			<img src={Logo} width="24" height="24" alt="sejiwo logo" class="brightness-0 invert" />
+		</div>
+		<h1 class="flex-shrink-0 text-2xl font-light tracking-wide text-gray-800">sejiwo</h1>
 	</div>
-	<div class="flex">
+	<div class="ml-4 flex min-w-0 flex-shrink-0 items-center gap-2">
 		<LanguagePicker />
 		<Login />
 	</div>

@@ -5,7 +5,7 @@
 </script>
 
 <select
-	class="text-blue focus:border-blue mr-2 cursor-pointer border border-[transparent] bg-none font-light focus:rounded-sm focus:border focus:outline-0"
+	class="mr-3 cursor-pointer rounded-md border border-transparent bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:border-gray-500 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:outline-none"
 	on:change={(e) => {
 		url.searchParams.set('hl', e.currentTarget.value);
 		location.href = url.pathname + '?' + url.searchParams.toString();
