@@ -1,9 +1,2 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer components {
-	.tap-transparent {
-		-webkit-tap-highlight-color: transparent;
-	}
-}
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';

@@ -4,7 +4,7 @@ import {
 	mockIdentityAuthorizeAPI,
 	mockIdentityUserAPI,
 	mockMessageAPI
-} from './core.test.js';
+} from './core-test.js';
 
 test('non-login submit prompts user to login', async ({ page }) => {
 	failOnAnyError(page);

@@ -1,4 +1,5 @@
 import { locales } from '$lib/i18n/i18n';
+import { redirect } from '@sveltejs/kit';
 import type { Handle } from '@sveltejs/kit';
 export const handle: Handle = async function handle({ event, resolve }) {
 	if (event.url.pathname !== '/') {
@@ -15,13 +16,7 @@ export const handle: Handle = async function handle({ event, resolve }) {
 		const p = event.url.searchParams;
 		p.set('hl', prefLocale);
 		const location = event.url.pathname + '?' + p.toString();
-		const r = new Response('', {
-			status: 302,
-			headers: {
-				location
-			}
-		});
-		return r;
+		throw redirect(302, location);
 	}
 	const response = await resolve(event, {
 		transformPageChunk: ({ html, done }) => {

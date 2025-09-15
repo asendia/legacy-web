@@ -7,7 +7,7 @@ import {
 	mockIdentityUserAPI,
 	mockMessageAPI,
 	timeout
-} from './core.test.js';
+} from './core-test.js';
 
 test('slow api', async ({ page }) => {
 	failOnAnyError(page);
