@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { TranslationFunction } from '$lib/i18n/translation';
 	import { unsubscribeMessage } from '$lib/query-string/queryStringFetcher';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 
 	export let data: { tr: TranslationFunction; locale: string; url: URL };
@@ -16,7 +17,7 @@
 				await unsubscribeMessage(id, secret);
 				state = 'success';
 				return;
-			} catch (err) {
+			} catch {
 				state = 'error';
 				return;
 			}
@@ -33,10 +34,10 @@
 		{tr('messageExtended')}
 	{:else if state === 'error'}
 		<p>Error: {tr('secretAPIError')}</p>
-		<a href="/">Home</a>
+		<a href={resolve('/')}>Home</a>
 	{:else if state === 'invalid-request'}
 		<p>Error: {tr('secretAPIInvalidRequest')}</p>
-		<a href="/">Home</a>
+		<a href={resolve('/')}>Home</a>
 	{:else if state === 'loading'}
 		{tr('loading')}
 	{/if}

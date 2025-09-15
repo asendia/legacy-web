@@ -52,45 +52,50 @@
 </script>
 
 <div
-	class="relative flex w-full flex-wrap border-b border-grey-light m-0 mb-6 cursor-text box-border focus:outline-1"
+	role="button"
+	tabindex="0"
+	class="border-grey-light relative m-0 mb-6 box-border flex w-full cursor-text flex-wrap border-b focus:outline-1"
 	on:click={handleWrapperClick}
 	on:keypress={handleWrapperClick}
 >
 	<div
 		data-test-id="email-list-label"
-		class={`text-sm leading-4 mt-[1px] mr-[5px] mb-[4px]${labelText === txtTo ? '' : ' opacity-0'}`}
+		class={`mt-[1px] mr-[5px] text-sm leading-4 mb-[4px]${labelText === txtTo ? '' : ' opacity-0'}`}
 	>
 		{txtTo}
 	</div>
 	<div
-		class={`absolute text-sm leading-4 mt-[1px] mr-[5px] mb-[4px]${
+		class={`absolute mt-[1px] mr-[5px] text-sm leading-4 mb-[4px]${
 			labelText === txtTo ? ' hidden' : ''
 		}`}
 	>
 		{txtPlaceholder}
 	</div>
-	{#each emailList as email, id}
-		<button
+	{#each emailList as email, id (id)}
+		<div
+			role="button"
+			tabindex="0"
 			data-test-id="email-{id}"
-			class="relative rounded-sm bg-grey-light pr-[18px] pl-[5px] mr-1 mb-1 text-sm h-5 text-grey-dark"
+			class="bg-grey-light text-grey-dark relative mr-1 mb-1 h-5 rounded-sm pr-[18px] pl-[5px] text-sm"
 			on:click={handleEmailClick}
+			on:keypress={() => {}}
 		>
 			{email}
 			<button
 				data-test-id="email-delete-{id}"
-				class="absolute top-0 right-0 pt-[2px] pr-[2px] pb-1 pl-1 cursor-pointer leading-3"
+				class="absolute top-0 right-0 cursor-pointer pt-[2px] pr-[2px] pb-1 pl-1 leading-3"
 				on:click={createHandleDeleteEmail(id)}
 			>
 				×
 			</button>
-		</button>
+		</div>
 	{/each}
 	{#if emailList.length < 3}
 		<input
 			data-test-id="email-input"
 			type="email"
 			aria-label="Receiver Email"
-			class="border-none m-0 mb-1 flex-grow bg-none leading-[18px] p-0 h-5 focus:outline focus:outline-0 tap-transparent"
+			class="tap-transparent m-0 mb-1 h-5 flex-grow border-none bg-none p-0 leading-[18px] focus:outline-0"
 			style="width: {showInput ? '100px' : '1px'}"
 			value={text}
 			on:blur={handleInputBlur}
@@ -119,7 +124,7 @@
 </div>
 <div class="relative">
 	<div
-		class="absolute text-xs leading-4 top-[-22px] left-0 text-red bg-white z-10 font-light rounded-sm transition-opacity duration-1000"
+		class="text-red absolute top-[-22px] left-0 z-10 rounded-sm bg-white text-xs leading-4 font-light transition-opacity duration-1000"
 		style="opacity: {isInvalidInput ? '100%' : '0%'};"
 	>
 		{tr('emailListValidity')}

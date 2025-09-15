@@ -1,5 +1,5 @@
 import test, { expect } from '@playwright/test';
-import { timeout, failOnAnyError } from './core.test.js';
+import { timeout, failOnAnyError } from './core-test.js';
 
 test('decrypting without login works', async ({ page }) => {
 	failOnAnyError(page);

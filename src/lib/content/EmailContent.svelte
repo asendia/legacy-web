@@ -42,9 +42,9 @@
 	}
 </script>
 
-<div class="relative mb-10 border-b border-b-grey-light">
+<div class="border-b-grey-light relative mb-10 border-b">
 	<textarea
-		class="block w-full border-none leading-4 resize-none box-border tracking-wider bg-none p-0 placeholder:text-grey-light focus:outline focus:outline-0 tap-transparent"
+		class="placeholder:text-grey-light tap-transparent box-border block w-full resize-none border-none bg-none p-0 leading-4 tracking-wider focus:outline-0"
 		on:change={(e) => handleChange(e.currentTarget.value, enableClientAES)}
 		on:keydown={handleKeydown}
 		on:focus={handleFocus}
@@ -52,17 +52,17 @@
 		rows={Math.max(minRows, Math.min(rows, maxRows))}
 		maxlength="2000"
 		autocomplete="off"
-		autocorrect="off"
 		autocapitalize="off"
 		spellcheck="false"
 		{placeholder}
-		style="filter: {toggleShow ? 'none' : 'blur(5px)'}; opacity: {isLoading ? '0' : '1'}"
-		>{messageContent}</textarea
+		style="filter: {toggleShow ? 'none' : 'blur(5px)'}; opacity: {isLoading
+			? '0'
+			: '1'}; -webkit-text-stroke: 0;">{messageContent}</textarea
 	>
 	<div class="absolute right-[2px] -bottom-7 flex">
 		<button
 			data-test-id="toggle-aes"
-			class="py-1 px-2 text-center cursor-pointer bg-grey-dark uppercase text-xs text-white font-light rounded-sm box-border flex justify-between min-w-[108px] mr-1"
+			class="bg-grey-dark mr-1 box-border flex min-w-[108px] cursor-pointer justify-between rounded-sm px-2 py-1 text-center text-xs font-light text-white uppercase"
 			on:click={handleAESToggle}
 		>
 			<div>client-aes:</div>
@@ -70,7 +70,7 @@
 		</button>
 		<button
 			data-test-id="toggle-show"
-			class="py-1 px-2 text-center cursor-pointer bg-grey-dark uppercase text-xs text-white font-light rounded-sm box-border flex min-w-[48px] justify-center"
+			class="bg-grey-dark box-border flex min-w-[48px] cursor-pointer justify-center rounded-sm px-2 py-1 text-center text-xs font-light text-white uppercase"
 			on:click={handleShowToggle}
 		>
 			{toggleShow ? tr('hide') : tr('show')}
@@ -79,7 +79,7 @@
 	{#if isLoading}
 		<div
 			data-test-id="loading"
-			class="absolute top-0 right-0 bottom-0 left-0 text-center pt-5 box-border text-grey"
+			class="text-grey absolute top-0 right-0 bottom-0 left-0 box-border pt-5 text-center"
 		>
 			{tr('loading')}
 		</div>

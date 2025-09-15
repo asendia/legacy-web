@@ -9,7 +9,7 @@ import {
 	mockIdentityUserAPI,
 	mockMessageAPI,
 	typingDelay
-} from './core.test.js';
+} from './core-test.js';
 
 test('insert/update message keyboard & click', async ({ page }) => {
 	failOnAnyError(page);

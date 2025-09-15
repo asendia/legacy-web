@@ -9,7 +9,7 @@ import {
 	mockMessageAPI,
 	timeout,
 	typingDelay
-} from './core.test.js';
+} from './core-test.js';
 
 test('draft conflicted use client', async ({ page }) => {
 	failOnAnyError(page);

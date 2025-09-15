@@ -1,5 +1,5 @@
 import test, { expect } from '@playwright/test';
-import { closeSymbol, failOnAnyError, typingDelay } from './core.test.js';
+import { closeSymbol, failOnAnyError, typingDelay } from './core-test.js';
 
 test('email input works', async ({ page }) => {
 	failOnAnyError(page);

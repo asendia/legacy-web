@@ -1,5 +1,5 @@
 export function throwIfNonSuccessResponse(res: Response) {
-	let errorKind: 'client' | 'server';
+	let errorKind: 'client' | 'server' | undefined;
 	if (res.status >= 500) {
 		errorKind = 'server';
 	} else if (res.status >= 400) {
