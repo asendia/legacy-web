@@ -16,6 +16,8 @@ test('draft conflicted use client', async ({ page }) => {
 	const token = 'secretjwt2';
 	await page.goto('/');
 	const draftText = 'this is a client draft';
+	await page.waitForSelector('textarea');
+	await page.click('textarea');
 	await page.type('textarea', draftText, { delay: typingDelay });
 	const email = 'test@sejiwo.com';
 	const fullname = 'Sejiwo Team';

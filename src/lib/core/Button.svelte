@@ -19,15 +19,15 @@
 
 <button
 	type="button"
-	class={`rounded-md px-6 py-3 text-sm font-medium transition-all duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none ${
+	class={`rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition-all duration-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none ${
 		key === 'filledprimary'
-			? 'bg-gray-800 text-white shadow-sm hover:bg-gray-900 active:bg-gray-700'
+			? 'bg-gray-800 text-white hover:bg-gray-900 hover:shadow active:bg-gray-700'
 			: key === 'filledsecondary'
-				? 'bg-gray-600 text-white shadow-sm hover:bg-gray-700 active:bg-gray-800'
+				? 'bg-gray-600 text-white hover:bg-gray-700 hover:shadow active:bg-gray-800'
 				: key === 'outlinedprimary'
-					? 'border border-gray-400 text-gray-700 hover:bg-gray-50 active:bg-gray-100'
+					? 'border border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50 hover:shadow active:bg-gray-100'
 					: key === 'outlinedsecondary'
-						? 'border border-gray-300 text-gray-600 hover:bg-gray-50 active:bg-gray-100'
+						? 'border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 hover:shadow active:bg-gray-100'
 						: key === 'disabled'
 							? 'cursor-not-allowed border border-gray-200 bg-gray-50 text-gray-400'
 							: ''

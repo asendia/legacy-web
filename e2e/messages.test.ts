@@ -59,7 +59,9 @@ test('insert/update message keyboard & click', async ({ page }) => {
 	await page.waitForNavigation({ waitUntil: 'networkidle' });
 	expect(await page.innerText('#user-message')).toBe(fullname.split(' ')[0]);
 	expect(await page.locator('data-test-id=toggle-show').innerText()).toBe('hide');
-	await page.click('data-test-id=email-list-label');
+	// Click on the email input wrapper to focus the input
+	await page.click('[data-test-id="email-list-wrapper"]');
+	await expect(page.locator('data-test-id=email-input')).toBeFocused();
 	const recipient = 'recipient@sejiwo.com';
 	await page.keyboard.type(recipient, { delay: typingDelay });
 	await page.keyboard.press('Tab', { delay });
@@ -103,7 +105,7 @@ test('insert/update message keyboard & click', async ({ page }) => {
 	expect(messages[0].inactivePeriodDays).toBe(90);
 	expect(messages[0].reminderIntervalDays).toBe(30);
 	expect(messages.length).toBe(1);
-	expect(await page.innerText('data-test-id=toggle-aes')).toBe('Client AES:\non');
+	expect(await page.innerText('data-test-id=toggle-aes')).toBe('client aes:\non');
 	expect(await page.innerText('data-test-id=toggle-show')).toBe('show');
 	expect(await page.textContent('data-test-id=email-0')).toBe(recipient + ' ' + closeSymbol);
 	expect(await page.inputValue('data-test-id=select-inactive')).toBe('90');

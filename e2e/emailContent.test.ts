@@ -6,7 +6,11 @@ test('decrypting without login works', async ({ page }) => {
 	await page.goto('/');
 	const encryptedContent =
 		'aes.utf8:U2FsdGVkX1/sk7Ay4bBbEFbaH+qASulM3TRjfE11ka9edj7vKSIblyzGRh38vBukxG7fIr+kY6gOe7kcjbdqOPXTuSdzYDVS2A7861j8GAg=';
+	await page.click('textarea');
 	await page.fill('textarea', encryptedContent);
+	await page.evaluate(() => {
+		document.querySelector('textarea')?.dispatchEvent(new Event('change', { bubbles: true }));
+	});
 	page.on('dialog', (dialog) => {
 		const encryptionSecret = 'WVI9YMsV39vx4UWUgrt7TaMxAMd2N968';
 		return dialog.accept(encryptionSecret);

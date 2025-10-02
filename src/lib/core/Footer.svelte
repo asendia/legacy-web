@@ -4,12 +4,12 @@
 	const { tr } = getContext<I18nContext>('i18n');
 </script>
 
-<footer class="mt-16 flex flex-col items-center justify-center space-y-2 py-8 text-center">
+<footer class="mt-12 flex flex-col items-center justify-center space-y-1.5 py-6 text-center">
 	<div class="text-sm text-gray-500">2018 - 2025</div>
 	<div class="text-sm text-gray-600">
 		sejiwo - {tr('sourceCode')}:
 		<a
-			class="ml-2 inline-flex items-center gap-1 text-gray-600 transition-colors hover:text-gray-800 hover:underline"
+			class="ml-1.5 inline-flex items-center gap-1 text-gray-600 transition-colors hover:text-gray-800 hover:underline"
 			target="_blank"
 			rel="noopener noreferrer"
 			href="https://github.com/asendia/legacy-web"
@@ -17,7 +17,7 @@
 			web
 		</a>
 		<a
-			class="ml-2 inline-flex items-center gap-1 text-gray-600 transition-colors hover:text-gray-800 hover:underline"
+			class="ml-1.5 inline-flex items-center gap-1 text-gray-600 transition-colors hover:text-gray-800 hover:underline"
 			target="_blank"
 			rel="noopener noreferrer"
 			href="https://github.com/asendia/legacy-api"

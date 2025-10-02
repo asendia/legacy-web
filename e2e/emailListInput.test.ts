@@ -4,7 +4,8 @@ import { closeSymbol, failOnAnyError, typingDelay } from './core-test.js';
 test('email input works', async ({ page }) => {
 	failOnAnyError(page);
 	await page.goto('/');
-	await page.click('data-test-id=email-list-label');
+	// Click on the email input wrapper to focus the input
+	await page.click('[data-test-id="email-list-wrapper"]');
 	await expect(page.locator('data-test-id=email-input')).toBeFocused();
 	// Enter 2 valid emails
 	const validEmails = ['test@sejiwo.com', 'admin1@sejiwo.com'];

@@ -10,12 +10,12 @@
 	const reminderIntervalDaysOptions = [15, 30];
 </script>
 
-<div class="mb-6 rounded-lg bg-gray-50 p-4 text-sm leading-relaxed text-gray-700">
-	<p class="mb-2">
+<div class="mb-5 rounded-lg bg-gray-50 p-3 text-sm leading-relaxed text-gray-700">
+	<div class="mb-1.5">
 		{tr('scheduler_pt1')}
 		<select
 			data-test-id="select-inactive"
-			class="mx-1 cursor-pointer rounded-md border border-gray-300 bg-white px-2 py-1 text-gray-600 transition-colors focus:border-gray-500 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:outline-none"
+			class="mx-1 cursor-pointer rounded-md border border-gray-300 bg-white px-1.5 py-0.5 text-gray-600 transition-colors focus:border-gray-500 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:outline-none"
 			on:change={(e) => {
 				const days = parseInt(e.currentTarget.value, 10);
 				onChange(days, 'inactive');
@@ -30,9 +30,11 @@
 			{/each}
 		</select>
 		{tr('scheduler_pt2')}
+		<div class="h-2"></div>
+		{tr('scheduler_pt3')}
 		<select
 			data-test-id="select-reminder"
-			class="mx-1 cursor-pointer rounded-md border border-gray-300 bg-white px-2 py-1 text-gray-600 transition-colors focus:border-gray-500 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:outline-none"
+			class="mx-1 cursor-pointer rounded-md border border-gray-300 bg-white px-1.5 py-0.5 text-gray-600 transition-colors focus:border-gray-500 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:outline-none"
 			on:change={(e) => {
 				const days = parseInt(e.currentTarget.value, 10);
 				onChange(days, 'reminder');
@@ -46,7 +48,7 @@
 				{/if}
 			{/each}
 		</select>
-		{tr('scheduler_pt3')}
+		{tr('scheduler_pt4')}
 		<span class="font-medium text-gray-900">{emailCreator}</span>.
-	</p>
+	</div>
 </div>
