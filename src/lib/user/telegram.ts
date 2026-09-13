@@ -8,9 +8,11 @@ const flowKey = 'sejiwo-telegram-login';
 export async function telegramRequest<T>(
 	action: string,
 	token?: string,
-	data: Record<string, unknown> = {}
+	data: Record<string, unknown> = {},
+	options: Pick<RequestInit, 'signal' | 'keepalive'> = {}
 ): Promise<T> {
 	const res = await fetch(`${API_URL}/legacy-api-telegram`, {
+		...options,
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

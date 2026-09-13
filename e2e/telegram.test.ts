@@ -122,3 +122,71 @@ test('writer can enable reminders and share a recipient link', async ({ page }) 
 		'receiver-remove'
 	]);
 });
+
+test('logout clears private data while the server and next page are stalled', async ({ page }) => {
+	let snapshot: unknown;
+	page.on('console', (message) => {
+		if (message.text().startsWith('logout-test ')) snapshot = JSON.parse(message.text().slice(12));
+	});
+	await page.addInitScript(() => {
+		window.addEventListener('beforeunload', () =>
+			console.log(
+				'logout-test ' +
+					JSON.stringify({
+						auth: localStorage.getItem('gotrue.user'),
+						secret: localStorage.getItem('encryption.secret'),
+						content: sessionStorage.getItem('message.content'),
+						receivers: sessionStorage.getItem('message.receivers'),
+						hidden: document.documentElement.hidden
+					})
+			)
+		);
+		if (sessionStorage.getItem('logout-test-started')) return;
+		sessionStorage.setItem('logout-test-started', 'true');
+		localStorage.setItem(
+			'gotrue.user',
+			JSON.stringify({
+				email: 'writer@example.com',
+				app_metadata: { provider: 'telegram' },
+				user_metadata: { full_name: 'Writer' },
+				token: { access_token: 'tg_logout_session', expires_at: Date.now() + 3600000 }
+			})
+		);
+		localStorage.setItem('encryption.secret', 'private-key');
+		sessionStorage.setItem('message.content', 'private-draft');
+		sessionStorage.setItem('message.receivers', '["recipient@example.com"]');
+	});
+	let release: () => void = () => {};
+	const held = new Promise<void>((resolve) => {
+		release = resolve;
+	});
+	let pageLoads = 0;
+	await page.route('http://127.0.0.1:4174/', async (route) => {
+		if (route.request().isNavigationRequest() && ++pageLoads > 1) await held;
+		await route.continue();
+	});
+	await page.route('**/legacy-api?action=select-messages', (route) =>
+		route.fulfill({ json: { data: [] } })
+	);
+	let revokedToken = '';
+	await page.route('**/legacy-api-telegram', async (route) => {
+		if (route.request().postDataJSON().action === 'logout') {
+			revokedToken = route.request().headers().authorization;
+			await held;
+			await route.fulfill({ json: { ok: true } }).catch(() => {});
+		} else await route.fulfill({ json: { linked: true, remindersEnabled: false, receivers: {} } });
+	});
+	try {
+		await page.goto('/');
+		await expect(page.locator('#user-message')).toBeVisible();
+		await page.getByRole('button', { name: 'logout', exact: true }).click({ noWaitAfter: true });
+		await expect
+			.poll(() => snapshot)
+			.toEqual({ auth: null, secret: null, content: null, receivers: null, hidden: true });
+		await expect.poll(() => revokedToken).toBe('Bearer tg_logout_session');
+	} finally {
+		release();
+	}
+	await expect(page.getByRole('button', { name: 'Telegram login', exact: true })).toBeVisible();
+	await expect(page.locator('#user-message')).toHaveCount(0);
+});

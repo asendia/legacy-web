@@ -60,16 +60,32 @@ export function clearUserData() {
 	localStorage.removeItem(STORAGE_ENCRYPTION_SECRET);
 }
 
-export async function logout() {
+export function logout() {
+	let token: string | undefined;
 	try {
 		const auth = getAuthFromLocalStorage();
-		if (auth.app_metadata?.provider === 'telegram')
-			await telegramRequest('logout', auth.token.access_token);
+		if (auth.app_metadata?.provider === 'telegram') token = auth.token.access_token;
 	} catch {
 		/* Clear local data if the session has expired. */
 	}
 	clearUserData();
 	clearDraft();
+	sessionStorage.removeItem('sejiwo-telegram-login');
+	// Hide private content even if the next page load stalls.
+	document.documentElement.hidden = true;
+	if (token) {
+		void telegramRequest(
+			'logout',
+			token,
+			{},
+			{
+				keepalive: true,
+				signal: AbortSignal.timeout(5000)
+			}
+		).catch(() => {
+			/* Local logout is complete. The remote session also has an expiry time. */
+		});
+	}
 	location.reload();
 }
 
