@@ -2,6 +2,8 @@
 
 Use Node 24.20.0 and npm 12.0.2. Netlify uses these versions. The npm engine check rejects older npm versions that can ignore the release-age rule.
 
+Netlify uses `NPM_VERSION` for its install step. Its build shell can still use the npm version bundled with Node. The build command therefore installs the exact `npm@12.0.2` release into the temporary Netlify build environment first. It then uses normal `npm` commands. This does not change your local npm installation. The npm upgrade also has install scripts disabled.
+
 The repository `.npmrc` sets a seven-day minimum release age. It also disables automatic install scripts and blocks Git and direct URL dependencies. All package sources in the lockfile must use `https://registry.npmjs.org/`. Direct dependency versions are exact.
 
 For a clean install, use:
