@@ -6,11 +6,7 @@
 	export let style: string | undefined = undefined;
 	export let disabled = false;
 	let key:
-		| 'filledprimary'
-		| 'filledsecondary'
-		| 'outlinedprimary'
-		| 'outlinedsecondary'
-		| 'disabled';
+		'filledprimary' | 'filledsecondary' | 'outlinedprimary' | 'outlinedsecondary' | 'disabled';
 
 	$: {
 		key = disabled ? 'disabled' : ((variant + color) as typeof key);
