@@ -1,5 +1,6 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
 import { STORAGE_ENCRYPTION_SECRET, STORAGE_GOTRUE } from '$lib/core/storageKeys';
+import { telegramRequest } from './telegram';
 import { clearDraft } from '$lib/form/draft';
 import { destroyFetchUserTokenPromise, fetchUserToken, type TokenObject } from './userFetcher';
 
@@ -59,7 +60,14 @@ export function clearUserData() {
 	localStorage.removeItem(STORAGE_ENCRYPTION_SECRET);
 }
 
-export function logout() {
+export async function logout() {
+	try {
+		const auth = getAuthFromLocalStorage();
+		if (auth.app_metadata?.provider === 'telegram')
+			await telegramRequest('logout', auth.token.access_token);
+	} catch {
+		/* Clear local data if the session has expired. */
+	}
 	clearUserData();
 	clearDraft();
 	location.reload();

@@ -2,6 +2,12 @@ import { locales } from '$lib/i18n/i18n';
 import { redirect } from '@sveltejs/kit';
 import type { Handle } from '@sveltejs/kit';
 export const handle: Handle = async function handle({ event, resolve }) {
+	if (event.url.pathname.startsWith('/telegram/')) {
+		const response = await resolve(event);
+		response.headers.set('cache-control', 'no-store');
+		response.headers.set('referrer-policy', 'no-referrer');
+		return response;
+	}
 	if (event.url.pathname !== '/') {
 		const response = resolve(event);
 		return response;

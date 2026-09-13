@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { getContext, onMount } from 'svelte';
+	import TelegramSettings from '$lib/user/TelegramSettings.svelte';
+	import { telegramEnabled } from '$lib/user/telegram';
 	import EmailListInput from '$lib/email/EmailListInput.svelte';
 	import EmailContent from '$lib/content/EmailContent.svelte';
 	import Scheduler from '$lib/schedule/Scheduler.svelte';
@@ -172,6 +174,15 @@
 		{isLoading}
 		emailList={messageData.emailReceivers}
 	/>
+	{#if telegramEnabled && auth && !isLoading}
+		{#key messageData.id}
+			<TelegramSettings
+				token={auth.token.access_token}
+				messageId={messageData.id}
+				emails={messageData.emailReceivers}
+			/>
+		{/key}
+	{/if}
 	<EmailContent
 		onChange={handleMessageChange}
 		{isLoading}
