@@ -1,6 +1,15 @@
 import type { TranslationData } from './translation';
 
 export const translationData: TranslationData = {
+	unlink: 'Unlink',
+	unlinkTelegram: 'Unlink Telegram',
+	confirmUnlink: 'Confirm unlink',
+	cancel: 'Cancel',
+	unlinkHint:
+		'Remove Telegram login and reminders? Email, saved messages, and recipient delivery links stay active.',
+	unlinkSessionHint:
+		'You will be signed out. Unsaved drafts on this device will be cleared. Use Google to sign in again.',
+
 	deliveryShort: 'Delivery',
 	link: 'Link',
 	accountSettings: 'Account settings',

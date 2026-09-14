@@ -294,3 +294,70 @@ test('mobile settings stay out of the form and lock unsaved recipient links', as
 	await page.setViewportSize({ width: 1280, height: 800 });
 	await page.screenshot({ path: 'test-results/desktop-delivery.png' });
 });
+
+for (const provider of ['google', 'telegram']) {
+	test(`unlink Telegram from a ${provider} session`, async ({ page }) => {
+		await page.addInitScript((provider) => {
+			if (sessionStorage.getItem('unlink-test-ready')) return;
+			sessionStorage.setItem('unlink-test-ready', 'true');
+			localStorage.setItem(
+				'gotrue.user',
+				JSON.stringify({
+					email: 'writer@example.com',
+					app_metadata: { provider },
+					user_metadata: { full_name: 'Writer' },
+					token: {
+						access_token: provider === 'telegram' ? 'tg_session' : 'google-session',
+						expires_at: Date.now() + 3600000
+					}
+				})
+			);
+		}, provider);
+		await page.route('**/legacy-api?action=select-messages', (route) =>
+			route.fulfill({ json: { data: [] } })
+		);
+		let requests = 0;
+		let reject = true;
+		await page.route('**/legacy-api-telegram', (route) => {
+			const body = route.request().postDataJSON();
+			if (body.action === 'unlink') {
+				expect(body).toEqual({ action: 'unlink' });
+				expect(route.request().headers().authorization).toBe(
+					provider === 'telegram' ? 'Bearer tg_session' : 'Bearer google-session'
+				);
+				requests++;
+				return route.fulfill({
+					status: reject ? 400 : 200,
+					json: reject ? { err: 'failed' } : { ok: true }
+				});
+			}
+			return route.fulfill({ json: { linked: true, remindersEnabled: true, receivers: {} } });
+		});
+		await page.goto('/');
+		await page.getByRole('button', { name: 'Account settings' }).click();
+		await page.getByRole('button', { name: 'Unlink Telegram', exact: true }).click();
+		await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+		expect(requests).toBe(0);
+		await expect(page.getByRole('switch', { name: 'Telegram reminders' })).toBeChecked();
+		await page.getByRole('button', { name: 'Unlink Telegram', exact: true }).click();
+		await page.getByRole('button', { name: 'Confirm unlink', exact: true }).click();
+		await expect(page.getByRole('alert')).toBeVisible();
+		await expect(page.getByRole('switch', { name: 'Telegram reminders' })).toBeChecked();
+		expect(await page.evaluate(() => localStorage.getItem('gotrue.user'))).not.toBeNull();
+		reject = false;
+		await page.getByRole('button', { name: 'Confirm unlink', exact: true }).click();
+		if (provider === 'google') {
+			await expect(page.getByRole('button', { name: 'Link Telegram', exact: true })).toBeVisible();
+			await expect(page.getByRole('switch', { name: 'Telegram reminders' })).toHaveCount(0);
+			expect(
+				await page.evaluate(
+					() => JSON.parse(localStorage.getItem('gotrue.user') ?? '{}').token.access_token
+				)
+			).toBe('google-session');
+		} else {
+			await expect(page.getByRole('button', { name: 'login', exact: true })).toBeVisible();
+			expect(await page.evaluate(() => localStorage.getItem('gotrue.user'))).toBeNull();
+		}
+		expect(requests).toBe(2);
+	});
+}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { I18nContext } from '$lib/i18n/i18n';
 	import { getContext, onMount } from 'svelte';
+	import { logout } from './auth';
 	import { startTelegramLogin, telegramRequest } from './telegram';
 	export let token: string;
 	export let messageId = '';
@@ -9,6 +10,7 @@
 	let ready = false;
 	export let emails: string[] = [];
 	let linked = false;
+	let confirmUnlink = false;
 	let remindersEnabled = false;
 	let busy = true;
 	let error = '';
@@ -38,6 +40,13 @@
 			error = (reason as Error).message;
 		}
 		busy = false;
+	}
+	async function unlinkAccount() {
+		await telegramRequest('unlink', token);
+		linked = false;
+		remindersEnabled = false;
+		confirmUnlink = false;
+		if (token.startsWith('tg_')) logout();
 	}
 	async function changeReminders() {
 		await telegramRequest('reminders', token, { enabled: !remindersEnabled });
@@ -76,7 +85,13 @@
 				<h3>Telegram</h3>
 				<p class="muted">{linked ? tr('extraLogin') : tr('addLogin')}</p>
 			</div>
-			{#if linked}<span class="status">{tr('connected')}</span>{:else}<button
+			{#if linked}<button
+					type="button"
+					class="shrink-0"
+					aria-label={tr('unlinkTelegram')}
+					disabled={busy}
+					on:click={() => (confirmUnlink = true)}>{tr('unlink')}</button
+				>{:else}<button
 					type="button"
 					class="shrink-0"
 					aria-label={tr('linkTelegram')}
@@ -84,6 +99,19 @@
 					on:click={() => run(() => startTelegramLogin(token))}>{tr('link')}</button
 				>{/if}
 		</div>
+		{#if linked && confirmUnlink}
+			<div class="notice mt-3" role="group" aria-label={tr('unlinkTelegram')}>
+				<p>{tr('unlinkHint')}</p>
+				{#if token.startsWith('tg_')}<p class="mt-2">{tr('unlinkSessionHint')}</p>{/if}
+				<div class="mt-3 flex flex-wrap gap-2">
+					<button type="button" disabled={busy} on:click={() => run(unlinkAccount)}
+						>{tr('confirmUnlink')}</button
+					><button type="button" disabled={busy} on:click={() => (confirmUnlink = false)}
+						>{tr('cancel')}</button
+					>
+				</div>
+			</div>
+		{/if}
 		{#if linked}
 			<div class="reminder-row">
 				<div>
@@ -176,13 +204,6 @@
 	}
 	.method svg {
 		flex-shrink: 0;
-	}
-	.status {
-		border-radius: 1rem;
-		padding: 0.125rem 0.5rem;
-		font-size: 0.7rem;
-		background: #f0fdf4;
-		color: #166534;
 	}
 	button {
 		min-height: 44px;
