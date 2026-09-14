@@ -76,7 +76,13 @@
 				<h3>Telegram</h3>
 				<p class="muted">{linked ? tr('extraLogin') : tr('addLogin')}</p>
 			</div>
-			{#if linked}<span class="status">{tr('connected')}</span>{/if}
+			{#if linked}<span class="status">{tr('connected')}</span>{:else}<button
+					type="button"
+					class="shrink-0"
+					aria-label={tr('linkTelegram')}
+					disabled={busy}
+					on:click={() => run(() => startTelegramLogin(token))}>{tr('link')}</button
+				>{/if}
 		</div>
 		{#if linked}
 			<div class="reminder-row">
@@ -94,14 +100,6 @@
 					on:click={() => run(changeReminders)}><span></span></button
 				>
 			</div>
-		{:else}
-			<p class="muted mt-3">{tr('linkTelegramHint')}</p>
-			<button
-				type="button"
-				class="mt-3"
-				disabled={busy}
-				on:click={() => run(() => startTelegramLogin(token))}>{tr('linkTelegram')}</button
-			>
 		{/if}
 	{:else}
 		<p class="muted mb-5">{tr('deliveryIntro')}</p>

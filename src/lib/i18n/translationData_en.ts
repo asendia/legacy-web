@@ -1,6 +1,8 @@
 import type { TranslationData } from './translation';
 
 export const translationData: TranslationData = {
+	deliveryShort: 'Delivery',
+	link: 'Link',
 	accountSettings: 'Account settings',
 	close: 'Close',
 	welcomeBack: 'Your Sejiwo account',

@@ -1,6 +1,8 @@
 import type { TranslationData } from './translation';
 
 export const translationData: TranslationData = {
+	deliveryShort: 'Pengiriman',
+	link: 'Tautkan',
 	accountSettings: 'Pengaturan akun',
 	close: 'Tutup',
 	welcomeBack: 'Akun Sejiwo Anda',
