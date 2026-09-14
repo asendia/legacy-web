@@ -42,3 +42,9 @@ The header has one login button. It opens Google and Telegram choices, with clea
 The Delivery button in the message toolbar opens settings for private recipient links and delivery status. Both panels support keyboard focus, Escape, and narrow mobile screens. Settings load only when their panel opens. Unsaved messages cannot create recipient links.
 
 If a Telegram callback fails, the original Google session stays available. The page shows only known error codes from the backend. Share that code when you report a failure. Do not share the callback URL, token, phone number, or secret. Older backend responses still show a general error.
+
+## Unlink an account
+
+In Account settings, select Unlink in the Telegram row and confirm. This removes Telegram login, revokes all Telegram sessions, cancels pending link requests, and stops pending Telegram reminders. Email, saved messages, and recipient Telegram delivery links stay active. Remove recipient links separately in Delivery settings.
+
+A Google session stays signed in. A Telegram session signs out after unlinking and clears local drafts, as stated in the confirmation. Use Google to sign in again. A failed unlink leaves the interface and session unchanged. Deploy the matching backend unlink action before the frontend.

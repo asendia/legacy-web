@@ -1,6 +1,15 @@
 import type { TranslationData } from './translation';
 
 export const translationData: TranslationData = {
+	unlink: 'Putuskan',
+	unlinkTelegram: 'Putuskan Telegram',
+	confirmUnlink: 'Konfirmasi pemutusan',
+	cancel: 'Batal',
+	unlinkHint:
+		'Hapus login dan pengingat Telegram? Email, pesan tersimpan, dan tautan pengiriman penerima tetap aktif.',
+	unlinkSessionHint:
+		'Anda akan keluar. Draf yang belum disimpan di perangkat ini akan dihapus. Gunakan Google untuk masuk kembali.',
+
 	deliveryShort: 'Pengiriman',
 	link: 'Tautkan',
 	accountSettings: 'Pengaturan akun',
