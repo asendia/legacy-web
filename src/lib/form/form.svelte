@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { getContext, onMount } from 'svelte';
+	import SettingsDialog from '$lib/core/SettingsDialog.svelte';
+	let deliveryOpen = false;
 	import TelegramSettings from '$lib/user/TelegramSettings.svelte';
 	import { telegramEnabled } from '$lib/user/telegram';
 	import EmailListInput from '$lib/email/EmailListInput.svelte';
@@ -175,13 +177,42 @@
 		emailList={messageData.emailReceivers}
 	/>
 	{#if telegramEnabled && auth && !isLoading}
-		{#key messageData.id}
-			<TelegramSettings
-				token={auth.token.access_token}
-				messageId={messageData.id}
-				emails={messageData.emailReceivers}
-			/>
-		{/key}
+		<div class="flex justify-end">
+			<button
+				type="button"
+				class="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm text-gray-600 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2"
+				aria-haspopup="dialog"
+				on:click={() => (deliveryOpen = true)}
+				><svg
+					width="16"
+					height="16"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.5"
+					aria-hidden="true"
+					><path d="M4 7h16M4 17h16" /><circle cx="8" cy="7" r="3" fill="white" /><circle
+						cx="16"
+						cy="17"
+						r="3"
+						fill="white"
+					/></svg
+				>{tr('deliverySettings')}</button
+			>
+		</div>
+		{#if deliveryOpen}
+			<SettingsDialog
+				title={tr('deliverySettings')}
+				closeLabel={tr('close')}
+				onClose={() => (deliveryOpen = false)}
+			>
+				{#key messageData.id}<TelegramSettings
+						token={auth.token.access_token}
+						messageId={messageData.id}
+						emails={messageData.emailReceivers}
+					/>{/key}
+			</SettingsDialog>
+		{/if}
 	{/if}
 	<EmailContent
 		onChange={handleMessageChange}

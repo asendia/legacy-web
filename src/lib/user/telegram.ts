@@ -21,8 +21,45 @@ export async function telegramRequest<T>(
 		},
 		body: JSON.stringify({ ...data, action })
 	});
-	if (!res.ok)
-		throw new Error('Telegram request failed. Check your account settings or try again.');
+	if (!res.ok) {
+		const fallback = 'Telegram request failed. Check your account settings or try again.';
+		const messages: Record<string, string> = {
+			telegram_client_settings:
+				'Telegram login is not configured correctly. Please use Google for now.',
+			telegram_code_rejected:
+				'Telegram could not accept this login code. Start again in the same browser tab.',
+			telegram_phone_required: 'To link Telegram, allow it to share your verified phone number.',
+			telegram_link_required: 'Sign in with Google first, then link Telegram in Account settings.',
+			telegram_link_conflict: 'This Telegram account cannot be linked to this Sejiwo account.',
+			login_expired: 'Telegram login has expired. Start again in the same browser tab.'
+		};
+		let code = '';
+		try {
+			const data: unknown = await res.json();
+			if (data && typeof data === 'object' && 'code' in data && typeof data.code === 'string')
+				code = data.code;
+		} catch {
+			/* Older servers can return an empty or plain text error. */
+		}
+		const knownCodes = new Set([
+			...Object.keys(messages),
+			'login_request',
+			'telegram_connection',
+			'telegram_token_response',
+			'telegram_token_verification',
+			'telegram_nonce',
+			'telegram_token_time',
+			'telegram_identity',
+			'telegram_exchange',
+			'login_storage',
+			'login_server_settings'
+		]);
+		throw new Error(
+			knownCodes.has(code)
+				? `${messages[code] || 'Telegram login could not finish. Please use Google for now.'} (${code})`
+				: fallback
+		);
+	}
 	return res.json();
 }
 

@@ -44,7 +44,8 @@ test('draft conflicted use client', async ({ page }) => {
 		await dialog.dismiss();
 	};
 	page.on('dialog', rejectDialog);
-	await page.click('text=login');
+	await page.getByRole('button', { name: 'login', exact: true }).click();
+	await page.getByRole('button', { name: 'Continue with Google' }).click();
 	await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
 	// Ensure no flash state
 	expect(await page.inputValue('textarea')).toBe('');
@@ -80,7 +81,8 @@ test('draft conflicted use remote', async ({ page }) => {
 		await dialog.accept();
 	};
 	page.on('dialog', acceptDialog);
-	await page.click('text=login');
+	await page.getByRole('button', { name: 'login', exact: true }).click();
+	await page.getByRole('button', { name: 'Continue with Google' }).click();
 	await page.waitForLoadState('networkidle');
 	expect(dialogCounter).toBe(1);
 	expect(await page.inputValue('textarea')).toBe('remote content');
