@@ -4,7 +4,7 @@ The production interface is enabled by `netlify.toml`. Other deploy contexts are
 
 The production context in `netlify.toml` sets `PUBLIC_TELEGRAM_ENABLED=true`. The build environment sets it to `false` for previews and branch deploys. The app reads the flag at build time so the browser and server use the same value without a separate runtime environment variable. Rebuild and deploy after a change. For rollback, change the production context to `false` and deploy. Repository build settings take precedence over duplicate dashboard values; remove the dashboard flag after the repository deployment is verified. Never put a bot token, Client Secret, or webhook secret in a frontend environment variable.
 
-Existing users can keep Google login and email delivery. To use Telegram login, first sign in with Google and select **Link Telegram**. This links the current account and requires a verified phone claim from Telegram. It does not create a second message account. The backend stores a keyed phone hash rather than the phone number. Telegram sessions last one hour.
+Existing users can keep Google login and email delivery. To use Telegram login, first sign in with Google, open **Account settings** in the header, and select **Link Telegram**. This links the current account and requires a verified phone claim from Telegram. It does not create a second message account. The backend stores a keyed phone hash rather than the phone number. Telegram sessions last one hour.
 
 The callback URL is `https://sejiwo.com/telegram/callback`. In the BotFather mini app, select the bot, open Login Widget, and select Switch to OpenID Connect Login if the legacy domain field appears. Add the callback under Redirect URIs. Trusted Origins and Native Login are not required for this server-side token exchange. Keep RS256. The login state and a separate browser proof are kept in session storage for five minutes. The callback clears the URL query and uses `Cache-Control: no-store` and `Referrer-Policy: no-referrer`.
 
@@ -33,4 +33,12 @@ The bot is `@SejiwoBot`, with public Client ID `8927237838`. The backend owns th
 
 The `SendTelegramMessages` job runs daily at 19:48 Asia/Jakarta (`48 19 * * *`), with Pub/Sub attribute `action=send-telegram`. Existing reminder and final-email jobs remain at 19:22 and 19:38. Each invocation attempts at most three Telegram messages; daily scheduling can delay a large queue for several days. See the backend guide for webhook setup and monitoring.
 
-Before merging an activation change, confirm the database migrations, backend settings, and webhook setup. After deployment, sign in with Google, select **Link Telegram**, and test login and delivery with a consenting test recipient. A successful build does not verify a live Telegram delivery.
+Before merging an activation change, confirm the database migrations, backend settings, and webhook setup. After deployment, sign in with Google, open **Account settings**, select **Link Telegram**, and test login and delivery with a consenting test recipient. A successful build does not verify a live Telegram delivery.
+
+## Account and delivery panels
+
+The header has one login button. It opens Google and Telegram choices, with clear instructions for new accounts. New accounts use Google first; an existing account can add Telegram through Account settings. Account settings also contains the reminder switch and logout.
+
+Delivery settings beside the recipient field contains private recipient links and delivery status. Both panels support keyboard focus, Escape, and narrow mobile screens. Settings load only when their panel opens. Unsaved messages cannot create recipient links.
+
+If a Telegram callback fails, the original Google session stays available. The page shows only known error codes from the backend. Share that code when you report a failure. Do not share the callback URL, token, phone number, or secret. Older backend responses still show a general error.

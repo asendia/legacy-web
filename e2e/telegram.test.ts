@@ -35,7 +35,8 @@ test('Telegram login keeps the linked email account', async ({ page }) => {
 	});
 	await page.goto('/telegram/callback?state=state&code=code');
 	await expect(page).toHaveURL('http://127.0.0.1:4174/');
-	await expect(page.getByText('Telegram is linked. You can use it to sign in.')).toBeVisible();
+	await page.getByRole('button', { name: 'Account settings' }).click();
+	await expect(page.getByText('An additional way to sign in')).toBeVisible();
 	const auth = await page.evaluate(() => JSON.parse(localStorage.getItem('gotrue.user') ?? '{}'));
 	expect(auth.email).toBe('writer@example.com');
 	expect(auth.app_metadata.provider).toBe('telegram');
@@ -107,8 +108,11 @@ test('writer can enable reminders and share a recipient link', async ({ page }) 
 		}
 	});
 	await page.goto('/');
-	await page.getByRole('button', { name: 'Enable Telegram reminders' }).click();
-	await expect(page.getByRole('button', { name: 'Stop Telegram reminders' })).toBeVisible();
+	await page.getByRole('button', { name: 'Account settings' }).click();
+	await page.getByRole('switch', { name: 'Telegram reminders' }).click();
+	await expect(page.getByRole('switch', { name: 'Telegram reminders' })).toBeChecked();
+	await page.getByRole('button', { name: 'Close', exact: true }).click();
+	await page.getByRole('button', { name: 'Delivery settings' }).click();
 	await page.getByRole('button', { name: 'Create recipient link' }).click();
 	await expect(page.getByLabel('Share privately with recipient@example.com')).toHaveValue(
 		'https://t.me/sejiwo_test_bot?start=private-link'
@@ -179,6 +183,7 @@ test('logout clears private data while the server and next page are stalled', as
 	try {
 		await page.goto('/');
 		await expect(page.locator('#user-message')).toBeVisible();
+		await page.getByRole('button', { name: 'Account settings' }).click();
 		await page.getByRole('button', { name: 'logout', exact: true }).click({ noWaitAfter: true });
 		await expect
 			.poll(() => snapshot)
@@ -187,6 +192,96 @@ test('logout clears private data while the server and next page are stalled', as
 	} finally {
 		release();
 	}
-	await expect(page.getByRole('button', { name: 'Telegram login', exact: true })).toBeVisible();
+	await expect(page.getByRole('button', { name: 'login', exact: true })).toBeVisible();
 	await expect(page.locator('#user-message')).toHaveCount(0);
+});
+
+test('mobile login choices fit and return focus after close', async ({ page }) => {
+	await page.setViewportSize({ width: 320, height: 640 });
+	await page.goto('/');
+	const login = page.getByRole('button', { name: 'login', exact: true });
+	await expect(page.getByRole('button', { name: 'Continue with Telegram' })).toHaveCount(0);
+	await expect(page.getByAltText('sejiwo logo')).toBeVisible();
+	expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
+	await login.click();
+	const dialog = page.getByRole('dialog', { name: 'Your Sejiwo account' });
+	await expect(dialog).toBeVisible();
+	await expect(dialog.getByRole('button', { name: 'Continue with Google' })).toBeVisible();
+	await expect(dialog.getByRole('button', { name: 'Continue with Telegram' })).toBeVisible();
+	await expect(dialog.getByText('New to Sejiwo?')).toBeVisible();
+	expect(await dialog.evaluate((node) => node.scrollWidth <= node.clientWidth)).toBe(true);
+	await page.screenshot({ path: 'test-results/mobile-login.png' });
+	await page.keyboard.press('Escape');
+	await expect(dialog).toHaveCount(0);
+	await expect(login).toBeFocused();
+	await expect(page.getByAltText('sejiwo logo')).toBeVisible();
+});
+
+test('login errors show only known safe codes and keep the Google session', async ({ page }) => {
+	await page.addInitScript(() => {
+		sessionStorage.setItem(
+			'sejiwo-telegram-login',
+			JSON.stringify({ state: 'state', proof: 'proof', expiresAt: Date.now() + 60000 })
+		);
+		localStorage.setItem(
+			'gotrue.user',
+			JSON.stringify({ email: 'writer@example.com', token: { access_token: 'google-session' } })
+		);
+	});
+	await page.route('**/legacy-api-telegram', (route) =>
+		route.fulfill({
+			status: 400,
+			json: { code: 'telegram_phone_required', err: 'private server details' }
+		})
+	);
+	await page.goto('/telegram/callback?code=code&state=state');
+	await expect(page.getByRole('alert')).toContainText(
+		'allow it to share your verified phone number'
+	);
+	await expect(page.getByRole('alert')).not.toContainText('private server details');
+	expect(
+		await page.evaluate(
+			() => JSON.parse(localStorage.getItem('gotrue.user') ?? '{}').token.access_token
+		)
+	).toBe('google-session');
+});
+
+test('mobile settings stay out of the form and lock unsaved recipient links', async ({ page }) => {
+	await page.setViewportSize({ width: 390, height: 844 });
+	await page.addInitScript(() =>
+		localStorage.setItem(
+			'gotrue.user',
+			JSON.stringify({
+				email: 'writer@example.com',
+				app_metadata: { provider: 'google' },
+				user_metadata: { full_name: 'Test Writer' },
+				token: { access_token: 'google-session', expires_at: Date.now() + 3600000 }
+			})
+		)
+	);
+	await page.route('**/legacy-api?action=select-messages', (route) =>
+		route.fulfill({ json: { data: [] } })
+	);
+	let settingsRequests = 0;
+	await page.route('**/legacy-api-telegram', (route) => {
+		settingsRequests++;
+		return route.fulfill({ json: { linked: true, remindersEnabled: false, receivers: {} } });
+	});
+	await page.goto('/');
+	await expect(page.getByRole('button', { name: 'Delivery settings' })).toBeVisible();
+	await expect(page.getByRole('switch')).toHaveCount(0);
+	expect(settingsRequests).toBe(0);
+	expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+	await page.screenshot({ path: 'test-results/mobile-form.png' });
+	await page.getByRole('button', { name: 'Account settings' }).click();
+	await expect(page.getByRole('switch', { name: 'Telegram reminders' })).toBeVisible();
+	await page.screenshot({ path: 'test-results/mobile-account.png' });
+	await page.keyboard.press('Escape');
+	await page.getByRole('button', { name: 'Delivery settings' }).click();
+	await expect(
+		page.getByText('Save your message before you create recipient links.')
+	).toBeVisible();
+	await expect(page.getByText('Add a recipient email to your message first.')).toBeVisible();
+	await page.setViewportSize({ width: 1280, height: 800 });
+	await page.screenshot({ path: 'test-results/desktop-delivery.png' });
 });

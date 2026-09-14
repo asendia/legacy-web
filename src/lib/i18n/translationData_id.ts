@@ -1,6 +1,46 @@
 import type { TranslationData } from './translation';
 
 export const translationData: TranslationData = {
+	accountSettings: 'Pengaturan akun',
+	close: 'Tutup',
+	welcomeBack: 'Akun Sejiwo Anda',
+	accountIntro: 'Masuk untuk menyimpan pesan dan mengatur pengirimannya.',
+	signInMethods: 'Metode masuk',
+	originalAccount: 'Akun utama Anda',
+	connected: 'Terhubung',
+	continueGoogle: 'Lanjutkan dengan Google',
+	continueTelegram: 'Lanjutkan dengan Telegram',
+	telegramLoginHint: 'Gunakan Telegram jika sudah ditautkan di pengaturan akun.',
+	newAccount: 'Baru menggunakan Sejiwo?',
+	newAccountHint:
+		'Lanjutkan dengan Google untuk membuat akun. Setelah itu, tambahkan Telegram di pengaturan akun.',
+	extraLogin: 'Cara tambahan untuk masuk',
+	addLogin: 'Tambahkan cara lain untuk masuk',
+	telegramReminders: 'Pengingat Telegram',
+	reminderHint: 'Terima tautan untuk memperpanjang tanggal pesan. Email tetap aktif.',
+	linkTelegramHint:
+		'Telegram akan meminta nomor telepon terverifikasi dan izin mengirim pesan bot. Akun Anda tetap sama.',
+	linkTelegram: 'Tautkan Telegram',
+	telegramLoadFailed: 'Pengaturan Telegram tidak dapat dimuat. Coba lagi.',
+	deliverySettings: 'Pengaturan pengiriman',
+	deliveryIntro:
+		'Pengiriman email tetap aktif. Tambahkan Telegram bagi penerima yang menginginkannya. Bagikan tautan pribadi kepada setiap penerima; mereka harus membukanya dan menekan Start.',
+	saveBeforeLink: 'Simpan pesan sebelum membuat tautan penerima.',
+	addRecipientFirst: 'Tambahkan email penerima ke pesan terlebih dahulu.',
+	telegramConnected: 'Telegram terhubung',
+	telegramWaiting: 'Menunggu penerima menekan Start',
+	emailOnly: 'Email saja',
+	createRecipientLink: 'Buat tautan penerima',
+	replaceRecipientLink: 'Ganti tautan penerima',
+	removeTelegram: 'Hapus pengiriman Telegram',
+	sharePrivately: 'Bagikan secara pribadi kepada',
+	refreshRecipients: 'Perbarui status penerima',
+	deliveryPrivacy: 'Privasi dan detail pengiriman',
+	deliveryPrivacyHint:
+		'Percakapan bot Telegram tidak memiliki enkripsi end-to-end. Gunakan CLIENT-AES agar teks akhir tetap terenkripsi, lalu bagikan kata sandi melalui saluran lain. Penerima dapat mengirim /stop untuk menghentikan pengiriman Telegram.',
+	replaceLinkHint:
+		'Tautan baru menggantikan tautan sebelumnya dan menghapus koneksinya. Penerima tidak perlu menyetujui pesan wasiat.',
+
 	// Index page
 	title: 'Sejiwo - Surat wasiat online',
 	description: 'Sejiwo adalah jasa pengiriman surat wasiat yang terpercaya',

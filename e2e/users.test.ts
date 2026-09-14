@@ -31,12 +31,14 @@ test('login/logout', async ({ page }) => {
 	await mockIdentityUserAPI(page, token, email, fullname);
 	await mockMessageAPI(page, token, 'select-messages', { responseBody: { data: [] } });
 	await page.goto('/');
-	await page.click('text=login');
+	await page.getByRole('button', { name: 'login', exact: true }).click();
+	await page.getByRole('button', { name: 'Continue with Google' }).click();
 	await page.waitForNavigation({ waitUntil: 'networkidle' });
 	expect(await page.innerText('#user-message')).toBe(fullname.split(' ')[0]);
 	let gotrue = await page.evaluate(() => JSON.parse(localStorage.getItem('gotrue.user')));
 	expect(gotrue.email).toBe(email);
-	await page.click('text=logout');
+	await page.getByRole('button', { name: 'Account settings' }).click();
+	await page.getByRole('button', { name: 'logout', exact: true }).click();
 	await expect(page.locator('#user-message')).toHaveCount(0);
 	gotrue = await page.evaluate(() => localStorage.getItem('gotrue.user'));
 	expect(gotrue).toBe(null);

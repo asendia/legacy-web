@@ -1,6 +1,46 @@
 import type { TranslationData } from './translation';
 
 export const translationData: TranslationData = {
+	accountSettings: 'Account settings',
+	close: 'Close',
+	welcomeBack: 'Your Sejiwo account',
+	accountIntro: 'Sign in to keep your message safe and manage its delivery.',
+	signInMethods: 'Sign-in methods',
+	originalAccount: 'Your original account',
+	connected: 'Connected',
+	continueGoogle: 'Continue with Google',
+	continueTelegram: 'Continue with Telegram',
+	telegramLoginHint: 'Use Telegram if you have already linked it in account settings.',
+	newAccount: 'New to Sejiwo?',
+	newAccountHint:
+		'Continue with Google to create your account. You can then add Telegram in account settings.',
+	extraLogin: 'An additional way to sign in',
+	addLogin: 'Add another way to sign in',
+	telegramReminders: 'Telegram reminders',
+	reminderHint: 'Receive links to extend your message date. Email stays active.',
+	linkTelegramHint:
+		'Telegram will ask for your verified phone number and permission to send bot messages. Your existing account stays the same.',
+	linkTelegram: 'Link Telegram',
+	telegramLoadFailed: 'Could not load Telegram settings. Try again.',
+	deliverySettings: 'Delivery settings',
+	deliveryIntro:
+		'Email delivery stays active. Add Telegram for recipients who want it. Share a private link with each recipient; they must open it and press Start.',
+	saveBeforeLink: 'Save your message before you create recipient links.',
+	addRecipientFirst: 'Add a recipient email to your message first.',
+	telegramConnected: 'Telegram connected',
+	telegramWaiting: 'Waiting for the recipient to press Start',
+	emailOnly: 'Email only',
+	createRecipientLink: 'Create recipient link',
+	replaceRecipientLink: 'Replace recipient link',
+	removeTelegram: 'Remove Telegram delivery',
+	sharePrivately: 'Share privately with',
+	refreshRecipients: 'Refresh recipient status',
+	deliveryPrivacy: 'Privacy and delivery details',
+	deliveryPrivacyHint:
+		'Telegram bot chats do not have end-to-end encryption. Use CLIENT-AES to keep the final text encrypted, and share the password through a separate channel. A recipient can send /stop to stop Telegram delivery.',
+	replaceLinkHint:
+		'A new link replaces the previous link and removes its connection. Recipients do not need to approve the deed.',
+
 	// Index page
 	title: 'Sejiwo - Your testament in the cloud',
 	description: 'Sejiwo is a secure testament storage and delivery service',

@@ -18,11 +18,13 @@
 <svelte:head
 	><title>Telegram login | Sejiwo</title><meta name="robots" content="noindex" /></svelte:head
 >
-<main class="mx-auto max-w-lg space-y-4 p-8">
+<main
+	class="mx-auto mt-12 max-w-md space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+>
 	<h1 class="text-xl font-semibold">Telegram login</h1>
 	{#if error}
 		<p role="alert">{error}</p>
-		<p>For first use, sign in with Google and link Telegram in the Telegram settings.</p>
+		<p>For first use, sign in with Google and link Telegram in Account settings.</p>
 		<a class="underline" href={resolve('/')}>Return to Sejiwo</a>
 	{:else}
 		<p role="status">Checking your Telegram account…</p>
