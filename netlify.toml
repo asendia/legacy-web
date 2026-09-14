@@ -1,5 +1,5 @@
 [build]
-  command = "npm run prepare && npm run check && npm run lint && npm run build"
+  command = "npm install --global --ignore-scripts --registry=https://registry.npmjs.org/ npm@12.0.2 && npm --version && npm ci && npm audit && npm audit signatures && npm run prepare && npm run check && npm run lint && npm run build"
   publish = "build/"
   functions = "functions/"
-  environment = { NODE_VERSION = "22" }
+  environment = { NODE_VERSION = "24.20.0", NPM_VERSION = "12.0.2" }

@@ -1,4 +1,6 @@
-# sv
+# Sejiwo frontend
+
+Use Node 24.20.0 and npm 12.0.2. Read [Dependency checks](DEPENDENCIES.md) before you install or update packages. Use `npm ci`, then `npm run prepare`.
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
@@ -16,7 +18,7 @@ npx sv create my-app
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+After the dependency checks pass, start a development server:
 
 ```sh
 npm run dev

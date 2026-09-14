@@ -1,5 +1,6 @@
 import { throwIfNonSuccessResponse } from '$lib/core/fetchHandler';
 import { STORAGE_ENCRYPTION_SECRET, STORAGE_GOTRUE } from '$lib/core/storageKeys';
+import { telegramRequest } from './telegram';
 import { clearDraft } from '$lib/form/draft';
 import { destroyFetchUserTokenPromise, fetchUserToken, type TokenObject } from './userFetcher';
 
@@ -60,8 +61,31 @@ export function clearUserData() {
 }
 
 export function logout() {
+	let token: string | undefined;
+	try {
+		const auth = getAuthFromLocalStorage();
+		if (auth.app_metadata?.provider === 'telegram') token = auth.token.access_token;
+	} catch {
+		/* Clear local data if the session has expired. */
+	}
 	clearUserData();
 	clearDraft();
+	sessionStorage.removeItem('sejiwo-telegram-login');
+	// Hide private content even if the next page load stalls.
+	document.documentElement.hidden = true;
+	if (token) {
+		void telegramRequest(
+			'logout',
+			token,
+			{},
+			{
+				keepalive: true,
+				signal: AbortSignal.timeout(5000)
+			}
+		).catch(() => {
+			/* Local logout is complete. The remote session also has an expiry time. */
+		});
+	}
 	location.reload();
 }
 

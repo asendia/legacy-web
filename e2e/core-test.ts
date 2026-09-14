@@ -1,5 +1,7 @@
 import { expect, Page, Route } from '@playwright/test';
 
+export const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:4173';
+
 export const delay = 200;
 export const timeout = 1000;
 export const typingDelay = 1;
@@ -8,7 +10,7 @@ export const closeSymbol = '×';
 export function generateAuthURL(token: string) {
 	// Need to specify complete url since the driver derives protocol & host based on current url
 	// in this case "https://" and "sejiwo.com"
-	return `http://localhost:4173/#access_token=${token}&expires_in=3600&refresh_token=refresh&token_type=bearer`;
+	return `${baseURL}/#access_token=${token}&expires_in=3600&refresh_token=refresh&token_type=bearer`;
 }
 
 export async function mockIdentityAuthorizeAPI(page: Page, token: string, delay?: number) {

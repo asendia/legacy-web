@@ -3,6 +3,17 @@
 	import { getAuthFromLocalStorage, logout, type AuthObject } from '$lib/user/auth';
 	import { getContext, onMount } from 'svelte';
 	import { fetchAuthorizeUser } from './userFetcher';
+	import { telegramEnabled, startTelegramLogin } from './telegram';
+	let telegramError = '';
+	async function handleTelegramLogin() {
+		disabled = true;
+		try {
+			await startTelegramLogin();
+		} catch (error) {
+			telegramError = (error as Error).message;
+			disabled = false;
+		}
+	}
 	const { tr } = getContext<I18nContext>('i18n');
 	let auth: AuthObject | undefined;
 	let disabled = true;
@@ -95,6 +106,15 @@
 	</div>
 {:else}
 	<!-- Logged out state -->
+	{#if telegramEnabled}
+		<button
+			type="button"
+			on:click={handleTelegramLogin}
+			{disabled}
+			class="rounded-lg border border-gray-300 px-2.5 py-1.5 text-sm">Telegram login</button
+		>
+		{#if telegramError}<p role="alert">{telegramError}</p>{/if}
+	{/if}
 	<button
 		type="button"
 		on:click={handleLogin}
