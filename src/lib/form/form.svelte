@@ -177,29 +177,6 @@
 		emailList={messageData.emailReceivers}
 	/>
 	{#if telegramEnabled && auth && !isLoading}
-		<div class="flex justify-end">
-			<button
-				type="button"
-				class="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm text-gray-600 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2"
-				aria-haspopup="dialog"
-				on:click={() => (deliveryOpen = true)}
-				><svg
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="1.5"
-					aria-hidden="true"
-					><path d="M4 7h16M4 17h16" /><circle cx="8" cy="7" r="3" fill="white" /><circle
-						cx="16"
-						cy="17"
-						r="3"
-						fill="white"
-					/></svg
-				>{tr('deliverySettings')}</button
-			>
-		</div>
 		{#if deliveryOpen}
 			<SettingsDialog
 				title={tr('deliverySettings')}
@@ -219,7 +196,34 @@
 		{isLoading}
 		messageContent={messageData.messageContent}
 		{enableClientAES}
-	/>
+	>
+		<svelte:fragment slot="actions">
+			{#if telegramEnabled && auth && !isLoading}
+				<button
+					type="button"
+					class="inline-flex h-9 items-center gap-1.5 rounded-md px-2 text-xs font-medium text-gray-600 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
+					aria-haspopup="dialog"
+					aria-label={tr('deliverySettings')}
+					on:click={() => (deliveryOpen = true)}
+					><svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.5"
+						aria-hidden="true"
+						><path d="M4 7h16M4 17h16" /><circle cx="8" cy="7" r="3" fill="white" /><circle
+							cx="16"
+							cy="17"
+							r="3"
+							fill="white"
+						/></svg
+					>{tr('deliveryShort')}</button
+				>
+			{/if}
+		</svelte:fragment>
+	</EmailContent>
 	<Scheduler
 		onChange={handleSchedulerChange}
 		inactivePeriodDays={messageData.inactivePeriodDays}

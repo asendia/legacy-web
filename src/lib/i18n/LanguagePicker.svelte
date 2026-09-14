@@ -31,7 +31,7 @@
 	<button
 		type="button"
 		on:click|stopPropagation={toggleDropdown}
-		class="group flex cursor-pointer items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition-all hover:border-gray-300 hover:shadow focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
+		class="group flex h-11 cursor-pointer items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
 		aria-haspopup="true"
 		aria-expanded={isOpen}
 	>

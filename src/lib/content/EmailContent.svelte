@@ -43,7 +43,7 @@
 </script>
 
 <div
-	class="relative mb-10 rounded-md border border-gray-300 bg-white p-3 transition-colors focus-within:border-gray-500"
+	class="relative rounded-md border border-gray-300 bg-white p-3 transition-colors focus-within:border-gray-500"
 >
 	<label for="message-content" class="mb-1.5 block text-sm font-medium text-gray-700"
 		>Message Content</label
@@ -65,10 +65,14 @@
 			? '0'
 			: '1'}; -webkit-text-stroke: 0;">{messageContent}</textarea
 	>
-	<div class="absolute right-0 -bottom-10 flex gap-1.5">
+	<div
+		class="-mx-3 mt-3 flex flex-wrap items-center justify-end gap-1.5 border-t border-gray-100 px-3 pt-2"
+		data-testid="message-toolbar"
+	>
+		<slot name="actions" />
 		<button
 			data-test-id="toggle-aes"
-			class="flex min-w-[110px] items-center justify-between rounded-md bg-gray-700 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-gray-800"
+			class="flex h-9 min-w-[100px] items-center justify-between rounded-md bg-gray-700 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-gray-800"
 			on:click={handleAESToggle}
 		>
 			<span>client aes:</span>
@@ -76,7 +80,7 @@
 		</button>
 		<button
 			data-test-id="toggle-show"
-			class="flex min-w-[55px] items-center justify-center rounded-md bg-gray-700 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-gray-800"
+			class="flex h-9 min-w-[55px] items-center justify-center rounded-md bg-gray-700 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-gray-800"
 			on:click={handleShowToggle}
 		>
 			{toggleShow ? tr('hide') : tr('show')}

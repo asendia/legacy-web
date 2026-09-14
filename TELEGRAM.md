@@ -39,6 +39,6 @@ Before merging an activation change, confirm the database migrations, backend se
 
 The header has one login button. It opens Google and Telegram choices, with clear instructions for new accounts. New accounts use Google first; an existing account can add Telegram through Account settings. Account settings also contains the reminder switch and logout.
 
-Delivery settings beside the recipient field contains private recipient links and delivery status. Both panels support keyboard focus, Escape, and narrow mobile screens. Settings load only when their panel opens. Unsaved messages cannot create recipient links.
+The Delivery button in the message toolbar opens settings for private recipient links and delivery status. Both panels support keyboard focus, Escape, and narrow mobile screens. Settings load only when their panel opens. Unsaved messages cannot create recipient links.
 
 If a Telegram callback fails, the original Google session stays available. The page shows only known error codes from the backend. Share that code when you report a failure. Do not share the callback URL, token, phone number, or secret. Older backend responses still show a general error.

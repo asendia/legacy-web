@@ -247,7 +247,7 @@ test('login errors show only known safe codes and keep the Google session', asyn
 });
 
 test('mobile settings stay out of the form and lock unsaved recipient links', async ({ page }) => {
-	await page.setViewportSize({ width: 390, height: 844 });
+	await page.setViewportSize({ width: 320, height: 844 });
 	await page.addInitScript(() =>
 		localStorage.setItem(
 			'gotrue.user',
@@ -265,16 +265,25 @@ test('mobile settings stay out of the form and lock unsaved recipient links', as
 	let settingsRequests = 0;
 	await page.route('**/legacy-api-telegram', (route) => {
 		settingsRequests++;
-		return route.fulfill({ json: { linked: true, remindersEnabled: false, receivers: {} } });
+		return route.fulfill({ json: { linked: false, remindersEnabled: false, receivers: {} } });
 	});
 	await page.goto('/');
 	await expect(page.getByRole('button', { name: 'Delivery settings' })).toBeVisible();
 	await expect(page.getByRole('switch')).toHaveCount(0);
 	expect(settingsRequests).toBe(0);
-	expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+	expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320);
+	const profile = await page.getByRole('button', { name: 'Account settings' }).boundingBox();
+	const language = await page.getByRole('button', { name: 'EN', exact: true }).boundingBox();
+	expect(profile?.height).toBe(language?.height);
+	const toolbar = page.getByTestId('message-toolbar');
+	await expect(toolbar.getByRole('button', { name: 'Delivery settings' })).toBeVisible();
+	const controls = await toolbar.getByRole('button').all();
+	const boxes = await Promise.all(controls.map((control) => control.boundingBox()));
+	expect(new Set(boxes.map((box) => box?.y)).size).toBe(1);
 	await page.screenshot({ path: 'test-results/mobile-form.png' });
 	await page.getByRole('button', { name: 'Account settings' }).click();
-	await expect(page.getByRole('switch', { name: 'Telegram reminders' })).toBeVisible();
+	await expect(page.getByRole('button', { name: 'Link Telegram' })).toHaveText('Link');
+	await expect(page.getByText('Telegram will ask', { exact: false })).toHaveCount(0);
 	await page.screenshot({ path: 'test-results/mobile-account.png' });
 	await page.keyboard.press('Escape');
 	await page.getByRole('button', { name: 'Delivery settings' }).click();
