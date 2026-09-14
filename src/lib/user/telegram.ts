@@ -1,8 +1,9 @@
 import { API_URL } from '$lib/core/urls';
 import { STORAGE_GOTRUE } from '$lib/core/storageKeys';
-import { env } from '$env/dynamic/public';
+import * as env from '$env/static/public';
 
-export const telegramEnabled = env.PUBLIC_TELEGRAM_ENABLED === 'true';
+const publicSettings: Record<string, string | undefined> = env;
+export const telegramEnabled = publicSettings.PUBLIC_TELEGRAM_ENABLED === 'true';
 const flowKey = 'sejiwo-telegram-login';
 
 export async function telegramRequest<T>(

@@ -2,6 +2,8 @@
 
 Use Node 24.20.0 and npm 12.0.2. Read [Dependency checks](DEPENDENCIES.md) before you install or update packages. Use `npm ci`, then `npm run prepare`.
 
+For Telegram login and delivery settings, see [Telegram setup](TELEGRAM.md). Production enables the public flag through `netlify.toml`; other deploy contexts keep it disabled. Secret values stay in Google Cloud Secret Manager.
+
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
 ## Creating a project
